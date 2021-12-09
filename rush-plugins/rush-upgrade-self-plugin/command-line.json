@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/command-line.schema.json",
   "commands": [
     {
-      "name": "upgrade-rush-self",
+      "name": "upgrade-self",
       "commandKind": "global",
       "summary": "Upgrade Rush.js itself",
-      "shellCommand": "upgrade-rush-self",
+      "shellCommand": "rush-upgrade-self",
       "safeForSimultaneousRushProcesses": true
     }
   ]

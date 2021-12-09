@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-import { upgradeRushSelf } from "./upgrade-rush-self";
+import { upgradeSelf } from "./upgrade-self";
 
 main();
 
 async function main() {
   try {
-    await upgradeRushSelf();
+    await upgradeSelf();
   } catch (error: any) {
     if (error.message) {
       console.log(error.message);

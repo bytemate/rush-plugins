@@ -5,10 +5,10 @@ import {
   JsonFile,
   Executable,
 } from "@rushstack/node-core-library";
-import { RushConfiguration, RushConstants } from "@rushstack/rush-sdk";
+import { RushConfiguration } from "@rushstack/rush-sdk";
 import type { Packument } from "pacote";
 
-export const upgradeRushSelf = async (): Promise<void> => {
+export const upgradeSelf = async (): Promise<void> => {
   const terminal: Terminal = new Terminal(new ConsoleTerminalProvider());
 
   const rushConfiguration: RushConfiguration =
