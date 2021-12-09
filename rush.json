@@ -451,7 +451,8 @@
     {
       "packageName": "rush-upgrade-self-plugin",
       "projectFolder": "rush-plugins/rush-upgrade-self-plugin",
-      "reviewCategory": "rush-plugins"
+      "reviewCategory": "rush-plugins",
+      "shouldPublish": true
     }
   ]
 }
