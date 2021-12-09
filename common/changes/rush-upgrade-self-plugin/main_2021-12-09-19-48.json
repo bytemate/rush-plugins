@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-upgrade-self-plugin",
+      "comment": "fix update autoinstaller",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-upgrade-self-plugin"
+}
