@@ -2,6 +2,18 @@
   "name": "rush-upgrade-self-plugin",
   "entries": [
     {
+      "version": "0.3.0",
+      "tag": "rush-upgrade-self-plugin_v0.3.0",
+      "date": "Thu, 09 Dec 2021 19:08:21 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "add workaround for rush-sdk"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.2.0",
       "tag": "rush-upgrade-self-plugin_v0.2.0",
       "date": "Thu, 09 Dec 2021 18:03:31 GMT",
