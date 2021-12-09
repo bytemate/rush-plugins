@@ -140,24 +140,30 @@ export const upgradeSelf = async (): Promise<void> => {
 
   const changedPackageJsonFileSet = new Set<string>();
   for (const pkgJsonFile of allPackageJsonFiles) {
-    const json = JsonFile.load(pkgJsonFile);
-    let changed = false;
-    for (const [pkgName, pkgVersion] of Object.entries(depVersionMap)) {
-      if (json.dependencies && json.dependencies[pkgName]) {
-        json.dependencies[pkgName] = pkgVersion;
-        changed = true;
+    try {
+      const json = JsonFile.load(pkgJsonFile);
+      let changed = false;
+      for (const [pkgName, pkgVersion] of Object.entries(depVersionMap)) {
+        if (json.dependencies && json.dependencies[pkgName]) {
+          json.dependencies[pkgName] = pkgVersion;
+          changed = true;
+        }
+        if (json.devDependencies && json.devDependencies[pkgName]) {
+          json.devDependencies[pkgName] = pkgVersion;
+          changed = true;
+        }
       }
-      if (json.devDependencies && json.devDependencies[pkgName]) {
-        json.devDependencies[pkgName] = pkgVersion;
-        changed = true;
+      if (changed) {
+        JsonFile.save(json, pkgJsonFile, {
+          onlyIfChanged: true,
+        });
+        changedPackageJsonFileSet.add(pkgJsonFile);
+        terminal.writeVerboseLine(`${pkgJsonFile} updated`);
       }
-    }
-    if (changed) {
-      JsonFile.save(json, pkgJsonFile, {
-        onlyIfChanged: true,
-      });
-      changedPackageJsonFileSet.add(pkgJsonFile);
-      terminal.writeVerboseLine(`${pkgJsonFile} updated`);
+    } catch {
+      terminal.writeWarningLine(
+        `${pkgJsonFile} is not a valid JSON file, ignored`
+      );
     }
   }
 
