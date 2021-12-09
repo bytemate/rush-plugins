@@ -1,0 +1,17 @@
+{
+  "name": "rush-upgrade-self-plugin",
+  "entries": [
+    {
+      "version": "0.1.0",
+      "tag": "rush-upgrade-self-plugin_v0.1.0",
+      "date": "Thu, 09 Dec 2021 17:50:47 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "initial implementation"
+          }
+        ]
+      }
+    }
+  ]
+}
