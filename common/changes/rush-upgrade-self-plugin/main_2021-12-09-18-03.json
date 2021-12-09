@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-upgrade-self-plugin",
+      "comment": "should not ignore command-line.json",
+      "type": "minor"
+    }
+  ],
+  "packageName": "rush-upgrade-self-plugin"
+}
