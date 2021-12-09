@@ -3,5 +3,5 @@ SHELL=/bin/bash
 CURRENT_BRANCH_NAME := $(shell git branch --show-current)
 
 publish:
-	rush publish --apply --publish --target-branch $(CURRENT_BRANCH_NAME) --registry https://registry.npmjs.org/
-always-auth=false
+	@export NPM_AUTH_TOKEN=`cat ~/.npmrc | grep npmjs | grep _authToken | awk -F= '{print $$2}'`; \
+	rush publish --apply --publish --target-branch $(CURRENT_BRANCH_NAME)
