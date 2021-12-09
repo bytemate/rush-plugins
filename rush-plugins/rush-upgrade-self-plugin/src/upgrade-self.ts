@@ -1,20 +1,68 @@
 import * as path from "path";
+import * as fs from "fs";
 import {
   Terminal,
   ConsoleTerminalProvider,
   JsonFile,
   Executable,
+  Import,
 } from "@rushstack/node-core-library";
-import { RushConfiguration } from "@rushstack/rush-sdk";
+import findUp from "find-up";
 import type { Packument } from "pacote";
+import type { RushConfiguration } from "@rushstack/rush-sdk";
 
 export const upgradeSelf = async (): Promise<void> => {
   const terminal: Terminal = new Terminal(new ConsoleTerminalProvider());
 
-  const rushConfiguration: RushConfiguration =
-    RushConfiguration.loadFromDefaultLocation({
-      startingFolder: process.cwd(),
-    });
+  // FIXME: workaround for rush-sdk
+  const rushJsonPath: string | undefined = await findUp("rush.json", {
+    cwd: process.cwd(),
+  });
+  if (!rushJsonPath) {
+    throw new Error("Could not find rush.json");
+  }
+  const monoRoot = path.dirname(rushJsonPath);
+
+  const rushJson = JsonFile.load(rushJsonPath);
+  const { rushVersion } = rushJson;
+
+  const installRunNodeModuleFolder: string = path.join(
+    monoRoot,
+    `common/temp/install-run/@microsoft+rush@${rushVersion}`
+  );
+  let RushConfiguration: RushConfiguration | undefined;
+  if (fs.existsSync(installRunNodeModuleFolder)) {
+    try {
+      const rushLibModulePath: string = Import.resolveModule({
+        modulePath: "@microsoft/rush-lib",
+        baseFolderPath: installRunNodeModuleFolder,
+      });
+      const rushLib = require(rushLibModulePath);
+      RushConfiguration = rushLib.RushConfiguration;
+    } catch {
+      throw new Error(
+        `Could not load @microsoft/rush-lib from ${installRunNodeModuleFolder}`
+      );
+    }
+  } else {
+    // try {
+    // global require
+    const rushLib = require("@microsoft/rush-lib");
+    RushConfiguration = rushLib.RushConfiguration;
+    // } catch {}
+  }
+
+  if (!RushConfiguration) {
+    throw new Error(
+      `Could not find RushConfiguration from ${installRunNodeModuleFolder}`
+    );
+  }
+
+  const rushConfiguration: any = (
+    RushConfiguration as any
+  ).loadFromDefaultLocation({
+    startingFolder: process.cwd(),
+  });
   if (!rushConfiguration) {
     throw new Error("Unable to load rush configuration");
   }
@@ -39,20 +87,20 @@ export const upgradeSelf = async (): Promise<void> => {
     type: "list",
     name: "version",
     message: "Pick up a target version",
-    choices: Object.keys(versions),
+    choices: Object.keys(versions).reverse(),
   });
 
   const targetVersion: string = answer.version;
 
   terminal.writeLine(`Upgrading to ${targetVersion}...`);
 
-  const rushJsonPath: string = rushConfiguration.rushJsonFile;
-  const monoRoot: string = rushConfiguration.rushJsonFolder;
+  // const rushJsonPath: string = rushConfiguration.rushJsonFile;
+  // const monoRoot: string = rushConfiguration.rushJsonFolder;
   const runRushJSPath: string = path.join(
     rushConfiguration.commonScriptsFolder,
     "install-run-rush.js"
   );
-  const rushJson: any = JsonFile.load(rushJsonPath);
+  // const rushJson: any = JsonFile.load(rushJsonPath);
   const oldVersion: string = rushJson.rushVersion;
 
   rushJson.rushVersion = targetVersion;

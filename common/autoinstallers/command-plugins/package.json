@@ -1,0 +1,8 @@
+{
+  "name": "command-plugins",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "rush-upgrade-self-plugin": "file:../../../rush-plugins/rush-upgrade-self-plugin"
+  }
+}

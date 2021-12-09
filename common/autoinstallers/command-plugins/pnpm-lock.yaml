@@ -1,0 +1,7 @@
+lockfileVersion: 5.3
+
+specifiers:
+  rush-upgrade-self-plugin: file:../../../rush-plugins/rush-upgrade-self-plugin
+
+dependencies:
+  rush-upgrade-self-plugin: link:../../../rush-plugins/rush-upgrade-self-plugin
