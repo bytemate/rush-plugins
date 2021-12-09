@@ -177,7 +177,8 @@ export const upgradeSelf = async (): Promise<void> => {
       const autoinstallerName = path.basename(autoinstallerFolder);
       terminal.writeVerboseLine(`update autoinstaller ${autoinstallerFolder}`);
       try {
-        Executable.spawnSync(runRushJSPath, [
+        Executable.spawnSync("node", [
+          runRushJSPath,
           "update-autoinstaller",
           `--name ${autoinstallerName}`,
         ]);
