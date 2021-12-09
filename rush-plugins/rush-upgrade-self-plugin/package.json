@@ -1,6 +1,6 @@
 {
   "name": "rush-upgrade-self-plugin",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "description": "Rush plugin for upgrade rush.js in monorepo",
   "keywords": [
     "rush",

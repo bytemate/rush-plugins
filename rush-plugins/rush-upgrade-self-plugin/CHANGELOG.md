@@ -1,6 +1,17 @@
 # Change Log - rush-upgrade-self-plugin
 
-This log was last generated on Thu, 09 Dec 2021 19:33:35 GMT and should not be manually modified.
+This log was last generated on Thu, 09 Dec 2021 19:50:06 GMT and should not be manually modified.
+
+## 1.0.0
+Thu, 09 Dec 2021 19:50:06 GMT
+
+### Breaking changes
+
+- first formal release
+
+### Patches
+
+- fix update autoinstaller
 
 ## 0.4.0
 Thu, 09 Dec 2021 19:33:35 GMT
