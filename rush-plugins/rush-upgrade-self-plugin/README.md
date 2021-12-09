@@ -41,7 +41,7 @@ rush update-autoinstaller --name command-plugins
 
 4. Run `rush update`
 
-After rush update, `rush-plugin-manifest.json` will be generated. It should be committed into git.
+After rush update, `rush-plugin-manifest.json` and `command-line.json` will be synced. They should be committed into git.
 
 All done! Run `rush upgrade-self` and it should works!
 
