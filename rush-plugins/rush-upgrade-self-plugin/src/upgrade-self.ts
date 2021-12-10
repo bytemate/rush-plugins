@@ -207,8 +207,8 @@ export const upgradeSelf = async (): Promise<void> => {
   if (shouldRunRushUpdate) {
     terminal.writeLine("Run rush update...");
     try {
-      Executable.spawnSync(runRushJSPath, ["update"], {
-        stdio: "ignore",
+      Executable.spawnSync("node", [runRushJSPath, "update"], {
+        stdio: "inherit",
       });
     } catch (e) {
       throw new Error("Failed to run rush update");
