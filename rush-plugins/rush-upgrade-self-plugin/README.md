@@ -53,6 +53,15 @@ Second, this plugin is designed to be idempotent. just run it again!
 
 Finally no goal, you can file a issue
 
+# How it works
+
+1. Fetch `microsoft/rush` versions by `pacote`
+2. After choose a version, decides the info of dependencies should be updated.(Prefixes with `@microsoft/` or `@rushstack/`)
+3. Scan all `package.json` files under monorepo
+4. Update dependencies(including devDependencies) in these `package.json` files
+5. Update autoinstallers accordingly.
+6. Prompt to run `rush update`
+
 # LICENSE
 
 MIT [@chengcyber](https://github.com/chengcyber)
