@@ -2,6 +2,18 @@
   "name": "rush-upgrade-self-plugin",
   "entries": [
     {
+      "version": "1.0.1",
+      "tag": "rush-upgrade-self-plugin_v1.0.1",
+      "date": "Fri, 10 Dec 2021 02:55:26 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "fix run rush update"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.0.0",
       "tag": "rush-upgrade-self-plugin_v1.0.0",
       "date": "Thu, 09 Dec 2021 19:50:06 GMT",
