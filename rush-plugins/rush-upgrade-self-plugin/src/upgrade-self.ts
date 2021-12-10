@@ -1,6 +1,7 @@
 import * as path from "path";
 import * as fs from "fs";
 import {
+  Colors,
   Terminal,
   ConsoleTerminalProvider,
   JsonFile,
@@ -8,6 +9,8 @@ import {
   Import,
 } from "@rushstack/node-core-library";
 import findUp from "find-up";
+import ora from "ora";
+
 import type { Packument } from "pacote";
 import type { RushConfiguration } from "@rushstack/rush-sdk";
 
@@ -92,7 +95,8 @@ export const upgradeSelf = async (): Promise<void> => {
 
   const targetVersion: string = answer.version;
 
-  terminal.writeLine(`Upgrading to ${targetVersion}...`);
+  let spinner: ora.Ora | undefined;
+  spinner = ora(`Updating rush.json with ${targetVersion}...`).start();
 
   // const rushJsonPath: string = rushConfiguration.rushJsonFile;
   // const monoRoot: string = rushConfiguration.rushJsonFolder;
@@ -108,12 +112,9 @@ export const upgradeSelf = async (): Promise<void> => {
     updateExistingFile: true,
   });
 
-  terminal.writeLine(
-    `Successfully upgraded from ${oldVersion} to ${targetVersion}`
-  );
+  spinner.succeed(`Updated rush.json from ${oldVersion} to ${targetVersion}`);
 
-  terminal.writeLine("Scanning for package.json files... It may take a while.");
-
+  spinner = ora("Scanning for package.json files...").start();
   const fg = await import("fast-glob");
 
   const allPackageJsonFiles = fg.sync(["**/package.json"], {
@@ -122,9 +123,11 @@ export const upgradeSelf = async (): Promise<void> => {
     absolute: true,
   });
 
-  terminal.writeLine(
-    "Upgrading Rush.js related dependencies in package.json files..."
-  );
+  spinner.succeed(`Found ${allPackageJsonFiles.length} package.json files`);
+
+  spinner = ora(
+    "Updating Rush.js related dependencies in package.json files..."
+  ).start();
 
   const depVersionMap: Record<string, string> = {};
   for (const [k, v] of Object.entries<string>(
@@ -134,9 +137,6 @@ export const upgradeSelf = async (): Promise<void> => {
       depVersionMap[k] = v;
     }
   }
-  terminal.writeVerboseLine(
-    `rush related deps:\n${JSON.stringify(depVersionMap, null, 2)}`
-  );
 
   const changedPackageJsonFileSet = new Set<string>();
   for (const pkgJsonFile of allPackageJsonFiles) {
@@ -167,27 +167,26 @@ export const upgradeSelf = async (): Promise<void> => {
     }
   }
 
-  terminal.writeLine(
-    `${changedPackageJsonFileSet.size} package.json files updated`
+  spinner.succeed(
+    `Updated ${changedPackageJsonFileSet.size} package.json files`
   );
 
   for (const packageJsonFile of changedPackageJsonFileSet) {
     if (packageJsonFile.includes("common/autoinstallers")) {
       const autoinstallerFolder = path.dirname(packageJsonFile);
       const autoinstallerName = path.basename(autoinstallerFolder);
-      terminal.writeVerboseLine(`update autoinstaller ${autoinstallerFolder}`);
+      spinner = ora(`Updating autoinstaller ${autoinstallerName}`).start();
       try {
         Executable.spawnSync("node", [
           runRushJSPath,
           "update-autoinstaller",
-          `--name ${autoinstallerName}`,
+          "--name",
+          autoinstallerName,
         ]);
       } catch {
-        throw new Error(
-          `Failed to update autoinstaller ${autoinstallerFolder}`
-        );
+        throw new Error(`Failed to update autoinstaller ${autoinstallerName}`);
       }
-      terminal.writeLine(`Updated autoinstaller ${autoinstallerFolder}`);
+      spinner.succeed(`Updated autoinstaller ${autoinstallerName}`);
     }
   }
 
@@ -215,8 +214,8 @@ export const upgradeSelf = async (): Promise<void> => {
     }
     terminal.writeLine("Rush update successfully.");
   } else {
-    terminal.writeLine("Rush update skipped, please run it manually.");
+    terminal.writeWarningLine("Rush update skipped, please run it manually.");
   }
 
-  terminal.writeLine("Upgrade rush self all done!");
+  terminal.writeLine(Colors.green("ALL DONE!"));
 };

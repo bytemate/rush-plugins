@@ -34,11 +34,12 @@
   ],
   "dependencies": {
     "@microsoft/rush-lib": "5.57.1",
-    "@rushstack/node-core-library": "~3.44.1",
+    "@rushstack/node-core-library": "3.44.1",
     "@rushstack/rush-sdk": "5.57.1",
     "fast-glob": "~3.2.7",
     "find-up": "5.0.0",
     "inquirer": "~8.2.0",
+    "ora": "5.4.1",
     "pacote": "~12.0.2"
   },
   "devDependencies": {
