@@ -45,6 +45,14 @@ After rush update, `rush-plugin-manifest.json` and `command-line.json` will be s
 
 All done! Run `rush upgrade-self` and it should works!
 
+# Something went wrong?
+
+First, you can always use `git checkout .` to revert all changes by this plugin.
+
+Second, this plugin is designed to be idempotent. just run it again!
+
+Finally no goal, you can file a issue
+
 # LICENSE
 
 MIT [@chengcyber](https://github.com/chengcyber)
