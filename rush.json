@@ -449,6 +449,12 @@
     //   "reviewCategory": "tools"
     // }
     {
+      "packageName": "rush-archive-project-plugin",
+      "projectFolder": "rush-plugins/rush-archive-project-plugin",
+      "reviewCategory": "rush-plugins",
+      "shouldPublish": true
+    },
+    {
       "packageName": "rush-upgrade-self-plugin",
       "projectFolder": "rush-plugins/rush-upgrade-self-plugin",
       "reviewCategory": "rush-plugins",

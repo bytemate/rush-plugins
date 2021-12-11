@@ -1,0 +1,29 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/command-line.schema.json",
+  "commands": [
+    {
+      "name": "archive-project",
+      "commandKind": "global",
+      "summary": "Archives the project to a tar file",
+      "shellCommand": "rush-project-archiver archive",
+      "safeForSimultaneousRushProcesses": true
+    },
+    {
+      "name": "unarchive-project",
+      "commandKind": "global",
+      "summary": "Unarchive the project from a tar file",
+      "shellCommand": "rush-project-archiver unarchive",
+      "safeForSimultaneousRushProcesses": true
+    }
+  ],
+  "parameters": [
+    {
+      "parameterKind": "string",
+      "description": "The name of the package",
+      "longName": "--package-name",
+      "argumentName": "PACKAGE_NAME",
+      "associatedCommands": ["archive-project", "unarchive-project"],
+      "required": true
+    }
+  ]
+}

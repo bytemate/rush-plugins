@@ -7,4 +7,8 @@ module.exports = {
     "@rushstack/eslint-config/mixins/friendly-locals",
   ],
   parserOptions: { tsconfigRootDir: __dirname },
+  ignorePatterns: ["node_modules/", "lib/", "**/test/**"],
+  rules: {
+    "@typescript-eslint/no-explicit-any": "off",
+  },
 };

@@ -1,0 +1,16 @@
+{
+  "rushVersion": "5.57.1",
+  "pnpmVersion": "6.23.1",
+  "pnpmOptions": {
+    "useWorkspaces": true
+  },
+  "projects": [
+    {
+      "packageName": "demo-project",
+      "projectFolder": "demo",
+      "reviewCategory": "lib",
+      "cyclicDependencyProjects": [],
+      "shouldPublish": false
+    }
+  ]
+}
