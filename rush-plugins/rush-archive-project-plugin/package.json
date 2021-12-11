@@ -1,0 +1,54 @@
+{
+  "name": "rush-archive-project-plugin",
+  "version": "0.0.1",
+  "description": "Rush plugin to archive project",
+  "keywords": [
+    "rush",
+    "plugin",
+    "archive",
+    "project"
+  ],
+  "homepage": "https://github.com/bytesfriends/rush-plugins#readme",
+  "bugs": {
+    "url": "https://github.com/bytesfriends/rush-plugins/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bytesfriends/rush-plugins.git",
+    "directory": "rush-plugins/rush-archive-project-plugin"
+  },
+  "license": "MIT",
+  "author": "Cheng Liu<chengcyber@outlook.com",
+  "main": "lib/index.js",
+  "bin": {
+    "rush-project-archiver": "lib/cli.js"
+  },
+  "scripts": {
+    "build": "heft build --clean",
+    "build:watch": "heft build --watch",
+    "prepublishOnly": "npm run build",
+    "test": "heft test"
+  },
+  "dependencies": {
+    "@microsoft/rush-lib": "5.57.1",
+    "@rushstack/node-core-library": "3.44.1",
+    "@rushstack/rush-sdk": "5.57.1",
+    "ora": "5.4.1",
+    "tar": "~6.1.11",
+    "yargs": "~17.3.0"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-config": "2.4.5",
+    "@rushstack/heft": "0.42.3",
+    "@rushstack/heft-jest-plugin": "~0.1.53",
+    "@rushstack/heft-node-rig": "1.2.31",
+    "@types/heft-jest": "1.0.1",
+    "@types/inquirer": "~8.1.3",
+    "@types/node": "12.20.24",
+    "@types/pacote": "~11.1.1",
+    "@types/tar": "~6.1.1",
+    "@types/yargs": "~17.0.7",
+    "eslint": "7.32.0",
+    "typescript": "4.4.2"
+  }
+}
