@@ -4,8 +4,14 @@
   "dictionaryDefinitions": [],
   "dictionaries": [],
   "words": [
+    "buildable",
+    "nonbrowser",
+    "noreply",
+    "npmjs",
+    "npmrc",
     "packument",
-    "pacote"
+    "pacote",
+    "subfolders"
   ],
   "ignoreWords": [],
   "import": []

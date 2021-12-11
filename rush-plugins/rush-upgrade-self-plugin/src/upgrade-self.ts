@@ -24,9 +24,9 @@ export const upgradeSelf = async (): Promise<void> => {
   if (!rushJsonPath) {
     throw new Error("Could not find rush.json");
   }
-  const monoRoot = path.dirname(rushJsonPath);
+  const monoRoot: string = path.dirname(rushJsonPath);
 
-  const rushJson = JsonFile.load(rushJsonPath);
+  const rushJson: any = JsonFile.load(rushJsonPath);
   const { rushVersion } = rushJson;
 
   const installRunNodeModuleFolder: string = path.join(
@@ -40,7 +40,9 @@ export const upgradeSelf = async (): Promise<void> => {
         modulePath: "@microsoft/rush-lib",
         baseFolderPath: installRunNodeModuleFolder,
       });
-      const rushLib = require(rushLibModulePath);
+      const rushLib: {
+        RushConfiguration: RushConfiguration;
+      } = require(rushLibModulePath);
       RushConfiguration = rushLib.RushConfiguration;
     } catch {
       throw new Error(
@@ -50,7 +52,9 @@ export const upgradeSelf = async (): Promise<void> => {
   } else {
     // try {
     // global require
-    const rushLib = require("@microsoft/rush-lib");
+    const rushLib: {
+      RushConfiguration: RushConfiguration;
+    } = require("@microsoft/rush-lib");
     RushConfiguration = rushLib.RushConfiguration;
     // } catch {}
   }
@@ -73,7 +77,7 @@ export const upgradeSelf = async (): Promise<void> => {
   let versions: Packument["versions"] | undefined;
   try {
     const { packument } = await import("pacote");
-    const info = await packument("@microsoft/rush", {
+    const info: Packument = await packument("@microsoft/rush", {
       preferOnline: true,
     });
     versions = info.versions;
@@ -81,12 +85,12 @@ export const upgradeSelf = async (): Promise<void> => {
     throw new Error("Failed to get versions of @microsoft/rush");
   }
 
-  type Answer = {
+  interface IAnswer {
     version: string;
-  };
+  }
 
   const { prompt } = await import("inquirer");
-  const answer: Answer = await prompt<Answer>({
+  const answer: IAnswer = await prompt<IAnswer>({
     type: "list",
     name: "version",
     message: "Pick up a target version",
@@ -115,9 +119,10 @@ export const upgradeSelf = async (): Promise<void> => {
   spinner.succeed(`Updated rush.json from ${oldVersion} to ${targetVersion}`);
 
   spinner = ora("Scanning for package.json files...").start();
+  // eslint-disable-next-line @typescript-eslint/typedef
   const fg = await import("fast-glob");
 
-  const allPackageJsonFiles = fg.sync(["**/package.json"], {
+  const allPackageJsonFiles: string[] = fg.sync(["**/package.json"], {
     cwd: monoRoot,
     ignore: ["node_modules/**", "**/node_modules/**", "**/temp/**"],
     absolute: true,
@@ -138,11 +143,11 @@ export const upgradeSelf = async (): Promise<void> => {
     }
   }
 
-  const changedPackageJsonFileSet = new Set<string>();
+  const changedPackageJsonFileSet: Set<string> = new Set<string>();
   for (const pkgJsonFile of allPackageJsonFiles) {
     try {
-      const json = JsonFile.load(pkgJsonFile);
-      let changed = false;
+      const json: any = JsonFile.load(pkgJsonFile);
+      let changed: boolean = false;
       for (const [pkgName, pkgVersion] of Object.entries(depVersionMap)) {
         if (json.dependencies && json.dependencies[pkgName]) {
           json.dependencies[pkgName] = pkgVersion;
@@ -173,8 +178,8 @@ export const upgradeSelf = async (): Promise<void> => {
 
   for (const packageJsonFile of changedPackageJsonFileSet) {
     if (packageJsonFile.includes("common/autoinstallers")) {
-      const autoinstallerFolder = path.dirname(packageJsonFile);
-      const autoinstallerName = path.basename(autoinstallerFolder);
+      const autoinstallerFolder: string = path.dirname(packageJsonFile);
+      const autoinstallerName: string = path.basename(autoinstallerFolder);
       spinner = ora(`Updating autoinstaller ${autoinstallerName}`).start();
       try {
         Executable.spawnSync("node", [
@@ -190,11 +195,11 @@ export const upgradeSelf = async (): Promise<void> => {
     }
   }
 
-  type ShouldRunRushUpdateAnswer = {
+  interface IShouldRunRushUpdateAnswer {
     shouldRunRushUpdate: boolean;
-  };
+  }
 
-  const { shouldRunRushUpdate } = await prompt<ShouldRunRushUpdateAnswer>([
+  const { shouldRunRushUpdate } = await prompt<IShouldRunRushUpdateAnswer>([
     {
       type: "confirm",
       name: "shouldRunRushUpdate",
