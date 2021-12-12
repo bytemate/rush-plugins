@@ -1,0 +1,17 @@
+{
+  "name": "rush-archive-project-plugin",
+  "entries": [
+    {
+      "version": "0.1.0",
+      "tag": "rush-archive-project-plugin_v0.1.0",
+      "date": "Sun, 12 Dec 2021 14:29:03 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "unarchive first implementation"
+          }
+        ]
+      }
+    }
+  ]
+}
