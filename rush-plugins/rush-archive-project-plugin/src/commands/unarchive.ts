@@ -45,7 +45,7 @@ export async function unarchive({
     );
   }
   spinner = ora(`Extracting ${tarballName}`).start();
-  // tar xf <package_name>.tar.gz -C
+  // tar xf <package_name>.tar.gz
   const extractWorkingFolder: string = path.join(
     tarballFolder,
     packageName.replace("/", "!")
@@ -78,7 +78,7 @@ export async function unarchive({
   });
   spinner.succeed();
 
-  // add to rush config
+  // resume project configuration to rush.json
   spinner = ora(`Resuming project configuration to rush.json`).start();
   const rawRushJson: JsonObject = JsonFile.load(rushConfiguration.rushJsonFile);
   rawRushJson.projects.push(projectConfig);

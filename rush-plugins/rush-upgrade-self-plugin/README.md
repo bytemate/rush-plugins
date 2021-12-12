@@ -8,7 +8,7 @@ Rush.js >= 5.57.0
 
 # Usage
 
-1. Create a autoinstaller
+1. Create an autoinstaller
 
 > NOTE: you can also reuse a existing autoinstaller. If so, skip this step.
 

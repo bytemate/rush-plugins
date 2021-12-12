@@ -55,8 +55,8 @@ export async function archive({ packageName }: IArchiveConfig): Promise<void> {
   projectMetadata.save(projectMetadataFilepath);
   spinner.succeed(`Created metadata.json for ${projectRelativeFolder}`);
 
-  // tar -czf <unscopedPackageName>.tgz
-  spinner = ora(`Creating archive for ${projectRelativeFolder}`).start();
+  // create archive tarball
+  spinner = ora(`Creating tarball for ${projectRelativeFolder}`).start();
   const { tarballRelativeFolder, tarballFolder, tarballName } =
     getGraveyardInfo({
       monoRoot,
@@ -64,7 +64,7 @@ export async function archive({ packageName }: IArchiveConfig): Promise<void> {
     });
   FileSystem.ensureFolder(tarballFolder);
   try {
-    //tar -czvf test.tar.gz -C project_relative_folder .
+    //tar -czf test.tar.gz -C project_relative_folder .
     tar.create(
       {
         gzip: true,
@@ -77,16 +77,16 @@ export async function archive({ packageName }: IArchiveConfig): Promise<void> {
   } catch (e: any) {
     throw new Error(`Failed to create tarball: ${e.message}`);
   }
-  spinner.succeed(`Created archive for ${projectRelativeFolder}`);
+  spinner.succeed(`Created tarball for ${projectRelativeFolder}`);
 
   // move the tarball to the graveyard folder
-  spinner = ora(`Moving archive to ${tarballRelativeFolder}`).start();
+  spinner = ora(`Moving tarball to ${tarballRelativeFolder}`).start();
   const finalTarballPath: string = path.join(tarballFolder, tarballName);
   FileSystem.move({
     sourcePath: tarballName,
     destinationPath: finalTarballPath,
   });
-  spinner.succeed(`Moved archive to ${tarballRelativeFolder}`);
+  spinner.succeed(`Moved tarball to ${tarballRelativeFolder}`);
 
   // check if the tarball is ignored by git
   spinner = ora(`Checking if tarball is ignored by git`).start();
