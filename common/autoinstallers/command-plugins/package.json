@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "rush-archive-project-plugin": "file:../../../rush-plugins/rush-archive-project-plugin",
     "rush-upgrade-self-plugin": "file:../../../rush-plugins/rush-upgrade-self-plugin"
   }
 }
