@@ -25,6 +25,7 @@ export async function archive({ packageName }: IArchiveConfig): Promise<void> {
   if (!rushConfiguration) {
     throw new Error("Could not load rush configuration");
   }
+  const monoRoot: string = rushConfiguration.rushJsonFolder;
   const project: RushConfigurationProject | undefined =
     rushConfiguration.getProjectByName(packageName);
   if (!project) {
@@ -58,20 +59,20 @@ export async function archive({ packageName }: IArchiveConfig): Promise<void> {
   spinner = ora(`Creating archive for ${projectRelativeFolder}`).start();
   const { tarballRelativeFolder, tarballFolder, tarballName } =
     getGraveyardInfo({
-      monoRoot: rushConfiguration.rushJsonFolder,
-      projectRelativeFolder,
+      monoRoot,
       packageName,
     });
   FileSystem.ensureFolder(tarballFolder);
   try {
+    //tar -czvf test.tar.gz -C project_relative_folder .
     tar.create(
       {
         gzip: true,
         file: tarballName,
         sync: true,
-        portable: true,
+        cwd: projectFolder,
       },
-      [projectFolder]
+      ["."]
     );
   } catch (e: any) {
     throw new Error(`Failed to create tarball: ${e.message}`);

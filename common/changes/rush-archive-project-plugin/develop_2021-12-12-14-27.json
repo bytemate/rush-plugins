@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-archive-project-plugin",
+      "comment": "unarchive first implementation",
+      "type": "minor"
+    }
+  ],
+  "packageName": "rush-archive-project-plugin"
+}
