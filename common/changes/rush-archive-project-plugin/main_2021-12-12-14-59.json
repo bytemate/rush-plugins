@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-archive-project-plugin",
+      "comment": "improve cli logging",
+      "type": "major"
+    }
+  ],
+  "packageName": "rush-archive-project-plugin"
+}
