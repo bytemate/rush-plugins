@@ -59,7 +59,7 @@ And `rush unarchive-project --package-name <package_name>` to unarchive a projec
 6. remove project config to `rush.json`
 7. delete project folder
 
-# how unarchive works
+# How unarchive works
 
 1. extract tarball by `packageName`
 2. run std like `tar xf <package_name>.tar.gz` to extract tarball
