@@ -2,6 +2,13 @@
 
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
+import {
+  Colors,
+  Terminal,
+  ConsoleTerminalProvider,
+} from "@rushstack/node-core-library";
+
+const terminal: Terminal = new Terminal(new ConsoleTerminalProvider());
 
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
 main();
@@ -21,8 +28,13 @@ async function main(): Promise<void> {
       },
       async (argv) => {
         const { archive } = await import("./commands/archive");
-        await archive(argv);
-        console.log("Archive ALL DONE!");
+        try {
+          await archive(argv);
+          terminal.writeLine(Colors.green("Archive ALL DONE!"));
+        } catch (e: any) {
+          terminal.writeErrorLine(`Archive FAILED: ${e.message}`);
+          process.exit(1);
+        }
       }
     )
     .command(
@@ -38,8 +50,13 @@ async function main(): Promise<void> {
       },
       async (argv) => {
         const { unarchive } = await import("./commands/unarchive");
-        await unarchive(argv);
-        console.log("Unarchive ALL DONE!");
+        try {
+          await unarchive(argv);
+          terminal.writeLine(Colors.green("Unarchive ALL DONE!"));
+        } catch (e: any) {
+          terminal.writeErrorLine(`Unarchive FAILED: ${e.message}`);
+          process.exit(1);
+        }
       }
     )
     .demandCommand(1, "You need at least one command before moving on")
