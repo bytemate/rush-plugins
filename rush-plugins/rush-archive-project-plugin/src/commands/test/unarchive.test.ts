@@ -1,6 +1,6 @@
 import * as path from "path";
 import { Executable } from "@rushstack/node-core-library";
-import { archive } from "../archive";
+import { unarchive } from "../unarchive";
 import { graveyardRelativeFolder } from "../../logic/graveyard";
 
 const folderSet = new Set<string>();
@@ -16,16 +16,16 @@ const resume = (folders: string[]) => {
   }
 };
 
-describe("archive", () => {
+describe("unarchive", () => {
   afterAll(() => {
     resume(Array.from(folderSet));
   });
 
-  describe("archive basic", () => {
+  describe("unarchive basic", () => {
     const fixtureMonorepoPath = path.join(
       __dirname,
       "../../../",
-      "fixtures/monorepo-1"
+      "fixtures/monorepo-2"
     );
     const fixtureMonorepoGraveyardPath = path.join(
       fixtureMonorepoPath,
@@ -33,6 +33,7 @@ describe("archive", () => {
     );
     folderSet.add(fixtureMonorepoPath);
     folderSet.add(fixtureMonorepoGraveyardPath);
+
     beforeEach(() => {
       jest.spyOn(process, "cwd").mockReturnValue(fixtureMonorepoPath);
     });
@@ -40,20 +41,22 @@ describe("archive", () => {
       jest.resetAllMocks();
     });
 
-    it("should not work with non existing package name", async () => {
+    it("should not work with no existing package name", async () => {
       const packageName = "non-exist";
       await expect(
-        archive({
+        unarchive({
           packageName,
         })
-      ).rejects.toThrow(`Could not find project with name ${packageName}`);
+      ).rejects.toThrow(
+        `Could not find tarball ${packageName}.tar.gz for package name ${packageName}`
+      );
     });
 
     describe("fixture monorepo", () => {
       it("should work with fixture demo", async () => {
         const packageName = "demo-project";
         await expect(
-          archive({
+          unarchive({
             packageName,
           })
         ).resolves.toBeUndefined();
@@ -61,11 +64,11 @@ describe("archive", () => {
     });
   });
 
-  describe("archive package with scope", () => {
+  describe("unarchive package with scope", () => {
     const fixtureMonorepoPath = path.join(
       __dirname,
       "../../../",
-      "fixtures/monorepo-3"
+      "fixtures/monorepo-4"
     );
     const fixtureMonorepoGraveyardPath = path.join(
       fixtureMonorepoPath,
@@ -79,11 +82,10 @@ describe("archive", () => {
     afterEach(() => {
       jest.resetAllMocks();
     });
-
     it("should work with scoped package @my-company/my-app", async () => {
       const packageName = "@my-company/my-app";
       await expect(
-        archive({
+        unarchive({
           packageName,
         })
       ).resolves.toBeUndefined();

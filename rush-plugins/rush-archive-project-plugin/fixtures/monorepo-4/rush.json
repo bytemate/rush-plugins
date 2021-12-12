@@ -1,0 +1,28 @@
+/**
+ * This is the main configuration file for Rush.
+ * For full documentation, please see https://rushjs.io
+ */
+{
+  /**
+   * (Required) This specifies the version of the Rush engine to be used in this repo.
+   * Rush's "version selector" feature ensures that the globally installed tool will
+   * behave like this release, regardless of which version is installed globally.
+   *
+   * The common/scripts/install-run-rush.js automation script also uses this version.
+   *
+   * NOTE: If you upgrade to a new major version of Rush, you should replace the "v5"
+   * path segment in the "$schema" field for all your Rush config files.  This will ensure
+   * correct error-underlining and tab-completion for editors such as VS Code.
+   */
+  "rushVersion": "5.57.1",
+  "pnpmVersion": "6.23.1",
+  "pnpmOptions": {
+    "useWorkspaces": true
+  },
+  "projects": [
+    {
+      "packageName": "@my-company/my-lib",
+      "projectFolder": "libraries/my-lib"
+    }
+  ]
+}
