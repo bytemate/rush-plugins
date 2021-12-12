@@ -29,7 +29,7 @@ export async function archive({ packageName }: IArchiveConfig): Promise<void> {
   const project: RushConfigurationProject | undefined =
     rushConfiguration.getProjectByName(packageName);
   if (!project) {
-    throw new Error(`Could not find project with name ${packageName}`);
+    throw new Error(`Could not find project with package name ${packageName}`);
   }
 
   const { projectFolder, projectRelativeFolder } = project;
