@@ -23,4 +23,8 @@ export class ProjectMetadata {
       }
     );
   }
+
+  public get projectConfig(): JsonObject {
+    return this._projectConfig;
+  }
 }
