@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-archive-project-plugin",
+      "comment": "update readme",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-archive-project-plugin"
+}

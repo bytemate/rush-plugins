@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-upgrade-self-plugin",
+      "comment": "update readme",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-upgrade-self-plugin"
+}
