@@ -1,12 +1,13 @@
 import { RushConfiguration } from "@microsoft/rush-lib"
 
-let rushConfiguration: RushConfiguration | undefined;
+const cwd2rushConfiguration: Record<string, RushConfiguration> = {};
 
-export const loadRushConfiguration = (): RushConfiguration => {
+export const loadRushConfiguration = (cwd: string = process.cwd()): RushConfiguration => {
+  let rushConfiguration: RushConfiguration | undefined = cwd2rushConfiguration[cwd];
   if (!rushConfiguration) {
     try {
       rushConfiguration = RushConfiguration.loadFromDefaultLocation({
-        startingFolder: process.cwd(),
+        startingFolder: cwd,
       });
     } catch {
       // no-catch
@@ -14,6 +15,7 @@ export const loadRushConfiguration = (): RushConfiguration => {
     if (!rushConfiguration) {
       throw new Error("Could not load rush configuration");
     }
+    cwd2rushConfiguration[cwd] = rushConfiguration;
   }
   return rushConfiguration;
 }
