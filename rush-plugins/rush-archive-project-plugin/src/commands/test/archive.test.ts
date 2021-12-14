@@ -46,7 +46,7 @@ describe("archive", () => {
         archive({
           packageName,
         })
-      ).rejects.toThrow(`Could not find project with name ${packageName}`);
+      ).rejects.toThrow(`Could not find project with package name ${packageName}`);
     });
 
     describe("fixture monorepo", () => {
