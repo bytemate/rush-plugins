@@ -1,0 +1,7 @@
+{
+  "name": "@my-company/my-app",
+  "version": "0.0.1",
+  "dependencies": {
+    "@my-company/my-lib": "workspace:*"
+  }
+}

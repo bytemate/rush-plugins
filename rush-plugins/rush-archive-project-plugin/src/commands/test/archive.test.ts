@@ -46,7 +46,9 @@ describe("archive", () => {
         archive({
           packageName,
         })
-      ).rejects.toThrow(`Could not find project with package name ${packageName}`);
+      ).rejects.toThrow(
+        `Could not find project with package name ${packageName}`
+      );
     });
 
     describe("fixture monorepo", () => {
@@ -87,6 +89,38 @@ describe("archive", () => {
           packageName,
         })
       ).resolves.toBeUndefined();
+    });
+  });
+
+  describe("archive package with dependent", () => {
+    const fixtureMonorepoPath = path.join(
+      __dirname,
+      "../../../",
+      "fixtures/monorepo-5"
+    );
+    const fixtureMonorepoGraveyardPath = path.join(
+      fixtureMonorepoPath,
+      graveyardRelativeFolder
+    );
+    folderSet.add(fixtureMonorepoPath);
+    folderSet.add(fixtureMonorepoGraveyardPath);
+    beforeEach(() => {
+      jest.spyOn(process, "cwd").mockReturnValue(fixtureMonorepoPath);
+    });
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
+
+    it("should not work with package has dependent", async () => {
+      const packageName = "@my-company/my-lib";
+      await expect(
+        archive({
+          packageName,
+        })
+      ).rejects.toThrowErrorMatchingInlineSnapshot(`
+              "Target project @my-company/my-lib is depended by other 1 project(s):
+              @my-company/my-app"
+            `);
     });
   });
 });
