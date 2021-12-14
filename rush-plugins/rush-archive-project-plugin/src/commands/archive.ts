@@ -23,6 +23,13 @@ export async function archive({ packageName }: IArchiveConfig): Promise<void> {
     throw new Error(`Could not find project with package name ${packageName}`);
   }
 
+  // check project is depended by other projects
+  const consumingProjectNames: string[] = Array.from(project.consumingProjects).map((x: RushConfigurationProject) => x.packageName);
+  if (consumingProjectNames.length) {
+    throw new Error(`Target project ${packageName} is depended by other ${consumingProjectNames.length} project(s):
+${consumingProjectNames.join(', ')}`)
+  }
+
   const { projectFolder, projectRelativeFolder } = project;
 
   // git clean -xdf
