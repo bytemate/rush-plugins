@@ -1,6 +1,14 @@
 # Change Log - rush-archive-project-plugin
 
-This log was last generated on Mon, 13 Dec 2021 00:58:24 GMT and should not be manually modified.
+This log was last generated on Tue, 14 Dec 2021 15:22:03 GMT and should not be manually modified.
+
+## 1.1.0
+Tue, 14 Dec 2021 15:22:03 GMT
+
+### Minor changes
+
+- Prompt user to run rush update after archive
+- Assert no consuming projects when archive
 
 ## 1.0.1
 Mon, 13 Dec 2021 00:58:24 GMT
