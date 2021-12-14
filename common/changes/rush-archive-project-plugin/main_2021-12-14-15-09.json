@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-archive-project-plugin",
+      "comment": "Prompt user to run rush update after archive",
+      "type": "minor"
+    }
+  ],
+  "packageName": "rush-archive-project-plugin"
+}
