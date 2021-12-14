@@ -21,6 +21,7 @@ importers:
       '@types/tar': ~6.1.1
       '@types/yargs': ~17.0.7
       eslint: 7.32.0
+      inquirer: ~8.2.0
       ora: 5.4.1
       tar: ~6.1.11
       typescript: 4.4.2
@@ -29,6 +30,7 @@ importers:
       '@microsoft/rush-lib': 5.57.1
       '@rushstack/node-core-library': 3.44.1
       '@rushstack/rush-sdk': 5.57.1
+      inquirer: 8.2.0
       ora: 5.4.1
       tar: 6.1.11
       yargs: 17.3.0

@@ -7,6 +7,7 @@ import {
   Terminal,
   ConsoleTerminalProvider,
 } from "@rushstack/node-core-library";
+import { promptRushUpdate } from "./logic/promptRushUpdate";
 
 const terminal: Terminal = new Terminal(new ConsoleTerminalProvider());
 
@@ -30,6 +31,9 @@ async function main(): Promise<void> {
         const { archive } = await import("./commands/archive");
         try {
           await archive(argv);
+          await promptRushUpdate({
+            terminal,
+          });
           terminal.writeLine(Colors.green("Archive ALL DONE!"));
         } catch (e: any) {
           terminal.writeErrorLine(`Archive FAILED: ${e.message}`);
@@ -52,6 +56,9 @@ async function main(): Promise<void> {
         const { unarchive } = await import("./commands/unarchive");
         try {
           await unarchive(argv);
+          await promptRushUpdate({
+            terminal
+          });
           terminal.writeLine(Colors.green("Unarchive ALL DONE!"));
         } catch (e: any) {
           terminal.writeErrorLine(`Unarchive FAILED: ${e.message}`);

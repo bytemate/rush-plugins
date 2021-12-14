@@ -7,24 +7,15 @@ import { gitCheckIgnored, gitFullClean } from "../logic/git";
 import { getGraveyardInfo } from "../logic/graveyard";
 import { ProjectMetadata } from "../logic/projectMetadata";
 import ora from "ora";
+import { loadRushConfiguration } from "../logic/rushConfiguration";
 
 interface IArchiveConfig {
   packageName: string;
 }
 
 export async function archive({ packageName }: IArchiveConfig): Promise<void> {
-  let rushConfiguration: RushConfiguration | undefined;
   let spinner: ora.Ora | undefined;
-  try {
-    rushConfiguration = RushConfiguration.loadFromDefaultLocation({
-      startingFolder: process.cwd(),
-    });
-  } catch {
-    // no-catch
-  }
-  if (!rushConfiguration) {
-    throw new Error("Could not load rush configuration");
-  }
+  const rushConfiguration: RushConfiguration = loadRushConfiguration();
   const monoRoot: string = rushConfiguration.rushJsonFolder;
   const project: RushConfigurationProject | undefined =
     rushConfiguration.getProjectByName(packageName);

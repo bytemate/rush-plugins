@@ -5,6 +5,7 @@ import ora from "ora";
 import { getGraveyardInfo } from "../logic/graveyard";
 import * as tar from "tar";
 import { ProjectMetadata } from "../logic/projectMetadata";
+import { loadRushConfiguration } from "../logic/rushConfiguration";
 
 export interface IUnarchiveConfig {
   packageName: string;
@@ -13,18 +14,8 @@ export interface IUnarchiveConfig {
 export async function unarchive({
   packageName,
 }: IUnarchiveConfig): Promise<void> {
-  let rushConfiguration: RushConfiguration | undefined;
   let spinner: ora.Ora | undefined;
-  try {
-    rushConfiguration = RushConfiguration.loadFromDefaultLocation({
-      startingFolder: process.cwd(),
-    });
-  } catch {
-    // no-catch
-  }
-  if (!rushConfiguration) {
-    throw new Error("Could not load rush configuration");
-  }
+  const rushConfiguration: RushConfiguration = loadRushConfiguration();
 
   // check if package name is existing
   if (rushConfiguration.getProjectByName(packageName)) {
