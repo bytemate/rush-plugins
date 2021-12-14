@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-archive-project-plugin",
+      "comment": "Assert no consuming projects when archive",
+      "type": "minor"
+    }
+  ],
+  "packageName": "rush-archive-project-plugin"
+}
