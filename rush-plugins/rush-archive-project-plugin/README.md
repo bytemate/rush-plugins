@@ -16,12 +16,13 @@ rush unarchive-project --package-name <your_package_name>
 # How archive works
 
 1. find project configuration via Rush.js, such as project folder
-2. `git clean -xdf` under project folder
-3. record project configuration into `rush-metadata.json` file
-4. run sth like `tar -czf <unscoped_package_name>.tar.gz -C <project_folder> .` to create a tarball
-5. move tarball to `common/_graveyard` folder
-6. remove project config to `rush.json`
-7. delete project folder
+2. check whether there are projects depends on target project
+3. `git clean -xdf` under project folder
+4. record project configuration into `rush-metadata.json` file
+5. run sth like `tar -czf <unscoped_package_name>.tar.gz -C <project_folder> .` to create a tarball
+6. move tarball to `common/_graveyard` folder
+7. remove project config to `rush.json`
+8. delete project folder
 
 # How unarchive works
 
