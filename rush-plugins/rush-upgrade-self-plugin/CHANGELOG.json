@@ -2,6 +2,18 @@
   "name": "rush-upgrade-self-plugin",
   "entries": [
     {
+      "version": "1.0.5",
+      "tag": "rush-upgrade-self-plugin_v1.0.5",
+      "date": "Thu, 16 Dec 2021 16:10:36 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Update @rushstack/rush-sdk version as well"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.0.4",
       "tag": "rush-upgrade-self-plugin_v1.0.4",
       "date": "Mon, 13 Dec 2021 00:58:24 GMT",
