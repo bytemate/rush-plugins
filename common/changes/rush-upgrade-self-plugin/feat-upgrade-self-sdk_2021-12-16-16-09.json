@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-upgrade-self-plugin",
+      "comment": "Update @rushstack/rush-sdk version as well",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-upgrade-self-plugin"
+}
