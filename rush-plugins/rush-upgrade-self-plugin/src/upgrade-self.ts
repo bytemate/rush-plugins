@@ -134,7 +134,9 @@ export const upgradeSelf = async (): Promise<void> => {
     "Updating Rush.js related dependencies in package.json files..."
   ).start();
 
-  const depVersionMap: Record<string, string> = {};
+  const depVersionMap: Record<string, string> = {
+    "@rushstack/rush-sdk": targetVersion,
+  };
   for (const [k, v] of Object.entries<string>(
     versions[targetVersion]!.dependencies!
   )) {
