@@ -1,0 +1,17 @@
+{
+  "name": "rush-init-project-plugin",
+  "entries": [
+    {
+      "version": "0.0.2",
+      "tag": "rush-init-project-plugin_v0.0.2",
+      "date": "Fri, 24 Dec 2021 14:54:41 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "first impl"
+          }
+        ]
+      }
+    }
+  ]
+}
