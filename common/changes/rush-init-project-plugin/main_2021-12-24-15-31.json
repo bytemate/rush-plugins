@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-init-project-plugin",
+      "comment": "Update package.json",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-init-project-plugin"
+}
