@@ -40,6 +40,8 @@ After you answer some simple questions, files under `common/_templates/<template
 
 # How it works
 
+The whole CLI is based on [node-plop](https://www.npmjs.com/package/plop)
+
 All files under `common/_templates/<template_name>` are template source code. And, all template source code will be rendered by handlebars. i.e. variables like `{{ packageName }}` in file content will be expanded to your package name.
 
 Current available tokens are `packageName`, `unscopedPackageName`, `projectFolder`, `authorName`.
