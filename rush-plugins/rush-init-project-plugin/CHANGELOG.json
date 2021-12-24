@@ -2,6 +2,18 @@
   "name": "rush-init-project-plugin",
   "entries": [
     {
+      "version": "0.0.5",
+      "tag": "rush-init-project-plugin_v0.0.5",
+      "date": "Fri, 24 Dec 2021 15:37:38 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Update readme"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.0.4",
       "tag": "rush-init-project-plugin_v0.0.4",
       "date": "Fri, 24 Dec 2021 15:31:53 GMT",
