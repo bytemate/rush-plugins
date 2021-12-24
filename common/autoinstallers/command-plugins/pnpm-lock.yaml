@@ -2,10 +2,12 @@ lockfileVersion: 5.3
 
 specifiers:
   rush-archive-project-plugin: 1.1.1
+  rush-init-project-plugin: file:../../../rush-plugins/rush-init-project-plugin
   rush-upgrade-self-plugin: 1.0.5
 
 dependencies:
   rush-archive-project-plugin: 1.1.1
+  rush-init-project-plugin: link:../../../rush-plugins/rush-init-project-plugin
   rush-upgrade-self-plugin: 1.0.5
 
 packages:

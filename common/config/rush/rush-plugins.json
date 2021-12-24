@@ -22,14 +22,19 @@
     //   "autoinstallerName": "plugins"
     // }
     // {
-    //   "packageName": "rush-archive-project-plugin",
-    //   "pluginName": "rush-archive-project-plugin",
+    //   "packageName": "rush-init-project-plugin",
+    //   "pluginName": "rush-init-project-plugin",
     //   "autoinstallerName": "command-plugins" // the name of autoinstaller you created before
     // },
-    // {
-    //   "packageName": "rush-upgrade-self-plugin",
-    //   "pluginName": "rush-upgrade-self-plugin",
-    //   "autoinstallerName": "command-plugins" // the name of autoinstaller you created before
-    // }
+    {
+      "packageName": "rush-archive-project-plugin",
+      "pluginName": "rush-archive-project-plugin",
+      "autoinstallerName": "command-plugins" // the name of autoinstaller you created before
+    },
+    {
+      "packageName": "rush-upgrade-self-plugin",
+      "pluginName": "rush-upgrade-self-plugin",
+      "autoinstallerName": "command-plugins" // the name of autoinstaller you created before
+    }
   ]
 }
