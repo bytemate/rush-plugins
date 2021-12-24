@@ -1,0 +1,53 @@
+{
+  "name": "rush-init-project-plugin",
+  "version": "0.0.1",
+  "description": "Rush plugin for initialize project in monorepo",
+  "keywords": [
+    "rush",
+    "plugin",
+    "init",
+    "project"
+  ],
+  "homepage": "https://github.com/bytesfriends/rush-plugins/rush-plugins/rush-init-project-plugin#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bytesfriends/rush-plugins",
+    "directory": "rush-plugins/rush-init-project-plugin"
+  },
+  "license": "MIT",
+  "author": "liucheng.leo",
+  "main": "lib/index.js",
+  "bin": {
+    "rush-init-project": "lib/cli.js"
+  },
+  "scripts": {
+    "build": "heft build --clean",
+    "build:watch": "heft build --watch",
+    "prepublishOnly": "npm run build",
+    "test": "heft test"
+  },
+  "dependencies": {
+    "@microsoft/rush-lib": "5.57.1",
+    "@rushstack/node-core-library": "3.44.1",
+    "@rushstack/rush-sdk": "5.57.1",
+    "chalk": "4.1.2",
+    "handlebars-helpers": "~0.10.0",
+    "inquirer": "~8.2.0",
+    "inquirer-autocomplete-prompt": "~1.4.0",
+    "node-plop": "0.26.3",
+    "ora": "5.4.1",
+    "sort-package-json": "~1.53.1",
+    "tapable": "~2.2.1",
+    "validate-npm-package-name": "~3.0.0"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-config": "2.4.5",
+    "@rushstack/heft": "0.42.3",
+    "@rushstack/heft-node-rig": "1.2.31",
+    "@types/heft-jest": "1.0.1",
+    "@types/inquirer": "~8.1.3",
+    "@types/node": "12.20.24",
+    "eslint": "7.32.0",
+    "typescript": "4.4.2"
+  }
+}

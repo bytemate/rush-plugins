@@ -449,6 +449,12 @@
     //   "reviewCategory": "tools"
     // }
     {
+      "packageName": "rush-init-project-plugin",
+      "projectFolder": "rush-plugins/rush-init-project-plugin",
+      "reviewCategory": "rush-plugins",
+      "shouldPublish": true
+    },
+    {
       "packageName": "rush-archive-project-plugin",
       "projectFolder": "rush-plugins/rush-archive-project-plugin",
       "reviewCategory": "rush-plugins",
