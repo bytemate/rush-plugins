@@ -1,6 +1,6 @@
 # rush-init-project-plugin
 
-Rush plugin for upgrade Rush.js itself in monorepo.
+Rush plugin for initialize project in monorepo
 
 # Prerequisite
 
