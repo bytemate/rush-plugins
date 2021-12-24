@@ -7,7 +7,7 @@
     "plugin",
     "command"
   ],
-  "homepage": "https://github.com/bytesfriends/rush-plugins/{{ projectFolder }}#readme",
+  "homepage": "https://github.com/bytesfriends/rush-plugins#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/bytesfriends/rush-plugins",

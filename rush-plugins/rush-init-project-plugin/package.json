@@ -5,10 +5,11 @@
   "keywords": [
     "rush",
     "plugin",
+    "command",
     "init",
     "project"
   ],
-  "homepage": "https://github.com/bytesfriends/rush-plugins/rush-plugins/rush-init-project-plugin#readme",
+  "homepage": "https://github.com/bytesfriends/rush-plugins#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/bytesfriends/rush-plugins",
