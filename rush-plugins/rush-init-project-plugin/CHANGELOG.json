@@ -2,6 +2,18 @@
   "name": "rush-init-project-plugin",
   "entries": [
     {
+      "version": "0.1.0",
+      "tag": "rush-init-project-plugin_v0.1.0",
+      "date": "Sun, 26 Dec 2021 11:48:25 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add configuration and plugin system"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.0.5",
       "tag": "rush-init-project-plugin_v0.0.5",
       "date": "Fri, 24 Dec 2021 15:37:38 GMT",
