@@ -42,7 +42,9 @@ After you answer some simple questions, files under `common/_templates/<template
 
 The whole CLI is based on [node-plop](https://www.npmjs.com/package/plop)
 
-All files under `common/_templates/<template_name>` are template source code. And, all template source code will be rendered by handlebars. i.e. variables like `{{ packageName }}` in file content will be expanded to your package name.
+All directory under `common/_templates/<template_name>` are template source code, except those who prefixes with `_`. For instance folder named `_internal` is treated as internal folder not template folder.
+
+After template is chosen, all template source code will be rendered by handlebars. i.e. variables like `{{ packageName }}` in file content will be expanded to your package name.
 
 Current available tokens are `packageName`, `unscopedPackageName`, `projectFolder`, `authorName`.
 
@@ -87,9 +89,13 @@ After rush update, `rush-plugin-manifest.json` and `command-line.json` will be s
 
 All done! You can run `rush init-project` now!
 
-# RoadMap
+# Advance Usage
 
-- [ ] Plugin system when initialize project
+Kind of boring in a template way?
+
+You can create a configuration file to extend initialization process.
+
+See [HERE](./docs/init_project_configuration.md) for detail.
 
 # LICENSE
 

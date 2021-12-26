@@ -9,6 +9,7 @@ module.exports = {
   parserOptions: { tsconfigRootDir: __dirname },
   ignorePatterns: ["node_modules/", "lib/"],
   rules: {
+    "@rushstack/no-new-null": "off",
     "@typescript-eslint/no-explicit-any": "off",
   },
 };

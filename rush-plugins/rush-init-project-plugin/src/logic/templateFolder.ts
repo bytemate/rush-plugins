@@ -2,43 +2,51 @@ import * as path from "path";
 import { FileSystem } from "@rushstack/node-core-library";
 import { loadRushConfiguration } from "./loadRushConfiguration";
 
-const templateFolder2templateNameList: Record<string, string[]> = {};
+const templatesFolder2templateNameList: Record<string, string[]> = {};
 
-export const getTemplateFolder = (): string => {
+export const getTemplatesFolder = (): string => {
   const { commonFolder } = loadRushConfiguration();
-  const templateFolder: string = path.join(commonFolder, "_templates");
-  return templateFolder;
+  const templatesFolder: string = path.join(commonFolder, "_templates");
+  return templatesFolder;
 };
 
-export const getTemplateFolderAndValidate = (): string => {
-  const templateFolder: string = getTemplateFolder();
-  if (!FileSystem.exists(templateFolder)) {
-    FileSystem.ensureFolder(templateFolder);
+export const getTemplatesFolderAndValidate = (): string => {
+  const templatesFolder: string = getTemplatesFolder();
+  if (!FileSystem.exists(templatesFolder)) {
+    FileSystem.ensureFolder(templatesFolder);
     throw new Error(
-      `Template folder created, please setup template under "${templateFolder}"`
+      `Templates folder created, please setup template under "${templatesFolder}"`
     );
   }
 
-  const templateNameList: string[] = getTemplateNameList(templateFolder);
+  const templateNameList: string[] = getTemplateNameList(templatesFolder);
   if (templateNameList.length === 0) {
-    throw new Error(`Please setup template under ${templateFolder}`);
+    throw new Error(`Please setup template under ${templatesFolder}`);
   }
 
-  return templateFolder;
+  return templatesFolder;
 };
 
-export function getTemplateNameList(templateFolder: string): string[] {
+export function getTemplateNameList(templatesFolder: string): string[] {
   let templateNameList: string[] =
-    templateFolder2templateNameList[templateFolder];
+    templatesFolder2templateNameList[templatesFolder];
   if (!templateNameList) {
-    templateNameList = FileSystem.readFolder(templateFolder).filter(
-      (filename: string) => {
+    templateNameList = FileSystem.readFolder(templatesFolder)
+      .filter((filename: string) => {
         return FileSystem.getStatistics(
-          path.resolve(templateFolder, filename)
+          path.resolve(templatesFolder, filename)
         ).isDirectory();
-      }
-    );
-    templateFolder2templateNameList[templateFolder] = templateNameList;
+      })
+      .filter((filename: string) => {
+        return !filename.startsWith("_");
+      });
+    templatesFolder2templateNameList[templatesFolder] = templateNameList;
   }
   return templateNameList;
+}
+
+export function getTemplateFolder(template: string): string {
+  const templatesFolder: string = getTemplatesFolder();
+  const templateFolder: string = path.join(templatesFolder, template);
+  return templateFolder;
 }

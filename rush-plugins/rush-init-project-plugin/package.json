@@ -18,6 +18,7 @@
   "license": "MIT",
   "author": "liucheng.leo",
   "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
   "bin": {
     "rush-init-project": "lib/cli.js"
   },
@@ -35,10 +36,12 @@
     "handlebars-helpers": "~0.10.0",
     "inquirer": "~8.2.0",
     "inquirer-autocomplete-prompt": "~1.4.0",
+    "lilconfig": "~2.0.4",
     "node-plop": "0.26.3",
     "ora": "5.4.1",
     "sort-package-json": "~1.53.1",
     "tapable": "~2.2.1",
+    "ts-node": "~10.4.0",
     "validate-npm-package-name": "~3.0.0"
   },
   "devDependencies": {

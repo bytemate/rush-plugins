@@ -1,5 +1,6 @@
 import { RushConfiguration } from "@microsoft/rush-lib";
 import { FileSystem, PackageName } from "@rushstack/node-core-library";
+import hbsHelpersLib from "handlebars-helpers/lib";
 import { Answers, Inquirer } from "inquirer";
 import autocompletePlugin from "inquirer-autocomplete-prompt";
 import type {
@@ -9,24 +10,29 @@ import type {
   PromptQuestion,
 } from "node-plop";
 import * as path from "path";
+import type { SyncHook } from "tapable";
 import validatePackageName from "validate-npm-package-name";
-import hbsHelpersLib from "handlebars-helpers/lib";
 import { addProjectToRushJson } from "./actions/addProjectToRushJson";
 import { runRushUpdate } from "./actions/rushRushUpdate";
 import { sortPackageJson } from "./actions/sortPackageJson";
 import { IHooks, initHooks } from "./hooks";
 import { loadRushConfiguration } from "./logic/loadRushConfiguration";
-import { TemplateConfiguration } from "./logic/TemplateConfiguration";
-import { getTemplateFolder, getTemplateNameList } from "./logic/templateFolder";
+import {
+  IPluginContext,
+  TemplateConfiguration,
+} from "./logic/TemplateConfiguration";
+import {
+  getTemplateNameList,
+  getTemplatesFolder,
+} from "./logic/templateFolder";
 
-interface IExtendedAnswers extends Answers {
+export interface IExtendedAnswers extends Answers {
   template: string;
   packageName: string;
   unscopedPackageName: string;
   projectFolder: string;
   shouldRunRushUpdate: boolean;
 }
-interface IPluginContext extends Record<string, any> {}
 
 export default function (plop: NodePlopAPI): void {
   const rushConfiguration: RushConfiguration = loadRushConfiguration();
@@ -42,8 +48,8 @@ export default function (plop: NodePlopAPI): void {
   registerActions(plop);
   registerHelpers(plop);
 
-  const templateFolder: string = getTemplateFolder();
-  const templateNameList: string[] = getTemplateNameList(templateFolder);
+  const templatesFolder: string = getTemplatesFolder();
+  const templateNameList: string[] = getTemplateNameList(templatesFolder);
   const templateChoices: { name: string; value: string }[] =
     templateNameList.map((x) => ({
       name: x,
@@ -128,6 +134,23 @@ export default function (plop: NodePlopAPI): void {
     let allAnswers: Partial<IExtendedAnswers> = {};
     while (promptQueue.length > 0) {
       const currentPrompt: PromptQuestion = promptQueue.shift()!;
+
+      const hookForCurrentPrompt:
+        | SyncHook<
+            [PromptQuestion, Partial<IExtendedAnswers>],
+            null | undefined
+          >
+        | undefined = hooks.promptQuestion.get(currentPrompt.name);
+      if (hookForCurrentPrompt) {
+        const hookResult: null | undefined = hookForCurrentPrompt.call(
+          currentPrompt,
+          allAnswers
+        );
+        // hook can return null to skip the prompt
+        if (hookResult === null) {
+          continue;
+        }
+      }
       const currentAnswers: Partial<IExtendedAnswers> = await inquirer.prompt(
         [currentPrompt],
         allAnswers
@@ -146,14 +169,9 @@ export default function (plop: NodePlopAPI): void {
           plugin.apply(hooks, pluginContext);
         }
         hooks.plop.call(plop);
-        const promptsFromHook: PromptQuestion[] = [];
         await hooks.prompts.promise({
-          prompts: promptsFromHook,
           promptQueue,
         });
-        for (const promptFromHook of promptsFromHook) {
-          promptQueue.push(promptFromHook);
-        }
       }
 
       // merge answers
@@ -171,8 +189,8 @@ export default function (plop: NodePlopAPI): void {
     actions: (answer) => {
       const { template, projectFolder } = answer as IExtendedAnswers;
 
-      const templateFolder: string = getTemplateFolder();
-      const baseFolder: string = path.join(templateFolder, template);
+      const templatesFolder: string = getTemplatesFolder();
+      const baseFolder: string = path.join(templatesFolder, template);
 
       const actions: ActionType[] = isDryRun
         ? []
@@ -181,7 +199,7 @@ export default function (plop: NodePlopAPI): void {
               type: "addMany",
               destination: path.resolve(monorepoRoot, projectFolder),
               base: baseFolder,
-              templateFiles: [`${templateFolder}/**/*`, "!init.config.ts"],
+              templateFiles: [`**/*`, "!init.config.ts", "!init.config.js"],
               data: answer,
             },
             {

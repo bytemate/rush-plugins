@@ -1737,7 +1737,7 @@ packages:
       dir-glob: 3.0.1
       fast-glob: 3.2.7
       glob: 7.2.0
-      ignore: 5.1.9
+      ignore: 5.2.0
       merge2: 1.4.1
       slash: 3.0.0
     dev: false
@@ -1751,7 +1751,7 @@ packages:
       dir-glob: 3.0.1
       fast-glob: 3.2.7
       glob: 7.2.0
-      ignore: 5.1.9
+      ignore: 5.2.0
       merge2: 1.4.1
       slash: 3.0.0
     dev: false
@@ -2018,6 +2018,11 @@ packages:
 
   /ignore/5.1.9:
     resolution: {integrity: sha512-2zeMQpbKz5dhZ9IwL0gbxSW5w0NK/MSAMtNuhgIHEPmaU3vPdKPL0UdvUCXs5SS4JAwsBxysK5sFMW8ocFiVjQ==}
+    engines: {node: '>= 4'}
+    dev: false
+
+  /ignore/5.2.0:
+    resolution: {integrity: sha512-CmxgYGiEPCLhfLnpPp1MoRmifwEIOgjcHXxOBjv7mY96c+eWScsOP9c112ZyLdWHi0FxHjI+4uVhKYp/gcdRmQ==}
     engines: {node: '>= 4'}
     dev: false
 
@@ -2843,7 +2848,7 @@ packages:
       isbinaryfile: 4.0.8
       lodash.get: 4.4.2
       mkdirp: 0.5.5
-      resolve: 1.17.0
+      resolve: 1.20.0
     dev: false
 
   /nopt/5.0.0:
@@ -3354,6 +3359,13 @@ packages:
   /resolve/1.17.0:
     resolution: {integrity: sha512-ic+7JYiV8Vi2yzQGFWOkiZD5Z9z7O2Zhm9XMaTxdJExKasieFCr+yXZ/WmXsckHiKl12ar0y6XiXDx3m4RHn1w==}
     dependencies:
+      path-parse: 1.0.7
+    dev: false
+
+  /resolve/1.20.0:
+    resolution: {integrity: sha512-wENBPt4ySzg4ybFQW2TT1zMQucPK95HSh/nq2CFTZVOGut2+pQvSsgtda4d26YrYcr067wjbmzOG8byDPBX63A==}
+    dependencies:
+      is-core-module: 2.8.0
       path-parse: 1.0.7
     dev: false
 

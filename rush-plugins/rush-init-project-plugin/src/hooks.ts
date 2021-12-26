@@ -1,13 +1,18 @@
 import type { Answers } from "inquirer";
 import type { ActionType, NodePlopAPI, PromptQuestion } from "node-plop";
-import { AsyncSeriesHook, SyncHook } from "tapable";
+import { AsyncSeriesHook, HookMap, SyncHook } from "tapable";
 
-interface IPromptsHookParams {
-  prompts: PromptQuestion[];
+export interface IPromptsHookParams {
+  /**
+   * The queue of prompt question. and question will be prompt to use in sequence order
+   */
   promptQueue: PromptQuestion[];
 }
 
-interface IActionsHookParams {
+export interface IActionsHookParams {
+  /**
+   * A list of plop action. These actions will be registered into plop
+   */
   actions: ActionType[];
 }
 
@@ -16,6 +21,9 @@ export interface IHooks {
   actions: SyncHook<IActionsHookParams>;
   answers: AsyncSeriesHook<Answers>;
   plop: SyncHook<NodePlopAPI>;
+  promptQuestion: HookMap<
+    SyncHook<[PromptQuestion, Answers], null | undefined>
+  >;
 }
 
 export const initHooks = (): IHooks => {
@@ -24,5 +32,12 @@ export const initHooks = (): IHooks => {
     answers: new AsyncSeriesHook<Answers>(["answers"]),
     actions: new SyncHook<IActionsHookParams>(["actionsHookParams"]),
     plop: new SyncHook<NodePlopAPI>(["plop"]),
+    promptQuestion: new HookMap(
+      (key: string) =>
+        new SyncHook<[PromptQuestion, Answers], null | undefined>([
+          "promptQuestion",
+          "answersSoFar",
+        ])
+    ),
   };
 };

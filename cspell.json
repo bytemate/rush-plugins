@@ -5,13 +5,16 @@
   "dictionaries": [],
   "words": [
     "buildable",
+    "lilconfig",
     "nonbrowser",
     "noreply",
     "npmjs",
     "npmrc",
     "packument",
     "pacote",
-    "subfolders"
+    "plopfile",
+    "subfolders",
+    "unshift"
   ],
   "ignoreWords": [],
   "import": []

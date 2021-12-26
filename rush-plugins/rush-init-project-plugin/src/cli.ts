@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { initProject } from "./init-project";
-import { getTemplateFolderAndValidate } from "./logic/templateFolder";
+import { getTemplatesFolderAndValidate } from "./logic/templateFolder";
 import { terminal } from "./terminal";
 
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -9,7 +9,7 @@ main();
 
 async function main(): Promise<void> {
   try {
-    getTemplateFolderAndValidate();
+    getTemplatesFolderAndValidate();
     await initProject();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
