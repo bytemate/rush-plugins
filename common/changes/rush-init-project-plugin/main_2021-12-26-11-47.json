@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-init-project-plugin",
+      "comment": "Add configuration and plugin system",
+      "type": "minor"
+    }
+  ],
+  "packageName": "rush-init-project-plugin"
+}
