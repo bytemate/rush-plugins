@@ -2,6 +2,18 @@
   "name": "rush-init-project-plugin",
   "entries": [
     {
+      "version": "0.1.1",
+      "tag": "rush-init-project-plugin_v0.1.1",
+      "date": "Mon, 27 Dec 2021 08:30:37 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Add a workaround for rushVersion validaty"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.1.0",
       "tag": "rush-init-project-plugin_v0.1.0",
       "date": "Sun, 26 Dec 2021 11:48:25 GMT",

@@ -1,6 +1,13 @@
 # Change Log - rush-init-project-plugin
 
-This log was last generated on Sun, 26 Dec 2021 11:48:25 GMT and should not be manually modified.
+This log was last generated on Mon, 27 Dec 2021 08:30:37 GMT and should not be manually modified.
+
+## 0.1.1
+Mon, 27 Dec 2021 08:30:37 GMT
+
+### Patches
+
+- Add a workaround for rushVersion validaty
 
 ## 0.1.0
 Sun, 26 Dec 2021 11:48:25 GMT
