@@ -2,6 +2,18 @@
   "name": "rush-init-project-plugin",
   "entries": [
     {
+      "version": "0.1.2",
+      "tag": "rush-init-project-plugin_v0.1.2",
+      "date": "Mon, 27 Dec 2021 12:51:25 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix template file glob options"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.1.1",
       "tag": "rush-init-project-plugin_v0.1.1",
       "date": "Mon, 27 Dec 2021 08:30:37 GMT",

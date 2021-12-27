@@ -1,6 +1,13 @@
 # Change Log - rush-init-project-plugin
 
-This log was last generated on Mon, 27 Dec 2021 08:30:37 GMT and should not be manually modified.
+This log was last generated on Mon, 27 Dec 2021 12:51:25 GMT and should not be manually modified.
+
+## 0.1.2
+Mon, 27 Dec 2021 12:51:25 GMT
+
+### Patches
+
+- Fix template file glob options
 
 ## 0.1.1
 Mon, 27 Dec 2021 08:30:37 GMT
