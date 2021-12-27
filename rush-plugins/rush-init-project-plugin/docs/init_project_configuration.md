@@ -40,9 +40,24 @@ const config: IConfig = {
 export default config;
 ```
 
-❗️❗️❗️
+❗️❗️❗️ **NOTE**:
 
-> **NOTE**: you should replace `autoinstallers/command-plugins` with a real directory `autoinstallers/<real_plugin_installed_autoinstaller_name>` to make type works.
+1. You should replace `autoinstallers/command-plugins` with a real directory `autoinstallers/<real_plugin_installed_autoinstaller_name>` to make type works.
+2. You should install `typescript` as a dependencies in according autoinstaller
+
+e.g.
+
+```json
+{
+  "name": "command-plugins",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "rush-init-project-plugin": "0.1.1",
+    "typescript": "4.4.2"
+  }
+}
+```
 
 ❗️❗️❗️
 
