@@ -200,6 +200,10 @@ export default function (plop: NodePlopAPI): void {
               destination: path.resolve(monorepoRoot, projectFolder),
               base: baseFolder,
               templateFiles: [`**/*`, "!init.config.ts", "!init.config.js"],
+              globOptions: {
+                cwd: baseFolder,
+                absolute: true,
+              },
               data: answer,
             },
             {
