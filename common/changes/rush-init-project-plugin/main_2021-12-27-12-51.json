@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-init-project-plugin",
+      "comment": "Fix template file glob options",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-init-project-plugin"
+}
