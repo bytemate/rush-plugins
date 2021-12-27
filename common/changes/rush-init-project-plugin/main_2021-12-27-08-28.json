@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-init-project-plugin",
+      "comment": "Add a workaround for rushVersion validaty",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-init-project-plugin"
+}
