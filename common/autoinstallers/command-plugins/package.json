@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "rush-init-project-plugin": "0.0.2",
+    "rush-init-project-plugin": "0.1.2",
     "rush-archive-project-plugin": "1.1.1",
     "rush-upgrade-self-plugin": "1.0.5"
   }
