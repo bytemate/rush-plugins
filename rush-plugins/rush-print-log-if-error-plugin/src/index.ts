@@ -2,7 +2,7 @@
 
 import path from "path";
 import fs from "fs";
-import { execSync } from "child_process";
+import readline from "readline";
 
 import { loadRushConfiguration } from "./helpers/loadRushConfiguration";
 import { terminal } from "./helpers/terminal";
@@ -30,9 +30,28 @@ async function main(): Promise<void> {
         `${unscopedProjectName}.build.error.log`
       );
       if (fs.existsSync(buildErrorLogPath) && fs.existsSync(buildLogPath)) {
+        const readStream = fs.createReadStream(buildLogPath);
         console.log(`========== ${project.packageName} BEGIN ==========`);
-        execSync(`cat ${buildLogPath}`, { stdio: "inherit" });
-        console.log(`========== ${project.packageName} END ==========`);
+        const rl = readline.createInterface({
+          input: readStream,
+          output: process.stdout,
+        });
+        let resolve: () => void = null as unknown as () => void;
+        const p = new Promise<void>((_resolve) => {
+          const timeoutId = setTimeout(() => {
+            console.log(`========== ${project.packageName} TIMEOUT ==========`);
+            _resolve();
+          }, 60 * 1000);
+          resolve = () => {
+            clearTimeout(timeoutId);
+            _resolve();
+          };
+        });
+        rl.on("close", () => {
+          resolve();
+          console.log(`========== ${project.packageName} END ==========`);
+        });
+        await p;
         hasPrint = true;
       }
     }
