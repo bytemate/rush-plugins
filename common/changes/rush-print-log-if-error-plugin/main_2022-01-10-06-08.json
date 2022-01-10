@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-print-log-if-error-plugin",
+      "comment": "Refactor cat with readline",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-print-log-if-error-plugin"
+}
