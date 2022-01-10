@@ -1,0 +1,13 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/command-line.schema.json",
+  "commands": [
+    {
+      "name": "print-log-if-error",
+      "commandKind": "global",
+      "summary": "Rush plugin for print entire log if error log exists",
+      "shellCommand": "node <packageFolder>/lib/index.js",
+      "safeForSimultaneousRushProcesses": true
+    }
+  ]
+  // "parameters": [],
+}

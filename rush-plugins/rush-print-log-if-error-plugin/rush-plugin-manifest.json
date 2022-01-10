@@ -1,0 +1,10 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/rush-plugin-manifest.schema.json",
+  "plugins": [
+    {
+      "pluginName": "rush-print-log-if-error-plugin",
+      "description": "Rush plugin for print entire log if error log exists",
+      "commandLineJsonFilePath": "command-line.json"
+    }
+  ]
+}

@@ -465,6 +465,11 @@
       "projectFolder": "rush-plugins/rush-upgrade-self-plugin",
       "reviewCategory": "rush-plugins",
       "shouldPublish": true
+    },
+    {
+      "packageName": "rush-print-log-if-error-plugin",
+      "projectFolder": "rush-plugins/rush-print-log-if-error-plugin",
+      "cyclicDependencyProjects": []
     }
   ]
 }
