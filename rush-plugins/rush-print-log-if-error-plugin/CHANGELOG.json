@@ -2,6 +2,18 @@
   "name": "rush-print-log-if-error-plugin",
   "entries": [
     {
+      "version": "0.0.3",
+      "tag": "rush-print-log-if-error-plugin_v0.0.3",
+      "date": "Mon, 10 Jan 2022 06:10:29 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Refactor cat with readline"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.0.2",
       "tag": "rush-print-log-if-error-plugin_v0.0.2",
       "date": "Mon, 10 Jan 2022 04:06:08 GMT",
