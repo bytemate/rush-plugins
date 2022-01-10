@@ -25,8 +25,7 @@ node common/scripts/install-run-rush.js build
 
 # How it works
 
-1. If `<package_name>.build.error.log` exists
-2. Run `cat <package_name>.build.log`
+If `<package_name>.build.error.log` exists, print the content of `<package_name>.build.log`
 
 # How to use
 
