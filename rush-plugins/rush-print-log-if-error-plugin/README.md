@@ -12,6 +12,17 @@ Rush.js >= 5.57.0
 rush print-log-if-error
 ```
 
+## Advance Usage
+
+```bash
+#!/bin/bash
+
+# logout if error
+trap "node common/scripts/install-run-rush.js print-log-if-error" ERR
+
+node common/scripts/install-run-rush.js build
+```
+
 # How it works
 
 1. If `<package_name>.build.error.log` exists
