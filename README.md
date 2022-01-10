@@ -18,3 +18,9 @@ After you have tons of project in monorepo, install time gets slower, manage dep
 Now, it's time to give this plugin a try!
 
 [Portal](./rush-plugins/rush-archive-project-plugin/README.md)
+
+# rush-print-log-if-error-plugin
+
+Sometimes build errors are collapsed in a remote machine, use this plugin to print the entire log if error occurs.
+
+[Portal](./rush-plugins/rush-print-log-if-error-plugin/README.md)
