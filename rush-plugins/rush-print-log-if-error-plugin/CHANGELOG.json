@@ -1,0 +1,17 @@
+{
+  "name": "rush-print-log-if-error-plugin",
+  "entries": [
+    {
+      "version": "0.0.1",
+      "tag": "rush-print-log-if-error-plugin_v0.0.1",
+      "date": "Mon, 10 Jan 2022 03:46:23 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Initial implementation"
+          }
+        ]
+      }
+    }
+  ]
+}
