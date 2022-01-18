@@ -472,6 +472,11 @@
       "reviewCategory": "rush-plugins",
       "shouldPublish": true,
       "cyclicDependencyProjects": []
+    },
+    {
+      "packageName": "rush-lint-staged-plugin",
+      "projectFolder": "rush-plugins/rush-lint-staged-plugin",
+      "cyclicDependencyProjects": []
     }
   ]
 }
