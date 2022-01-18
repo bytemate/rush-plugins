@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-init-project-plugin",
+      "comment": "Dot files in template should be added now",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-init-project-plugin"
+}
