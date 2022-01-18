@@ -190,7 +190,8 @@ export default function (plop: NodePlopAPI): void {
       const { template, projectFolder } = answer as IExtendedAnswers;
 
       const templatesFolder: string = getTemplatesFolder();
-      const baseFolder: string = path.join(templatesFolder, template);
+      // glob result is always splitted by slash
+      const baseFolder: string = path.join(templatesFolder, template).replace(/\\/g, '/');
 
       const actions: ActionType[] = isDryRun
         ? []
