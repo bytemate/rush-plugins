@@ -1,6 +1,13 @@
 # Change Log - rush-init-project-plugin
 
-This log was last generated on Mon, 27 Dec 2021 12:51:25 GMT and should not be manually modified.
+This log was last generated on Tue, 18 Jan 2022 16:54:18 GMT and should not be manually modified.
+
+## 0.1.3
+Tue, 18 Jan 2022 16:54:18 GMT
+
+### Patches
+
+- Fix add 0 template files in Windows
 
 ## 0.1.2
 Mon, 27 Dec 2021 12:51:25 GMT
