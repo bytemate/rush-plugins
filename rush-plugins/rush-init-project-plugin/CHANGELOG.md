@@ -1,6 +1,13 @@
 # Change Log - rush-init-project-plugin
 
-This log was last generated on Tue, 18 Jan 2022 16:54:18 GMT and should not be manually modified.
+This log was last generated on Tue, 18 Jan 2022 17:04:14 GMT and should not be manually modified.
+
+## 0.1.4
+Tue, 18 Jan 2022 17:04:14 GMT
+
+### Patches
+
+- Dot files in template should be added now
 
 ## 0.1.3
 Tue, 18 Jan 2022 16:54:18 GMT
