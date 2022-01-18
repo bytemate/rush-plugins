@@ -2,13 +2,13 @@ lockfileVersion: 5.3
 
 specifiers:
   rush-archive-project-plugin: 1.1.1
-  rush-init-project-plugin: 0.1.2
+  rush-init-project-plugin: 0.1.3
   rush-upgrade-self-plugin: 1.0.5
   typescript: 4.4.2
 
 dependencies:
   rush-archive-project-plugin: 1.1.1
-  rush-init-project-plugin: 0.1.2_typescript@4.4.2
+  rush-init-project-plugin: 0.1.3_typescript@4.4.2
   rush-upgrade-self-plugin: 1.0.5
   typescript: 4.4.2
 
@@ -3491,8 +3491,8 @@ packages:
       - supports-color
     dev: false
 
-  /rush-init-project-plugin/0.1.2_typescript@4.4.2:
-    resolution: {integrity: sha512-Yh5LymJnYG5V/7Zz7nm5lI/Fia3p7LvQROQdCpop7m41scXYckNEYKba3U1VHXXzgSvrDeyEphqOmNB5AXAU1A==}
+  /rush-init-project-plugin/0.1.3_typescript@4.4.2:
+    resolution: {integrity: sha512-X/kglhmEY6uViLjy5fg7MyPoewkuuJGy8gKwOpV9YUclHG49kiEqhkesRZPNn0aFfabYXT31ODeylGAHj1VVUw==}
     hasBin: true
     dependencies:
       '@microsoft/rush-lib': 5.57.1
