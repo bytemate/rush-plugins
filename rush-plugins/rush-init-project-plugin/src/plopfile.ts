@@ -203,6 +203,7 @@ export default function (plop: NodePlopAPI): void {
               templateFiles: [`**/*`, "!init.config.ts", "!init.config.js"],
               globOptions: {
                 cwd: baseFolder,
+                dot: true,
                 absolute: true,
               },
               data: answer,
