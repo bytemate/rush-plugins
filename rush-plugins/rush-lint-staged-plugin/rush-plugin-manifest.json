@@ -1,0 +1,10 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/rush-plugin-manifest.schema.json",
+  "plugins": [
+    {
+      "pluginName": "rush-lint-staged-plugin",
+      "description": "Rush plugin for lint-staged",
+      "commandLineJsonFilePath": "command-line.json"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-print-log-if-error-plugin",
+      "comment": "",
+      "type": "none"
+    }
+  ],
+  "packageName": "rush-print-log-if-error-plugin"
+}

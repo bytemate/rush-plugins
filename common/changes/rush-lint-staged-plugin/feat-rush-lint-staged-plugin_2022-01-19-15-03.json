@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-lint-staged-plugin",
+      "comment": "First implementation",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-lint-staged-plugin"
+}

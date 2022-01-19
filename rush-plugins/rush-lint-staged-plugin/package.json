@@ -1,0 +1,44 @@
+{
+  "name": "rush-lint-staged-plugin",
+  "version": "0.0.0",
+  "description": "Rush plugin for lint-staged",
+  "keywords": [
+    "rush",
+    "plugin",
+    "command"
+  ],
+  "homepage": "https://github.com/bytesfriends/rush-plugins#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bytesfriends/rush-plugins",
+    "directory": "rush-plugins/rush-lint-staged-plugin"
+  },
+  "license": "MIT",
+  "author": "Cheng Liu<chengcyber@outlook.com>",
+  "type": "module",
+  "exports": {
+    ".": "./lib/index.mjs"
+  },
+  "engines": {
+    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
+  },
+  "scripts": {
+    "build": "heft build --clean --lite",
+    "build:watch": "heft build --lite --watch",
+    "prepublishOnly": "npm run build",
+    "test": "heft test"
+  },
+  "dependencies": {
+    "@rushstack/node-core-library": "3.44.1",
+    "lint-staged": "12.2.1"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-config": "2.4.5",
+    "@rushstack/heft": "0.42.3",
+    "@rushstack/heft-node-rig": "1.2.31",
+    "@types/heft-jest": "1.0.1",
+    "@types/node": "12.20.24",
+    "eslint": "7.32.0",
+    "typescript": "4.4.2"
+  }
+}
