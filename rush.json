@@ -476,6 +476,7 @@
     {
       "packageName": "rush-lint-staged-plugin",
       "projectFolder": "rush-plugins/rush-lint-staged-plugin",
+      "shouldPublish": true,
       "cyclicDependencyProjects": []
     }
   ]
