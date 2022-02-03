@@ -2,6 +2,18 @@
   "name": "rush-lint-staged-plugin",
   "entries": [
     {
+      "version": "0.1.1",
+      "tag": "rush-lint-staged-plugin_v0.1.1",
+      "date": "Thu, 03 Feb 2022 11:45:46 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Upgrade lint-staged to 12.3.3"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.1.0",
       "tag": "rush-lint-staged-plugin_v0.1.0",
       "date": "Thu, 03 Feb 2022 11:43:28 GMT",
