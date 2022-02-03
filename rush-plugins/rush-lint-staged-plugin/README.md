@@ -4,7 +4,8 @@ Rush plugin for lint-staged
 
 # Prerequisite
 
-Rush.js >= 5.57.0
+- Rush.js >= 5.57.0
+- Node >= 12
 
 # Usage
 
@@ -92,6 +93,18 @@ You can run `rush lint-staged` now!
 # for each file whenever they are committed. The command comes from
 # rush-lint-staged-plugin.
 node common/scripts/install-run-rush.js lint-staged || exit $?
+```
+
+6. Add multiple lint-staged config files
+
+For example,
+
+```
+monorepo-root
+├── apps/my-app
+|   └── .lintstagedrc.json
+└── libraries/my-lib
+    └── .lintstagedrc.json
 ```
 
 ALL DONE! try `git add` some files and `git commit`!
