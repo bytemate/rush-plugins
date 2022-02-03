@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-lint-staged-plugin",
+      "comment": "Upgrade lint-staged to 12.3.3",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-lint-staged-plugin"
+}
