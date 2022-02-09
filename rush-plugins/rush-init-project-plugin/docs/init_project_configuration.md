@@ -19,6 +19,7 @@ common/_templates
 const config = {
   prompts: [],
   plugins: [],
+  defaultProjectConfiguration: {},
 };
 module.exports = config;
 ```
@@ -35,6 +36,7 @@ import type { IConfig } from "../../autoinstallers/command-plugins/node_modules/
 const config: IConfig = {
   prompts: [],
   plugins: [],
+  defaultProjectConfiguration: {},
 };
 
 export default config;
@@ -80,6 +82,82 @@ const config = {
 ```
 
 then `cdnHost` is added to `answers`, and becomes one of the data when rendering template. That says `{{ cdnHost }}` in template file, will be replaced with the string user input.
+
+# `defaultProjectConfiguration`
+
+`defaultProjectConfiguration` is used to specify the project configuration in `rush.json`
+
+For example,
+
+```typescript
+import type {
+  IConfig,
+  IHooks,
+  IPluginContext,
+} from "../../autoinstallers/command-plugins/node_modules/rush-init-project-plugin";
+
+const config: IConfig = {
+  defaultProjectConfiguration: {
+    reviewCategory: "libraries",
+  },
+};
+
+export default config;
+```
+
+The initialized project configuration is `rush.json` will be
+
+```json
+{
+  "projects": [
+    {
+      "packageName": "<real_package_name>",
+      "projectFolder": "<real_project_folder>",
+      "reviewCategory": "libraries" // <--- comes from defaultProjectConfiguration
+    }
+  ]
+}
+```
+
+## `defaultProjectConfiguration` properties
+
+Current defaultProjectConfiguration supports the following properties:
+
+### `reviewCategory`
+
+type: `string`
+
+An optional category for usage in the "browser-approved-packages.json" and "nonbrowser-approved-packages.json" files. Only strings from reviewCategories are allowed here.
+
+### `cyclicDependencyProjects`
+
+type: `string[]`
+
+A list of local projects that appear as devDependencies for this project, but cannot be locally linked because it would create a cyclic dependency; instead, the last published version will be installed in the Common folder.
+
+### `shouldPublish`
+
+type: `boolean`
+
+A flag indicating that changes to this project will be published to npm, which affects the Rush change and publish workflows.
+
+### `skipRushCheck`
+
+type: `boolean`
+
+If true, then this project will be ignored by the "rush check" command. The default value is false.
+
+### `versionPolicyName`
+
+type: `string`
+
+An optional version policy associated with the project. Version policies are defined in "version-policies.json" file.
+
+### `publishFolder`
+
+type: `string`
+
+Facilitates postprocessing of a project's files prior to publishing. If specified, the "publishFolder" is the relative path to a subfolder of the project folder. The "rush publish" command will publish the subfolder instead of the project folder. The subfolder must contain its own package.json file, which is typically a build output.
 
 # `plugins`
 
@@ -268,6 +346,14 @@ default actions as follow:
 - Params: `Answers`
 
 `answers` is all answers collected after the end of prompts. You can mutate answers in this hook. Since this object is used as handlebars data. You can inject more template data information into this object as well.
+
+### defaultProjectConfiguration
+
+- SyncHook
+- Params: `IDefaultProjectConfiguration`, `Answers`
+  - `({ // defaultProjectConfiguration }, { // answers }`
+
+`defaultProjectConfiguration` with all answers is passed. You can mutate `defaultProjectConfiguration` here.
 
 ### plop
 

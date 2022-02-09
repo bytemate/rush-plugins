@@ -1,6 +1,8 @@
+import { AsyncSeriesHook, HookMap, SyncHook } from "tapable";
+
 import type { Answers } from "inquirer";
 import type { ActionType, NodePlopAPI, PromptQuestion } from "node-plop";
-import { AsyncSeriesHook, HookMap, SyncHook } from "tapable";
+import type { IDefaultProjectConfiguration } from "./logic/TemplateConfiguration";
 
 export interface IPromptsHookParams {
   /**
@@ -24,6 +26,9 @@ export interface IHooks {
   promptQuestion: HookMap<
     SyncHook<[PromptQuestion, Answers], null | undefined>
   >;
+  defaultProjectConfiguration: SyncHook<
+    [IDefaultProjectConfiguration, Answers]
+  >;
 }
 
 export const initHooks = (): IHooks => {
@@ -39,5 +44,8 @@ export const initHooks = (): IHooks => {
           "answersSoFar",
         ])
     ),
+    defaultProjectConfiguration: new SyncHook<
+      [IDefaultProjectConfiguration, Answers]
+    >(["defaultProjectConfiguration", "answers"]),
   };
 };
