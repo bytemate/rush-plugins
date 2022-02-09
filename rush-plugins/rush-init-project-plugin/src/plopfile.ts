@@ -4,6 +4,7 @@ import hbsHelpersLib from "handlebars-helpers/lib";
 import { Answers, Inquirer } from "inquirer";
 import autocompletePlugin from "inquirer-autocomplete-prompt";
 import type {
+  ActionConfig,
   ActionType,
   DynamicPromptsFunction,
   NodePlopAPI,
@@ -18,6 +19,7 @@ import { sortPackageJson } from "./actions/sortPackageJson";
 import { IHooks, initHooks } from "./hooks";
 import { loadRushConfiguration } from "./logic/loadRushConfiguration";
 import {
+  IDefaultProjectConfiguration,
   IPluginContext,
   TemplateConfiguration,
 } from "./logic/TemplateConfiguration";
@@ -124,6 +126,7 @@ export default function (plop: NodePlopAPI): void {
       message: "Do you need run rush update after init?",
     },
   ];
+  let templateConfiguration: TemplateConfiguration | undefined;
   const promptsFunc: DynamicPromptsFunction = async (
     inquirerPassed: Parameters<DynamicPromptsFunction>[0]
   ): Promise<Answers> => {
@@ -158,10 +161,9 @@ export default function (plop: NodePlopAPI): void {
 
       // when template decided, load template configuration
       if (currentPrompt?.name === "template") {
-        const templateConfiguration: TemplateConfiguration =
-          await TemplateConfiguration.loadFromTemplate(
-            currentAnswers.template!
-          );
+        templateConfiguration = await TemplateConfiguration.loadFromTemplate(
+          currentAnswers.template!
+        );
         for (const prompt of templateConfiguration.prompts) {
           promptQueue.push(prompt);
         }
@@ -189,9 +191,18 @@ export default function (plop: NodePlopAPI): void {
     actions: (answer) => {
       const { template, projectFolder } = answer as IExtendedAnswers;
 
+      const defaultProjectConfiguration: IDefaultProjectConfiguration =
+        templateConfiguration?.defaultProjectConfiguration || {};
+      hooks.defaultProjectConfiguration.call(
+        defaultProjectConfiguration,
+        answer as IExtendedAnswers
+      );
+
       const templatesFolder: string = getTemplatesFolder();
       // glob result is always splitted by slash
-      const baseFolder: string = path.join(templatesFolder, template).replace(/\\/g, '/');
+      const baseFolder: string = path
+        .join(templatesFolder, template)
+        .replace(/\\/g, "/");
 
       const actions: ActionType[] = isDryRun
         ? []
@@ -213,6 +224,9 @@ export default function (plop: NodePlopAPI): void {
             },
             {
               type: "addProjectToRushJson",
+              data: {
+                defaultProjectConfiguration,
+              },
             },
             {
               type: "runRushUpdate",
@@ -227,21 +241,31 @@ export default function (plop: NodePlopAPI): void {
 }
 
 function registerActions(plop: NodePlopAPI): void {
-  plop.setActionType("addProjectToRushJson", (ans: Answers) => {
-    const answers: IExtendedAnswers = ans as IExtendedAnswers;
-    const { packageName, projectFolder } = answers;
-    if (!packageName) {
-      throw new Error("packageName is required");
+  plop.setActionType(
+    "addProjectToRushJson",
+    (ans: Answers, config: ActionConfig | undefined) => {
+      const answers: IExtendedAnswers = ans as IExtendedAnswers;
+      const { packageName, projectFolder } = answers;
+      const defaultProjectConfiguration: IDefaultProjectConfiguration =
+        (
+          config?.data as {
+            defaultProjectConfiguration: IDefaultProjectConfiguration;
+          }
+        )?.defaultProjectConfiguration || {};
+      if (!packageName) {
+        throw new Error("packageName is required");
+      }
+      if (!projectFolder) {
+        throw new Error("projectFolder is required");
+      }
+      addProjectToRushJson({
+        packageName,
+        projectFolder,
+        defaultProjectConfiguration,
+      });
+      return `Add ${packageName} to rush.json successfully`;
     }
-    if (!projectFolder) {
-      throw new Error("projectFolder is required");
-    }
-    addProjectToRushJson({
-      packageName,
-      projectFolder,
-    });
-    return `Add ${packageName} to rush.json successfully`;
-  });
+  );
 
   plop.setActionType("runRushUpdate", (ans: Answers) => {
     const { shouldRunRushUpdate } = ans as IExtendedAnswers;

@@ -26,9 +26,19 @@ const loaders: Record<string, (path: string) => IConfig> = {
   },
 };
 
+export interface IDefaultProjectConfiguration {
+  reviewCategory?: string;
+  cyclicDependencyProjects?: string[];
+  shouldPublish?: boolean;
+  skipRushCheck?: boolean;
+  versionPolicyName?: string;
+  publishFolder?: string;
+}
+
 export interface IConfig {
   prompts?: PromptQuestion[];
   plugins?: IPlugin[];
+  defaultProjectConfiguration: IDefaultProjectConfiguration;
 }
 
 export interface IPlugin {
@@ -42,6 +52,7 @@ export interface IPluginContext extends Record<string, any> {
 export class TemplateConfiguration {
   private _prompts: PromptQuestion[];
   private _plugins: IPlugin[];
+  private _defaultProjectConfiguration: IDefaultProjectConfiguration;
 
   private constructor(template: string) {
     const templateFolder: string = getTemplateFolder(template);
@@ -51,12 +62,17 @@ export class TemplateConfiguration {
     }).search(templateFolder);
     this._prompts = [];
     this._plugins = [];
+    this._defaultProjectConfiguration = {};
     if (result && result.config) {
       if (result.config.prompts) {
         this._prompts = result.config.prompts;
       }
       if (result.config.plugins) {
         this._plugins = result.config.plugins;
+      }
+      if (result.config.defaultProjectConfiguration) {
+        this._defaultProjectConfiguration =
+          result.config.defaultProjectConfiguration;
       }
     }
   }
@@ -77,5 +93,9 @@ export class TemplateConfiguration {
 
   public get plugins(): IPlugin[] {
     return this._plugins;
+  }
+
+  public get defaultProjectConfiguration(): IDefaultProjectConfiguration {
+    return this._defaultProjectConfiguration;
   }
 }
