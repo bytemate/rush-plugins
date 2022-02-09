@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-init-project-plugin",
+      "comment": "Add defaultProjectConfiguration & related hook in template configuration",
+      "type": "minor"
+    }
+  ],
+  "packageName": "rush-init-project-plugin"
+}
