@@ -1,6 +1,13 @@
 # Change Log - rush-init-project-plugin
 
-This log was last generated on Tue, 18 Jan 2022 17:04:14 GMT and should not be manually modified.
+This log was last generated on Wed, 09 Feb 2022 11:08:02 GMT and should not be manually modified.
+
+## 0.2.0
+Wed, 09 Feb 2022 11:08:02 GMT
+
+### Minor changes
+
+- Add defaultProjectConfiguration & related hook in template configuration
 
 ## 0.1.4
 Tue, 18 Jan 2022 17:04:14 GMT
