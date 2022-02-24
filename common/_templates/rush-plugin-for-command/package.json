@@ -23,9 +23,8 @@
     "test": "heft test"
   },
   "dependencies": {
-    "@microsoft/rush-lib": "5.57.1",
     "@rushstack/node-core-library": "3.44.1",
-    "@rushstack/rush-sdk": "5.57.1"
+    "@rushstack/rush-sdk": "5.62.4"
   },
   "devDependencies": {
     "@rushstack/eslint-config": "2.4.5",
