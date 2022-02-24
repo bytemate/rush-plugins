@@ -27,6 +27,6 @@ Sometimes build errors are collapsed in a remote machine, use this plugin to pri
 
 # rush-lint-staged-plugin
 
-Are you finding alternative to `husky` in your monorepo? Rush takes care of Git hooks natively by sync hook scripts under `common/git-hooks/` folder into `.git/hooks`. So, all you need is `lint-staged`. Use this plugin to setup `int-staged` in your monorepo!
+Are you finding alternative to `husky` in your monorepo? Rush takes care of Git hooks natively by sync hook scripts under `common/git-hooks/` folder into `.git/hooks`. So, all you need is `lint-staged`. Use this plugin to setup `lint-staged` in your monorepo!
 
 [Portal](./rush-plugins/rush-lint-staged-plugin/README.md)
