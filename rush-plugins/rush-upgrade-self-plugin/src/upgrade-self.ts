@@ -1,23 +1,20 @@
 import * as path from "path";
-import * as fs from "fs";
 import {
   Colors,
   Terminal,
   ConsoleTerminalProvider,
   JsonFile,
   Executable,
-  Import,
 } from "@rushstack/node-core-library";
+import { RushConfiguration } from "@rushstack/rush-sdk";
 import findUp from "find-up";
 import ora from "ora";
 
 import type { Packument } from "pacote";
-import type { RushConfiguration } from "@rushstack/rush-sdk";
 
 export const upgradeSelf = async (): Promise<void> => {
   const terminal: Terminal = new Terminal(new ConsoleTerminalProvider());
 
-  // FIXME: workaround for rush-sdk
   const rushJsonPath: string | undefined = await findUp("rush.json", {
     cwd: process.cwd(),
   });
@@ -27,49 +24,12 @@ export const upgradeSelf = async (): Promise<void> => {
   const monoRoot: string = path.dirname(rushJsonPath);
 
   const rushJson: any = JsonFile.load(rushJsonPath);
-  const { rushVersion } = rushJson;
 
-  const installRunNodeModuleFolder: string = path.join(
-    monoRoot,
-    `common/temp/install-run/@microsoft+rush@${rushVersion}`
-  );
-  let RushConfiguration: RushConfiguration | undefined;
-  if (fs.existsSync(installRunNodeModuleFolder)) {
-    try {
-      const rushLibModulePath: string = Import.resolveModule({
-        modulePath: "@microsoft/rush-lib",
-        baseFolderPath: installRunNodeModuleFolder,
-      });
-      const rushLib: {
-        RushConfiguration: RushConfiguration;
-      } = require(rushLibModulePath);
-      RushConfiguration = rushLib.RushConfiguration;
-    } catch {
-      throw new Error(
-        `Could not load @microsoft/rush-lib from ${installRunNodeModuleFolder}`
-      );
-    }
-  } else {
-    // try {
-    // global require
-    const rushLib: {
-      RushConfiguration: RushConfiguration;
-    } = require("@microsoft/rush-lib");
-    RushConfiguration = rushLib.RushConfiguration;
-    // } catch {}
-  }
+  const rushConfiguration: RushConfiguration =
+    RushConfiguration.loadFromDefaultLocation({
+      startingFolder: process.cwd(),
+    });
 
-  if (!RushConfiguration) {
-    throw new Error(
-      `Could not find RushConfiguration from ${installRunNodeModuleFolder}`
-    );
-  }
-
-  const rushConfiguration: any = (
-    RushConfiguration as any
-  ).loadFromDefaultLocation({
-    startingFolder: process.cwd(),
-  });
   if (!rushConfiguration) {
     throw new Error("Unable to load rush configuration");
   }
