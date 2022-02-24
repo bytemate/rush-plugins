@@ -18,7 +18,8 @@ async function main(): Promise<void> {
   try {
     const rushConfig: RushConfiguration = loadRushConfiguration();
 
-    const packageNameParser: PackageNameParser = rushConfig.packageNameParser;
+    const packageNameParser: PackageNameParser =
+      rushConfig.packageNameParser as unknown as PackageNameParser;
     let hasPrint: boolean = false;
     for (const project of rushConfig.projects) {
       const folder: string = project.projectFolder;
