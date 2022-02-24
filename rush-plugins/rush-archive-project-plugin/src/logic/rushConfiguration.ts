@@ -1,9 +1,12 @@
-import { RushConfiguration } from "@microsoft/rush-lib"
+import { RushConfiguration } from "@rushstack/rush-sdk";
 
 const cwd2rushConfiguration: Record<string, RushConfiguration> = {};
 
-export const loadRushConfiguration = (cwd: string = process.cwd()): RushConfiguration => {
-  let rushConfiguration: RushConfiguration | undefined = cwd2rushConfiguration[cwd];
+export const loadRushConfiguration = (
+  cwd: string = process.cwd()
+): RushConfiguration => {
+  let rushConfiguration: RushConfiguration | undefined =
+    cwd2rushConfiguration[cwd];
   if (!rushConfiguration) {
     try {
       rushConfiguration = RushConfiguration.loadFromDefaultLocation({
@@ -18,4 +21,4 @@ export const loadRushConfiguration = (cwd: string = process.cwd()): RushConfigur
     cwd2rushConfiguration[cwd] = rushConfiguration;
   }
   return rushConfiguration;
-}
+};

@@ -1,11 +1,12 @@
 import * as path from "path";
-import { RushConfiguration } from "@microsoft/rush-lib";
 import { FileSystem, JsonFile, JsonObject } from "@rushstack/node-core-library";
 import ora from "ora";
 import { getGraveyardInfo } from "../logic/graveyard";
 import * as tar from "tar";
 import { ProjectMetadata } from "../logic/projectMetadata";
 import { loadRushConfiguration } from "../logic/rushConfiguration";
+
+import type { RushConfiguration } from "@rushstack/rush-sdk";
 
 export interface IUnarchiveConfig {
   packageName: string;

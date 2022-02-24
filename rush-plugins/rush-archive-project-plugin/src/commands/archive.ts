@@ -1,5 +1,7 @@
-import type { RushConfigurationProject } from "@microsoft/rush-lib";
-import { RushConfiguration } from "@microsoft/rush-lib";
+import type {
+  RushConfiguration,
+  RushConfigurationProject,
+} from "@rushstack/rush-sdk";
 import { FileSystem, JsonFile, JsonObject } from "@rushstack/node-core-library";
 import * as path from "path";
 import * as tar from "tar";
@@ -24,10 +26,14 @@ export async function archive({ packageName }: IArchiveConfig): Promise<void> {
   }
 
   // check project is depended by other projects
-  const consumingProjectNames: string[] = Array.from(project.consumingProjects).map((x: RushConfigurationProject) => x.packageName);
+  const consumingProjectNames: string[] = Array.from(
+    project.consumingProjects
+  ).map((x: RushConfigurationProject) => x.packageName);
   if (consumingProjectNames.length) {
-    throw new Error(`Target project ${packageName} is depended by other ${consumingProjectNames.length} project(s):
-${consumingProjectNames.join(', ')}`)
+    throw new Error(`Target project ${packageName} is depended by other ${
+      consumingProjectNames.length
+    } project(s):
+${consumingProjectNames.join(", ")}`);
   }
 
   const { projectFolder, projectRelativeFolder } = project;
