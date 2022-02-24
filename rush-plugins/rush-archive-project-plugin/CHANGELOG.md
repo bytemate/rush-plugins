@@ -1,6 +1,13 @@
 # Change Log - rush-archive-project-plugin
 
-This log was last generated on Thu, 24 Feb 2022 10:57:56 GMT and should not be manually modified.
+This log was last generated on Thu, 24 Feb 2022 11:57:31 GMT and should not be manually modified.
+
+## 1.1.3
+Thu, 24 Feb 2022 11:57:31 GMT
+
+### Patches
+
+- Upgrade rush-sdk to latest
 
 ## 1.1.2
 Thu, 24 Feb 2022 10:57:56 GMT

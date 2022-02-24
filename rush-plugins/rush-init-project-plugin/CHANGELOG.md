@@ -1,6 +1,13 @@
 # Change Log - rush-init-project-plugin
 
-This log was last generated on Wed, 09 Feb 2022 11:08:02 GMT and should not be manually modified.
+This log was last generated on Thu, 24 Feb 2022 11:57:31 GMT and should not be manually modified.
+
+## 0.2.1
+Thu, 24 Feb 2022 11:57:31 GMT
+
+### Patches
+
+- Upgrade rush-sdk to load rushConfiguration
 
 ## 0.2.0
 Wed, 09 Feb 2022 11:08:02 GMT
