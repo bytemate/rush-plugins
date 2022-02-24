@@ -7,38 +7,43 @@ import readline from "readline";
 import { loadRushConfiguration } from "./helpers/loadRushConfiguration";
 import { terminal } from "./helpers/terminal";
 
+import type { RushConfiguration } from "@rushstack/rush-sdk";
+import type { PackageNameParser } from "@rushstack/node-core-library";
+import type { ReadStream } from "fs";
+
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
 main();
 
 async function main(): Promise<void> {
   try {
-    const rushConfig = loadRushConfiguration();
+    const rushConfig: RushConfiguration = loadRushConfiguration();
 
-    const packageNameParser = rushConfig.packageNameParser;
-    let hasPrint = false;
+    const packageNameParser: PackageNameParser = rushConfig.packageNameParser;
+    let hasPrint: boolean = false;
     for (const project of rushConfig.projects) {
-      const folder = project.projectFolder;
-      const unscopedProjectName = packageNameParser.getUnscopedName(
+      const folder: string = project.projectFolder;
+      const unscopedProjectName: string = packageNameParser.getUnscopedName(
         project.packageName
       );
-      const buildLogPath = path.resolve(
+      const buildLogPath: string = path.resolve(
         folder,
         `${unscopedProjectName}.build.log`
       );
-      const buildErrorLogPath = path.resolve(
+      const buildErrorLogPath: string = path.resolve(
         folder,
         `${unscopedProjectName}.build.error.log`
       );
       if (fs.existsSync(buildErrorLogPath) && fs.existsSync(buildLogPath)) {
-        const readStream = fs.createReadStream(buildLogPath);
+        const readStream: ReadStream = fs.createReadStream(buildLogPath);
         console.log(`========== ${project.packageName} BEGIN ==========`);
-        const rl = readline.createInterface({
+        const rl: readline.Interface = readline.createInterface({
           input: readStream,
           output: process.stdout,
         });
         let resolve: () => void = null as unknown as () => void;
-        const p = new Promise<void>((_resolve) => {
-          const timeoutId = setTimeout(() => {
+        // eslint-disable-next-line promise/param-names, @typescript-eslint/naming-convention
+        const p: Promise<void> = new Promise<void>((_resolve: () => void) => {
+          const timeoutId: NodeJS.Timeout = setTimeout(() => {
             console.log(`========== ${project.packageName} TIMEOUT ==========`);
             _resolve();
           }, 60 * 1000);
