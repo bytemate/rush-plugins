@@ -1,5 +1,4 @@
-import { RushConfiguration } from "@microsoft/rush-lib";
-import { JsonFile, JsonObject } from "@rushstack/node-core-library";
+import { RushConfiguration } from "@rushstack/rush-sdk";
 
 const cwd2RushConfiguration: Record<string, RushConfiguration> = {};
 
@@ -9,19 +8,9 @@ export const loadRushConfiguration = (
   let rushConfiguration: RushConfiguration = cwd2RushConfiguration[cwd];
   if (!rushConfiguration) {
     try {
-      const rushJsonFilePath: string | undefined =
-        RushConfiguration.tryFindRushJsonLocation({
-          startingFolder: cwd,
-        });
-      if (!rushJsonFilePath) {
-        throw new Error(`Not found rush.json`);
-      }
-      const rushJson: JsonObject = JsonFile.load(rushJsonFilePath);
-      // HACK!!! await merge this PR https://github.com/microsoft/rushstack/pull/3091
-      rushConfiguration = new (RushConfiguration as any)(
-        rushJson,
-        rushJsonFilePath
-      );
+      rushConfiguration = RushConfiguration.loadFromDefaultLocation({
+        startingFolder: cwd,
+      });
       if (!rushConfiguration) {
         throw new Error("Rush configuration not found");
       }

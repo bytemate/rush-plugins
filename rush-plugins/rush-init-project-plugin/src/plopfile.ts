@@ -1,4 +1,4 @@
-import { RushConfiguration } from "@microsoft/rush-lib";
+import type { RushConfiguration } from "@rushstack/rush-sdk";
 import { FileSystem, PackageName } from "@rushstack/node-core-library";
 import hbsHelpersLib from "handlebars-helpers/lib";
 import { Answers, Inquirer } from "inquirer";

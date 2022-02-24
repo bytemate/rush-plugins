@@ -29,9 +29,8 @@
     "test": "heft test"
   },
   "dependencies": {
-    "@microsoft/rush-lib": "5.57.1",
     "@rushstack/node-core-library": "3.44.1",
-    "@rushstack/rush-sdk": "5.57.1",
+    "@rushstack/rush-sdk": "5.62.4",
     "chalk": "4.1.2",
     "handlebars-helpers": "~0.10.0",
     "inquirer": "~8.2.0",
