@@ -1,5 +1,6 @@
 import { Executable } from "@rushstack/node-core-library";
-import { Utilities } from "@microsoft/rush-lib/lib/utilities/Utilities";
+
+import type { SpawnSyncReturns } from "child_process";
 
 let checkedGitPath: boolean = false;
 let gitPath: string | undefined;
@@ -22,10 +23,8 @@ export const getGitPathOrThrow = (): string => {
 
 export const gitFullClean = (cwd: string): void => {
   const gitPath: string = getGitPathOrThrow();
-  Utilities.executeCommand({
-    command: gitPath,
-    args: ["clean", "-fdx"],
-    workingDirectory: cwd,
+  Executable.spawnSync(gitPath, ["clean", "-fdx"], {
+    currentWorkingDirectory: cwd,
   });
 };
 
@@ -33,11 +32,16 @@ export const gitCheckIgnored = (cwd: string, filePath: string): string => {
   const gitPath: string = getGitPathOrThrow();
   let result: string = "";
   try {
-    result = Utilities.executeCommandAndCaptureOutput(
+    const process: SpawnSyncReturns<string> = Executable.spawnSync(
       gitPath,
       ["check-ignore", "-v", filePath],
-      cwd
+      {
+        currentWorkingDirectory: cwd,
+      }
     );
+    if (process.status === 0) {
+      result = process.stdout.toString();
+    }
   } catch (e: any) {
     if (e.message.includes("The command failed with exit code 1")) {
       // ignore

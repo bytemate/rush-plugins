@@ -1,14 +1,16 @@
-import type { RushConfiguration } from '@microsoft/rush-lib';
+import type { RushConfiguration } from "@rushstack/rush-sdk";
 import type { ITerminal } from "@rushstack/node-core-library";
-import { Executable } from '@rushstack/node-core-library';
-import * as path from 'path';
-import { loadRushConfiguration } from './rushConfiguration';
+import { Executable } from "@rushstack/node-core-library";
+import * as path from "path";
+import { loadRushConfiguration } from "./rushConfiguration";
 
 export interface IPromptRushUpdateParams {
-  terminal: ITerminal
+  terminal: ITerminal;
 }
 
-export async function promptRushUpdate({ terminal }: IPromptRushUpdateParams): Promise<void> {
+export async function promptRushUpdate({
+  terminal,
+}: IPromptRushUpdateParams): Promise<void> {
   const { prompt } = await import("inquirer");
   interface IShouldRunRushUpdateAnswer {
     shouldRunRushUpdate: boolean;
