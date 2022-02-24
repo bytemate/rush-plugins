@@ -102,11 +102,11 @@ importers:
       '@types/heft-jest': 1.0.1
       '@types/node': 12.20.24
       eslint: 7.32.0
-      lint-staged: 12.3.3
+      lint-staged: 12.3.4
       typescript: 4.4.2
     dependencies:
       '@rushstack/node-core-library': 3.44.1
-      lint-staged: 12.3.3
+      lint-staged: 12.3.4
     devDependencies:
       '@rushstack/eslint-config': 2.4.5_eslint@7.32.0+typescript@4.4.2
       '@rushstack/heft': 0.42.3
@@ -4997,8 +4997,8 @@ packages:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
     dev: true
 
-  /lint-staged/12.3.3:
-    resolution: {integrity: sha512-OqcLsqcPOqzvsfkxjeBpZylgJ3SRG1RYqc9LxC6tkt6tNsq1bNVkAixBwX09f6CobcHswzqVOCBpFR1Fck0+ag==}
+  /lint-staged/12.3.4:
+    resolution: {integrity: sha512-yv/iK4WwZ7/v0GtVkNb3R82pdL9M+ScpIbJLJNyCXkJ1FGaXvRCOg/SeL59SZtPpqZhE7BD6kPKFLIDUhDx2/w==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     hasBin: true
     dependencies:
