@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-archive-project-plugin",
+      "comment": "Upgrade rush-sdk to latest",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-archive-project-plugin"
+}
