@@ -51,7 +51,6 @@
    * This design avoids unnecessary churn in this file.
    */
   "allowedAlternativeVersions": {
-    "@rushstack/rush-sdk": ["5.57.1"]
     /**
      * For example, allow some projects to use an older TypeScript compiler
      * (in addition to whatever "usual" version is being used by other projects in the repo):
