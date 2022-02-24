@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-init-project-plugin",
+      "comment": "Upgrade rush-sdk to load rushConfiguration",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-init-project-plugin"
+}
