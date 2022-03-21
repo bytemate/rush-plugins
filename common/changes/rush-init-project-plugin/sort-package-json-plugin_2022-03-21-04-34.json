@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-init-project-plugin",
+      "comment": "upgrade sort-package-json version",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-init-project-plugin"
+}
