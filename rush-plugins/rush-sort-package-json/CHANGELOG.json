@@ -1,0 +1,17 @@
+{
+  "name": "rush-sort-package-json",
+  "entries": [
+    {
+      "version": "0.0.2",
+      "tag": "rush-sort-package-json_v0.0.2",
+      "date": "Tue, 22 Mar 2022 03:26:29 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "init"
+          }
+        ]
+      }
+    }
+  ]
+}
