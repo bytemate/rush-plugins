@@ -64,7 +64,7 @@ importers:
       lilconfig: ~2.0.4
       node-plop: 0.26.3
       ora: 5.4.1
-      sort-package-json: ~1.53.1
+      sort-package-json: 1.54.0
       tapable: ~2.2.1
       ts-node: ~10.4.0
       typescript: 4.4.2
@@ -79,7 +79,7 @@ importers:
       lilconfig: 2.0.4
       node-plop: 0.26.3
       ora: 5.4.1
-      sort-package-json: 1.53.1
+      sort-package-json: 1.54.0
       tapable: 2.2.1
       ts-node: 10.4.0_06c0d17a2604b53f6f8299daedda05cf
       validate-npm-package-name: 3.0.0
@@ -130,6 +130,31 @@ importers:
     dependencies:
       '@rushstack/node-core-library': 3.44.1
       '@rushstack/rush-sdk': 5.62.4
+    devDependencies:
+      '@rushstack/eslint-config': 2.4.5_eslint@7.32.0+typescript@4.4.2
+      '@rushstack/heft': 0.42.3
+      '@rushstack/heft-node-rig': 1.2.31_@rushstack+heft@0.42.3
+      '@types/heft-jest': 1.0.1
+      '@types/node': 12.20.24
+      eslint: 7.32.0
+      typescript: 4.4.2
+
+  ../../rush-plugins/rush-sort-package-json:
+    specifiers:
+      '@rushstack/eslint-config': 2.4.5
+      '@rushstack/heft': 0.42.3
+      '@rushstack/heft-node-rig': 1.2.31
+      '@rushstack/node-core-library': 3.44.1
+      '@rushstack/rush-sdk': 5.62.4
+      '@types/heft-jest': 1.0.1
+      '@types/node': 12.20.24
+      eslint: 7.32.0
+      sort-package-json: 1.54.0
+      typescript: 4.4.2
+    dependencies:
+      '@rushstack/node-core-library': 3.44.1
+      '@rushstack/rush-sdk': 5.62.4
+      sort-package-json: 1.54.0
     devDependencies:
       '@rushstack/eslint-config': 2.4.5_eslint@7.32.0+typescript@4.4.2
       '@rushstack/heft': 0.42.3
@@ -2849,7 +2874,7 @@ packages:
       is-shared-array-buffer: 1.0.1
       is-string: 1.0.7
       is-weakref: 1.0.1
-      object-inspect: 1.11.1
+      object-inspect: 1.12.0
       object-keys: 1.1.1
       object.assign: 4.1.2
       string.prototype.trimend: 1.0.4
@@ -5595,13 +5620,8 @@ packages:
       define-property: 0.2.5
       kind-of: 3.2.2
 
-  /object-inspect/1.11.1:
-    resolution: {integrity: sha512-If7BjFlpkzzBeV1cqgT3OSWT3azyoxDGajR+iGnFBfVV2EWyDyWaZZW2ERDjUaY2QM8i5jI3Sj7mhsM4DDAqWA==}
-    dev: true
-
   /object-inspect/1.12.0:
     resolution: {integrity: sha512-Ho2z80bVIvJloH+YzRmpZVQe87+qASmBUKZDWgx9cu+KDrX2ZDH/3tMy+gXbZETVGs2M8YdxObOh7XAtim9Y0g==}
-    dev: false
 
   /object-keys/1.1.1:
     resolution: {integrity: sha512-NuAESUOUMrlIXOfHKzD6bpPu3tYt3xvjNdRIQ+FeT0lNb4K8WR70CaDxhuNguS2XG+GjkyMwOzsN5ZktImfhLA==}
@@ -6385,7 +6405,7 @@ packages:
     dependencies:
       call-bind: 1.0.2
       get-intrinsic: 1.1.1
-      object-inspect: 1.11.1
+      object-inspect: 1.12.0
     dev: true
 
   /signal-exit/3.0.6:
@@ -6481,8 +6501,8 @@ packages:
     resolution: {integrity: sha512-855pvK+VkU7PaKYPc+Jjnmt4EzejQHyhhF33q31qG8x7maDzkeFhAAThdCYay11CISO+qAMwjOBP+fPZe0IPyg==}
     dev: false
 
-  /sort-package-json/1.53.1:
-    resolution: {integrity: sha512-ltLORrQuuPMpy23YkWCA8fO7zBOxM4P1j9LcGxci4K2Fk8jmSyCA/ATU6CFyy8qR2HQRx4RBYWzoi78FU/Anuw==}
+  /sort-package-json/1.54.0:
+    resolution: {integrity: sha512-MA0nRiSfZ4/CNM/9rz70Hwq4PpvtBc3v532tzQSmoaLSdeBB3cCd488xmNruLL0fb/ZdbKlcaDDudwnrObbjBw==}
     hasBin: true
     dependencies:
       detect-indent: 6.1.0

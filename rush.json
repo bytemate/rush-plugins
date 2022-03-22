@@ -467,6 +467,12 @@
       "shouldPublish": true
     },
     {
+      "packageName": "rush-sort-package-json",
+      "projectFolder": "rush-plugins/rush-sort-package-json",
+      "reviewCategory": "rush-plugins",
+      "shouldPublish": true
+    },
+    {
       "packageName": "rush-print-log-if-error-plugin",
       "projectFolder": "rush-plugins/rush-print-log-if-error-plugin",
       "reviewCategory": "rush-plugins",
