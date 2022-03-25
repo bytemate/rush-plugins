@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-plugin-utils",
+      "comment": "init",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-plugin-utils"
+}

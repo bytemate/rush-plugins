@@ -1,0 +1,10 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/rush-plugin-manifest.schema.json",
+  "plugins": [
+    {
+      "pluginName": "rush-sort-package-json",
+      "description": "Rush plugin for sort package.json file in the project",
+      "commandLineJsonFilePath": "command-line.json"
+    }
+  ]
+}

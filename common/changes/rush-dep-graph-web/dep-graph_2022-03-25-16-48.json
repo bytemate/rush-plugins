@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-dep-graph-web",
+      "comment": "init",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-dep-graph-web"
+}

@@ -1,19 +1,17 @@
 {
-  "name": "rush-sort-package-json",
+  "name": "rush-dep-graph",
   "version": "0.0.1",
-  "description": "Rush plugin for sort package.json file in the project",
+  "description": "Rush plugin for generator workspace dependency graph",
   "keywords": [
     "rush",
     "plugin",
-    "command",
-    "sort",
-    "package.json"
+    "dep-graph"
   ],
   "homepage": "https://github.com/bytesfriends/rush-plugins#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/bytesfriends/rush-plugins",
-    "directory": "rush-plugins/rush-sort-package-json"
+    "directory": "rush-plugins/rush-dep-graph"
   },
   "license": "MIT",
   "author": "bohanzh",
@@ -27,10 +25,15 @@
   "dependencies": {
     "@rushstack/node-core-library": "3.44.1",
     "@rushstack/rush-sdk": "5.62.4",
-    "sort-package-json": "1.54.0",
-    "rush-plugin-utils": "workspace:*"
+    "rush-plugin-utils": "workspace:*",
+    "rush-dep-graph-web": "workspace:*",
+    "sirv": "2.0.2",
+    "lodash.escape": "4.0.1",
+    "opener": "1.5.2"
   },
   "devDependencies": {
+    "@types/lodash.escape": "4.0.6",
+    "@types/opener": "1.4.0",
     "@rushstack/eslint-config": "2.4.5",
     "@rushstack/heft": "0.42.3",
     "@rushstack/heft-node-rig": "1.2.31",

@@ -484,6 +484,21 @@
       "projectFolder": "rush-plugins/rush-lint-staged-plugin",
       "shouldPublish": true,
       "cyclicDependencyProjects": []
+    },
+    {
+      "packageName": "rush-dep-graph",
+      "projectFolder": "rush-plugins/rush-dep-graph",
+      "shouldPublish": true
+    },
+    {
+      "packageName": "rush-dep-graph-web",
+      "projectFolder": "rush-plugins/rush-dep-graph-web",
+      "shouldPublish": true
+    },
+    {
+      "packageName": "rush-plugin-utils",
+      "projectFolder": "rush-plugins/rush-plugin-utils",
+      "shouldPublish": true
     }
   ]
 }
