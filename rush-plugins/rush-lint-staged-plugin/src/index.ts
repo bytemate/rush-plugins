@@ -10,7 +10,8 @@ main();
 async function main(): Promise<void> {
   try {
     // https://github.com/okonet/lint-staged/pull/1080
-    await lintStaged();
+    const success = await lintStaged();
+    if (!success) process.exit(1);
   } catch (error: any) {
     if (error.message) {
       // terminal.writeErrorLine(error.message);
