@@ -37,6 +37,11 @@
       "autoinstallerName": "command-plugins" // the name of autoinstaller you created before
     },
     {
+      "packageName": "rush-sort-package-json",
+      "pluginName": "rush-sort-package-json",
+      "autoinstallerName": "command-plugins" // the name of autoinstaller you created before
+    },
+    {
       "packageName": "rush-upgrade-self-plugin",
       "pluginName": "rush-upgrade-self-plugin",
       "autoinstallerName": "command-plugins" // the name of autoinstaller you created before
