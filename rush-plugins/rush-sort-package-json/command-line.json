@@ -5,7 +5,8 @@
       "name": "sort-package-json",
       "commandKind": "global",
       "summary": "Rush plugin for sort package.json file in the project",
-      "shellCommand": "node <packageFolder>/lib/index.js"
+      "shellCommand": "node <packageFolder>/lib/index.js",
+      "safeForSimultaneousRushProcesses": true
     }
   ]
 }

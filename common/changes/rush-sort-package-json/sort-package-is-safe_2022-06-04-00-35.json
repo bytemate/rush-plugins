@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-sort-package-json",
+      "comment": "Mark as safe for simultaneous processes",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-sort-package-json"
+}
