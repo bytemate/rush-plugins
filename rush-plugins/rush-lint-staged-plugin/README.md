@@ -25,18 +25,18 @@ monorepo-root
 |   └── index.js
 ├── apps/my-app
 |   ├── index.js
-|   └── .lintstagedrc.json
+|   └── .lintstagedrc.js
 └── libraries/my-lib
     ├── index.js
-    └── .lintstagedrc.json
+    └── .lintstagedrc.js
 ```
 
 Assuming git staged `apps/my-app/index.js`, `libraries/my-lib/index.js` and `scripts/index.js`
 
 when `rush lint-staged` runs,
 
-1. `apps/my-app/index.js` uses config from `apps/my-app/.lintstagedrc.json`
-2. `libraries/my-lib/index.js` uses config from `libraries/my-lib/.lintstagedrc.json`
+1. `apps/my-app/index.js` uses config from `apps/my-app/.lintstagedrc.js`
+2. `libraries/my-lib/index.js` uses config from `libraries/my-lib/.lintstagedrc.js`
 3. `scripts/index.js` has no related config, nothing runs for this file
 
 # How to plugin into your monorepo
@@ -102,9 +102,9 @@ For example,
 ```
 monorepo-root
 ├── apps/my-app
-|   └── .lintstagedrc.json
+|   └── .lintstagedrc.js
 └── libraries/my-lib
-    └── .lintstagedrc.json
+    └── .lintstagedrc.js
 ```
 
 ALL DONE! try `git add` some files and `git commit`!
