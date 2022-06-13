@@ -1,6 +1,13 @@
 # Change Log - rush-lint-staged-plugin
 
-This log was last generated on Tue, 22 Mar 2022 03:26:29 GMT and should not be manually modified.
+This log was last generated on Mon, 13 Jun 2022 02:56:11 GMT and should not be manually modified.
+
+## 0.1.4
+Mon, 13 Jun 2022 02:56:11 GMT
+
+### Patches
+
+- Exit with code 1 if linting failed
 
 ## 0.1.3
 Tue, 22 Mar 2022 03:26:29 GMT
