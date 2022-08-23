@@ -5,28 +5,37 @@ import {
   TextAttribute,
 } from "@rushstack/node-core-library";
 
-const verboseEnabled: boolean = process.argv.includes("--verbose");
-
-export const terminal: Terminal = new Terminal(
-  new ConsoleTerminalProvider({
-    verboseEnabled,
-  })
-);
-
-export interface LogOption {
-  prefix: string;
+export class TerminalSingleton {
+  private static _instance: Terminal | undefined;
+  private constructor() {}
+  public static getInstance(verboseEnabled?: boolean): Terminal {
+    if (!TerminalSingleton._instance) {
+      TerminalSingleton._instance = new Terminal(
+        new ConsoleTerminalProvider({
+          verboseEnabled,
+        })
+      );
+    }
+    return TerminalSingleton._instance;
+  }
 }
 
-export type Logger = {
+export interface ILogOption {
+  prefix: string;
+  verboseEnabled?: boolean;
+}
+
+export interface ILogger {
   info(msg: string): void;
   warn(msg: string): void;
   error(msg: string): void;
   success(msg: string): void;
   verbose(msg: string): void;
-};
+}
 
-export function createLog(logOption: LogOption): Logger {
-  const { prefix } = logOption;
+export function createLog(logOption: ILogOption): ILogger {
+  const { prefix, verboseEnabled } = logOption;
+  const terminal: Terminal = TerminalSingleton.getInstance(verboseEnabled);
   return {
     info(msg: string) {
       terminal.write({

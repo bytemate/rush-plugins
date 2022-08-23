@@ -1,18 +1,35 @@
-import { Colors } from "@rushstack/node-core-library";
+import { Colors, Terminal } from "@rushstack/node-core-library";
 import chalk from "chalk";
 import type { Answers } from "inquirer";
 import type { NodePlopAPI, PlopGenerator } from "node-plop";
 import nodePlop from "node-plop";
 import ora, { Ora } from "ora";
 import * as path from "path";
-import { terminal } from "./terminal";
+import { TerminalSingleton } from "./terminal";
 
-export const initProject = async (): Promise<void> => {
+export interface ICliParams {
+  answer?: string | object;
+  verbose: boolean;
+  dryRun: boolean;
+}
+
+export const initProject = async (params: ICliParams): Promise<void> => {
+  const terminal: Terminal = TerminalSingleton.getInstance();
+  // validate if external answer is valid JSON
+  if (params.answer && typeof params.answer === "string") {
+    try {
+      params.answer = JSON.parse(params.answer);
+    } catch (error: any) {
+      params.answer = "";
+      terminal.writeErrorLine(`Invalid JSON answer: ${error?.message}`);
+    }
+  }
   const plopfilePath: string = path.join(__dirname, "./plopfile.js");
 
   const plop: NodePlopAPI = nodePlop(plopfilePath, {
     destBasePath: process.cwd(),
     force: false,
+    ...params,
   });
 
   const generators: { name: string; description: string }[] =
@@ -27,7 +44,7 @@ export const initProject = async (): Promise<void> => {
   const generator: PlopGenerator = plop.getGenerator(generators[0].name);
   await doThePlop(generator, []);
 
-  terminal.writeLine(Colors.green("ALL DONE!"));
+  TerminalSingleton.getInstance().writeLine(Colors.green("ALL DONE!"));
 };
 
 async function doThePlop(

@@ -8,6 +8,7 @@ import type {
   ActionType,
   DynamicPromptsFunction,
   NodePlopAPI,
+  PlopCfg,
   PromptQuestion,
 } from "node-plop";
 import * as path from "path";
@@ -27,6 +28,7 @@ import {
   getTemplateNameList,
   getTemplatesFolder,
 } from "./logic/templateFolder";
+import type { ICliParams } from "./init-project";
 
 export interface IExtendedAnswers extends Answers {
   authorName: string;
@@ -38,18 +40,17 @@ export interface IExtendedAnswers extends Answers {
   shouldRunRushUpdate: boolean;
 }
 
-export default function (plop: NodePlopAPI): void {
+export default function (
+  plop: NodePlopAPI,
+  plopCfg: PlopCfg & ICliParams
+): void {
   const rushConfiguration: RushConfiguration = loadRushConfiguration();
   const monorepoRoot: string = rushConfiguration.rushJsonFolder;
-  const isDryRun: boolean =
-    process.argv.includes("--dry-run") || Boolean(process.env.DRY_RUN);
-  const noInteraction: boolean =
-    process.argv.includes("--config") || Boolean(process.env.NO_INTERACTION);
 
   const hooks: IHooks = initHooks();
   const pluginContext: IPluginContext = {
-    isDryRun,
-    noInteraction,
+    isDryRun: plopCfg.dryRun || Boolean(process.env.DRY_RUN),
+    externalAnswer: Boolean(plopCfg.answer),
   };
 
   registerActions(plop);
@@ -209,7 +210,7 @@ export default function (plop: NodePlopAPI): void {
         .join(templatesFolder, template)
         .replace(/\\/g, "/");
 
-      const actions: ActionType[] = isDryRun
+      const actions: ActionType[] = plopCfg.dryRun
         ? []
         : [
             {

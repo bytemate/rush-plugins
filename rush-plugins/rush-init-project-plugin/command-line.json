@@ -8,6 +8,32 @@
       "shellCommand": "rush-init-project",
       "safeForSimultaneousRushProcesses": true
     }
+  ],
+  "parameters": [
+    {
+      "parameterKind": "string",
+      "description": "Provide node-plop answers with JSON string",
+      "shortName": "-a",
+      "longName": "--answer",
+      "argumentName": "ANSWER",
+      "associatedCommands": ["init-project"],
+      "required": false
+    },
+    {
+      "parameterKind": "flag",
+      "description": "Provide the option isDryRun in plugin context",
+      "shortName": "-d",
+      "longName": "--dry-run",
+      "associatedCommands": ["init-project"],
+      "required": false
+    },
+    {
+      "parameterKind": "flag",
+      "description": "Provide node-plop answers with JSON string",
+      "shortName": "-v",
+      "longName": "--verbose",
+      "associatedCommands": ["init-project"],
+      "required": false
+    }
   ]
-  // "parameters": [],
 }
