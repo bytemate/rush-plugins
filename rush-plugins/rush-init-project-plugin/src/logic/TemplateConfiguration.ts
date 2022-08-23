@@ -42,11 +42,15 @@ export interface IConfig {
 }
 
 export interface IPlugin {
-  apply: (hook: IHooks, pluginContext: IPluginContext) => void;
+  apply: (
+    hook: IHooks,
+    pluginContext: Pick<IPluginContext, keyof IPluginContext>
+  ) => void;
 }
 
 export interface IPluginContext extends Record<string, any> {
   isDryRun: boolean;
+  noInteraction: boolean;
 }
 
 export class TemplateConfiguration {

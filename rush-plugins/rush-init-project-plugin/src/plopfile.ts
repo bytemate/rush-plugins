@@ -29,6 +29,8 @@ import {
 } from "./logic/templateFolder";
 
 export interface IExtendedAnswers extends Answers {
+  authorName: string;
+  description: string;
   template: string;
   packageName: string;
   unscopedPackageName: string;
@@ -41,10 +43,13 @@ export default function (plop: NodePlopAPI): void {
   const monorepoRoot: string = rushConfiguration.rushJsonFolder;
   const isDryRun: boolean =
     process.argv.includes("--dry-run") || Boolean(process.env.DRY_RUN);
+  const noInteraction: boolean =
+    process.argv.includes("--config") || Boolean(process.env.NO_INTERACTION);
 
   const hooks: IHooks = initHooks();
   const pluginContext: IPluginContext = {
     isDryRun,
+    noInteraction,
   };
 
   registerActions(plop);
