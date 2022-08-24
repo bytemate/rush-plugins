@@ -3,6 +3,7 @@ import { FileSystem, PackageName } from "@rushstack/node-core-library";
 import hbsHelpersLib from "handlebars-helpers/lib";
 import { Answers, Inquirer } from "inquirer";
 import autocompletePlugin from "inquirer-autocomplete-prompt";
+import { pickBy } from "lodash";
 import type {
   ActionConfig,
   ActionType,
@@ -50,7 +51,7 @@ export default function (
   const hooks: IHooks = initHooks();
   const pluginContext: IPluginContext = {
     isDryRun: plopCfg.dryRun || Boolean(process.env.DRY_RUN),
-    externalAnswer: Boolean(plopCfg.answer),
+    externalAnswer: typeof plopCfg.answer === "object" ? plopCfg.answer : {},
   };
 
   registerActions(plop);
@@ -132,15 +133,60 @@ export default function (
       message: "Do you need run rush update after init?",
     },
   ];
+
   let templateConfiguration: TemplateConfiguration | undefined;
+  const loadTemplateConfiguration = async (
+    promptQueue: PromptQuestion[],
+    template: string
+  ): Promise<void> => {
+    templateConfiguration = await TemplateConfiguration.loadFromTemplate(
+      template
+    );
+    for (const prompt of templateConfiguration.prompts) {
+      promptQueue.push(prompt);
+    }
+    for (const plugin of templateConfiguration.plugins) {
+      plugin.apply(hooks, pluginContext);
+    }
+    hooks.plop.call(plop);
+    await hooks.prompts.promise({
+      promptQueue,
+    });
+  };
+
   const promptsFunc: DynamicPromptsFunction = async (
     inquirerPassed: Parameters<DynamicPromptsFunction>[0]
   ): Promise<Answers> => {
     const inquirer: Inquirer = inquirerPassed as unknown as Inquirer;
     inquirer.registerPrompt("autocomplete", autocompletePlugin);
 
-    const promptQueue: PromptQuestion[] = defaultPrompts.slice();
+    let promptQueue: PromptQuestion[] = defaultPrompts.slice();
     let allAnswers: Partial<IExtendedAnswers> = {};
+
+    if (pluginContext.externalAnswer) {
+      // if some answers are provided externally, use them instead of prompting.
+      // if template is provided externally, load template configuration.
+      if (pluginContext.externalAnswer?.template) {
+        await loadTemplateConfiguration(
+          promptQueue,
+          pluginContext.externalAnswer.template
+        );
+      }
+      const promptQueueNames: Array<string | undefined> = promptQueue.map(
+        (x) => x.name
+      );
+      allAnswers = pickBy(pluginContext.externalAnswer, (v, k) =>
+        promptQueueNames.includes(k)
+      );
+      // filter out prompts that are provided externally.
+      const answeredPrompts: string[] = Object.keys(allAnswers);
+      promptQueue = promptQueue.filter((it) => {
+        if (it.name) {
+          return !answeredPrompts.includes(it.name);
+        }
+      });
+    }
+
     while (promptQueue.length > 0) {
       const currentPrompt: PromptQuestion = promptQueue.shift()!;
 
@@ -167,19 +213,7 @@ export default function (
 
       // when template decided, load template configuration
       if (currentPrompt?.name === "template") {
-        templateConfiguration = await TemplateConfiguration.loadFromTemplate(
-          currentAnswers.template!
-        );
-        for (const prompt of templateConfiguration.prompts) {
-          promptQueue.push(prompt);
-        }
-        for (const plugin of templateConfiguration.plugins) {
-          plugin.apply(hooks, pluginContext);
-        }
-        hooks.plop.call(plop);
-        await hooks.prompts.promise({
-          promptQueue,
-        });
+        await loadTemplateConfiguration(promptQueue, currentAnswers.template!);
       }
 
       // merge answers

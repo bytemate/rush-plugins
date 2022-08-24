@@ -8,7 +8,7 @@ import * as path from "path";
 import { TerminalSingleton } from "./terminal";
 
 export interface ICliParams {
-  answer?: string | object;
+  answer?: string | Record<string, string>;
   verbose: boolean;
   dryRun: boolean;
 }

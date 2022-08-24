@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-init-project-plugin",
+      "comment": "Add CLI parameters -a, --answer to accept answers from external JSON",
+      "type": "minor"
+    }
+  ],
+  "packageName": "rush-init-project-plugin"
+}
