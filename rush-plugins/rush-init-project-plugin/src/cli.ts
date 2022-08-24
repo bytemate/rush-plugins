@@ -24,7 +24,8 @@ import { TerminalSingleton } from "./terminal";
     )
     .description("Initialize new Rush projects")
     .action(async (params) => {
-      TerminalSingleton.setVerboseEnabled(params?.verbose);
+      if (typeof params?.verbose === "boolean")
+        TerminalSingleton.setVerboseEnabled(params?.verbose);
       const terminal: Terminal = TerminalSingleton.getInstance();
       try {
         getTemplatesFolderAndValidate();
