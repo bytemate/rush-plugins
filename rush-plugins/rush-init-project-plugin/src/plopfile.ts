@@ -51,7 +51,7 @@ export default function (
   const hooks: IHooks = initHooks();
   const pluginContext: IPluginContext = {
     isDryRun: plopCfg.dryRun || Boolean(process.env.DRY_RUN),
-    externalAnswer: typeof plopCfg.answer === "object" ? plopCfg.answer : {},
+    cliAnswer: typeof plopCfg.answer === "object" ? plopCfg.answer : {},
   };
 
   registerActions(plop);
@@ -135,10 +135,10 @@ export default function (
   ];
 
   let templateConfiguration: TemplateConfiguration | undefined;
-  const loadTemplateConfiguration = async (
+  const loadTemplateConfiguration: (
     promptQueue: PromptQuestion[],
     template: string
-  ): Promise<void> => {
+  ) => Promise<void> = async (promptQueue, template) => {
     templateConfiguration = await TemplateConfiguration.loadFromTemplate(
       template
     );
@@ -163,19 +163,19 @@ export default function (
     let promptQueue: PromptQuestion[] = defaultPrompts.slice();
     let allAnswers: Partial<IExtendedAnswers> = {};
 
-    if (pluginContext.externalAnswer) {
+    if (pluginContext.cliAnswer) {
       // if some answers are provided externally, use them instead of prompting.
       // if template is provided externally, load template configuration.
-      if (pluginContext.externalAnswer?.template) {
+      if (pluginContext.cliAnswer?.template) {
         await loadTemplateConfiguration(
           promptQueue,
-          pluginContext.externalAnswer.template
+          pluginContext.cliAnswer.template
         );
       }
       const promptQueueNames: Array<string | undefined> = promptQueue.map(
         (x) => x.name
       );
-      allAnswers = pickBy(pluginContext.externalAnswer, (v, k) =>
+      allAnswers = pickBy(pluginContext.cliAnswer, (v, k) =>
         promptQueueNames.includes(k)
       );
       // filter out prompts that are provided externally.

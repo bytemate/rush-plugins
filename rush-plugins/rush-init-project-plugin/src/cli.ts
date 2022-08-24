@@ -10,7 +10,7 @@ import { TerminalSingleton } from "./terminal";
   program
     .option(
       "-a, --answer <ANSWER>",
-      "Provide node-plop answers with JSON string"
+      "Provide predefined answers with JSON string"
     )
     .option(
       "-d, --dry-run",
@@ -24,7 +24,8 @@ import { TerminalSingleton } from "./terminal";
     )
     .description("Initialize new Rush projects")
     .action(async (params) => {
-      const terminal: Terminal = TerminalSingleton.getInstance(params?.verbose);
+      TerminalSingleton.setVerboseEnabled(params?.verbose);
+      const terminal: Terminal = TerminalSingleton.getInstance();
       try {
         getTemplatesFolderAndValidate();
         await initProject(params);

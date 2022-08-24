@@ -7,16 +7,28 @@ import {
 
 export class TerminalSingleton {
   private static _instance: Terminal | undefined;
+  private static _verboseEnabled: boolean = false;
   private constructor() {}
-  public static getInstance(verboseEnabled?: boolean): Terminal {
+  public static getInstance(): Terminal {
     if (!TerminalSingleton._instance) {
       TerminalSingleton._instance = new Terminal(
         new ConsoleTerminalProvider({
-          verboseEnabled,
+          verboseEnabled: TerminalSingleton._verboseEnabled,
         })
       );
     }
     return TerminalSingleton._instance;
+  }
+  public static setVerboseEnabled(enabled?: boolean): void {
+    if (enabled === undefined) {
+      return;
+    }
+    TerminalSingleton._verboseEnabled = enabled;
+    TerminalSingleton._instance = new Terminal(
+      new ConsoleTerminalProvider({
+        verboseEnabled: TerminalSingleton._verboseEnabled,
+      })
+    );
   }
 }
 
@@ -35,7 +47,8 @@ export interface ILogger {
 
 export function createLog(logOption: ILogOption): ILogger {
   const { prefix, verboseEnabled } = logOption;
-  const terminal: Terminal = TerminalSingleton.getInstance(verboseEnabled);
+  TerminalSingleton.setVerboseEnabled(verboseEnabled);
+  const terminal: Terminal = TerminalSingleton.getInstance();
   return {
     info(msg: string) {
       terminal.write({

@@ -47,7 +47,7 @@ export interface IPlugin {
 
 export interface IPluginContext extends Record<string, any> {
   isDryRun: boolean;
-  externalAnswer: Record<string, string>;
+  cliAnswer: Record<string, string>;
 }
 
 export class TemplateConfiguration {

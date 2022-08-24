@@ -12,7 +12,7 @@
   "parameters": [
     {
       "parameterKind": "string",
-      "description": "Provide node-plop answers with JSON string",
+      "description": "Provide predefined answers with JSON string",
       "shortName": "-a",
       "longName": "--answer",
       "argumentName": "ANSWER",
@@ -29,7 +29,7 @@
     },
     {
       "parameterKind": "flag",
-      "description": "Provide node-plop answers with JSON string",
+      "description": "Provide verbose log output",
       "shortName": "-v",
       "longName": "--verbose",
       "associatedCommands": ["init-project"],
