@@ -7,10 +7,9 @@ import {
 
 export class TerminalSingleton {
   private static _instance: Terminal | undefined;
-  private static _terminalProvider: ConsoleTerminalProvider;
-  private constructor() {
-    TerminalSingleton._terminalProvider = new ConsoleTerminalProvider();
-  }
+  private static _terminalProvider: ConsoleTerminalProvider =
+    new ConsoleTerminalProvider();
+  private constructor() {}
   public static getInstance(): Terminal {
     if (!TerminalSingleton._instance) {
       TerminalSingleton._instance = new Terminal(
