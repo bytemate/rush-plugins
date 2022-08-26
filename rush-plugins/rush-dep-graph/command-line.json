@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/command-line.schema.json",
+  "commands": [
+    {
+      "name": "dep-graph",
+      "commandKind": "global",
+      "summary": "Rush plugin for generating a dependency graph in this repo",
+      "shellCommand": "node <packageFolder>/lib/index.js"
+    }
+  ]
+}

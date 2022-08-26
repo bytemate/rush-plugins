@@ -1,0 +1,70 @@
+{
+  "nodes": [
+    {
+      "id": "rush-archive-project-plugin@1.1.3",
+      "name": "rush-archive-project-plugin",
+      "version": "1.1.3",
+      "isProject": true
+    },
+    {
+      "id": "rush-dep-graph@0.0.1",
+      "name": "rush-dep-graph",
+      "version": "0.0.1",
+      "isProject": true
+    },
+    {
+      "id": "rush-dep-graph-web@0.0.1",
+      "name": "rush-dep-graph-web",
+      "version": "0.0.1",
+      "isProject": true
+    },
+    {
+      "id": "rush-init-project-plugin@0.2.1",
+      "name": "rush-init-project-plugin",
+      "version": "0.2.1",
+      "isProject": true
+    },
+    {
+      "id": "rush-lint-staged-plugin@0.1.2",
+      "name": "rush-lint-staged-plugin",
+      "version": "0.1.2",
+      "isProject": true
+    },
+    {
+      "id": "rush-plugin-utils@0.0.1",
+      "name": "rush-plugin-utils",
+      "version": "0.0.1",
+      "isProject": true
+    },
+    {
+      "id": "rush-print-log-if-error-plugin@0.0.4",
+      "name": "rush-print-log-if-error-plugin",
+      "version": "0.0.4",
+      "isProject": true
+    },
+    {
+      "id": "rush-sort-package-json@0.0.1",
+      "name": "rush-sort-package-json",
+      "version": "0.0.1",
+      "isProject": true
+    },
+    {
+      "id": "rush-upgrade-self-plugin@1.0.6",
+      "name": "rush-upgrade-self-plugin",
+      "version": "1.0.6",
+      "isProject": true
+    }
+  ],
+  "edges": [
+    { "source": "rush-dep-graph@0.0.1", "target": "rush-plugin-utils@0.0.1" },
+    { "source": "rush-dep-graph@0.0.1", "target": "rush-dep-graph-web@0.0.1" },
+    {
+      "source": "rush-dep-graph-web@0.0.1",
+      "target": "rush-plugin-utils@0.0.1"
+    },
+    {
+      "source": "rush-sort-package-json@0.0.1",
+      "target": "rush-plugin-utils@0.0.1"
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 
 import path from "path";
 
-import { loadRushConfiguration } from "./helpers/loadRushConfiguration";
+import { loadRushConfiguration } from "rush-plugin-utils";
 import { terminal } from "./helpers/terminal";
 
 import type { RushConfiguration } from "@rushstack/rush-sdk";

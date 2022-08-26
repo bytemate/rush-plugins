@@ -1,19 +1,17 @@
 {
-  "name": "rush-sort-package-json",
-  "version": "0.0.3",
-  "description": "Rush plugin for sort package.json file in the project",
+  "name": "rush-plugin-utils",
+  "version": "0.0.1",
+  "description": "Utils for rush plugin",
   "keywords": [
     "rush",
     "plugin",
-    "command",
-    "sort",
-    "package.json"
+    "utils"
   ],
   "homepage": "https://github.com/bytesfriends/rush-plugins#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/bytesfriends/rush-plugins",
-    "directory": "rush-plugins/rush-sort-package-json"
+    "directory": "rush-plugins/rush-plugin-utils"
   },
   "license": "MIT",
   "author": "bohanzh",
@@ -26,9 +24,7 @@
   },
   "dependencies": {
     "@rushstack/node-core-library": "3.44.1",
-    "@rushstack/rush-sdk": "5.62.4",
-    "sort-package-json": "1.54.0",
-    "rush-plugin-utils": "workspace:*"
+    "@rushstack/rush-sdk": "5.62.4"
   },
   "devDependencies": {
     "@rushstack/eslint-config": "2.4.5",
