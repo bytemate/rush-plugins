@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-init-project-plugin",
+      "comment": "Adds \"decoupledLocalDependencies\" and \"tags\" to the fields of the default rush project configuration",
+      "type": "minor"
+    }
+  ],
+  "packageName": "rush-init-project-plugin"
+}
