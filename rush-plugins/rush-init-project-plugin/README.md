@@ -47,7 +47,7 @@ After rush update, `rush-plugin-manifest.json` and `command-line.json` will be s
 
 5. Add your first template
 
-Let's say you want to add a new template named `my-template`, put your project templates under `common/_templates/my-template` folder.
+Let's say you want to add a new template named `my-template`, put the template files under `common/_templates/my-template` folder.
 
 ```
 common/_templates
