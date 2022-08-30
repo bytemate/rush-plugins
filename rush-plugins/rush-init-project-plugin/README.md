@@ -72,12 +72,13 @@ See [HERE](./docs/init_project_configuration.md) for detail.
 
 The whole CLI is based on [node-plop](https://www.npmjs.com/package/plop)
 
-All directories under `common/_templates/<template_name>` are template source code, except those who prefixes with `_`. For instance folder named `_internal` is treated as internal folder not template folder.
+All directories under `common/_templates/<template_name>` are template source code, except those who prefixes with `_`. For instance, folder named `_plugins` is treated as internal folder not template folder where you can store shared files across templates.
 
 All source code will be rendered by [handlebars](https://handlebarsjs.com/guide/).
 
 Plenty of handlebar helpers are provided as default by [handlebars-helpers](https://www.npmjs.com/package/handlebars-helpers)
 
+Third party node modules can be used in `init.config` configuration file by installing them into `common/autoinstallers/command-plugins/` folder.
 
 Default prompts includes:
 - `packageName`: `"name"` field in `package.json`
