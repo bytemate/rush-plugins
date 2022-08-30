@@ -123,41 +123,15 @@ The initialized project configuration is `rush.json` will be
 
 Current defaultProjectConfiguration supports the following properties:
 
-### `reviewCategory`
+- `reviewCategory`
+- `decoupledLocalDependencies`
+- `shouldPublish`
+- `skipRushCheck`
+- `versionPolicyName`
+- `publishFolder`
+- `tags`
 
-type: `string`
-
-An optional category for usage in the "browser-approved-packages.json" and "nonbrowser-approved-packages.json" files. Only strings from reviewCategories are allowed here.
-
-### `cyclicDependencyProjects`
-
-type: `string[]`
-
-A list of local projects that appear as devDependencies for this project, but cannot be locally linked because it would create a cyclic dependency; instead, the last published version will be installed in the Common folder.
-
-### `shouldPublish`
-
-type: `boolean`
-
-A flag indicating that changes to this project will be published to npm, which affects the Rush change and publish workflows.
-
-### `skipRushCheck`
-
-type: `boolean`
-
-If true, then this project will be ignored by the "rush check" command. The default value is false.
-
-### `versionPolicyName`
-
-type: `string`
-
-An optional version policy associated with the project. Version policies are defined in "version-policies.json" file.
-
-### `publishFolder`
-
-type: `string`
-
-Facilitates postprocessing of a project's files prior to publishing. If specified, the "publishFolder" is the relative path to a subfolder of the project folder. The "rush publish" command will publish the subfolder instead of the project folder. The subfolder must contain its own package.json file, which is typically a build output.
+Please check [Rush documentation](https://rushjs.io/pages/configs/rush_json/) for more details.
 
 # `plugins`
 
@@ -423,5 +397,51 @@ export class FooPlugin implements IPlugin {
       });
     });
   }
+}
+```
+
+## Case 3: Replace render engine with [ejs](https://www.npmjs.com/package/ejs)
+
+```typescript
+import ejs from 'ejs';
+import type { IAnswers, IPlugin, IHooks, IPromptsHookParams } from 'rush-init-project-plugin';
+
+export class EJSPlugin implements IPlugin {
+  public static readonly pluginName: string = 'ejsPlugin';
+  apply(hooks: IHooks): void {
+    hooks.plop.tap(EJSPlugin.pluginName, (plop) => {
+      plop.renderString = (template: string, data: IAnswers) => {
+        return ejs.render(template, data);
+      }
+    });
+  };
+}
+```
+
+NOTE: `ejs` is installed by `autoinstaller`
+
+```json
+// common/autoinstallers/command-plugins/package.json
+{
+  "dependencies": {
+    "ejs": "3.8.1"
+  }
+}
+```
+
+## Case 4: Add predefined variables to template
+
+```typescript
+import type { IAnswers, IPlugin, IHooks, IPromptsHookParams } from 'rush-init-project-plugin';
+
+export class MyDataPlugin implements IPlugin {
+  public static readonly pluginName: string = 'MyDataPlugin';
+  apply(hooks: IHooks): void {
+    hooks.answers.tap(MyDataPlugin.pluginName, (answers) => {
+      // mutate answers here 
+      answers.foo = 'foo';
+      answers.bar = 'bar';
+    });
+  };
 }
 ```
