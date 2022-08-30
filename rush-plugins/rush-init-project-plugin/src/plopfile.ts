@@ -3,11 +3,13 @@ import { FileSystem, PackageName } from "@rushstack/node-core-library";
 import hbsHelpersLib from "handlebars-helpers/lib";
 import { Answers, Inquirer } from "inquirer";
 import autocompletePlugin from "inquirer-autocomplete-prompt";
+import { pickBy } from "lodash";
 import type {
   ActionConfig,
   ActionType,
   DynamicPromptsFunction,
   NodePlopAPI,
+  PlopCfg,
   PromptQuestion,
 } from "node-plop";
 import * as path from "path";
@@ -27,8 +29,11 @@ import {
   getTemplateNameList,
   getTemplatesFolder,
 } from "./logic/templateFolder";
+import type { ICliParams } from "./init-project";
 
 export interface IExtendedAnswers extends Answers {
+  authorName: string;
+  description: string;
   template: string;
   packageName: string;
   unscopedPackageName: string;
@@ -36,15 +41,17 @@ export interface IExtendedAnswers extends Answers {
   shouldRunRushUpdate: boolean;
 }
 
-export default function (plop: NodePlopAPI): void {
+export default function (
+  plop: NodePlopAPI,
+  plopCfg: PlopCfg & ICliParams
+): void {
   const rushConfiguration: RushConfiguration = loadRushConfiguration();
   const monorepoRoot: string = rushConfiguration.rushJsonFolder;
-  const isDryRun: boolean =
-    process.argv.includes("--dry-run") || Boolean(process.env.DRY_RUN);
 
   const hooks: IHooks = initHooks();
   const pluginContext: IPluginContext = {
-    isDryRun,
+    isDryRun: plopCfg.dryRun || Boolean(process.env.DRY_RUN),
+    cliAnswer: typeof plopCfg.answer === "object" ? plopCfg.answer : {},
   };
 
   registerActions(plop);
@@ -126,15 +133,60 @@ export default function (plop: NodePlopAPI): void {
       message: "Do you need run rush update after init?",
     },
   ];
+
   let templateConfiguration: TemplateConfiguration | undefined;
+  const loadTemplateConfiguration: (
+    promptQueue: PromptQuestion[],
+    template: string
+  ) => Promise<void> = async (promptQueue, template) => {
+    templateConfiguration = await TemplateConfiguration.loadFromTemplate(
+      template
+    );
+    for (const prompt of templateConfiguration.prompts) {
+      promptQueue.push(prompt);
+    }
+    for (const plugin of templateConfiguration.plugins) {
+      plugin.apply(hooks, pluginContext);
+    }
+    hooks.plop.call(plop);
+    await hooks.prompts.promise({
+      promptQueue,
+    });
+  };
+
   const promptsFunc: DynamicPromptsFunction = async (
     inquirerPassed: Parameters<DynamicPromptsFunction>[0]
   ): Promise<Answers> => {
     const inquirer: Inquirer = inquirerPassed as unknown as Inquirer;
     inquirer.registerPrompt("autocomplete", autocompletePlugin);
 
-    const promptQueue: PromptQuestion[] = defaultPrompts.slice();
+    let promptQueue: PromptQuestion[] = defaultPrompts.slice();
     let allAnswers: Partial<IExtendedAnswers> = {};
+
+    if (pluginContext.cliAnswer) {
+      // if some answers are provided externally, use them instead of prompting.
+      // if template is provided externally, load template configuration.
+      if (pluginContext.cliAnswer?.template) {
+        await loadTemplateConfiguration(
+          promptQueue,
+          pluginContext.cliAnswer.template
+        );
+      }
+      const promptQueueNames: Array<string | undefined> = promptQueue.map(
+        (x) => x.name
+      );
+      allAnswers = pickBy(pluginContext.cliAnswer, (v, k) =>
+        promptQueueNames.includes(k)
+      );
+      // filter out prompts that are provided externally.
+      const answeredPrompts: string[] = Object.keys(allAnswers);
+      promptQueue = promptQueue.filter((it) => {
+        if (it.name) {
+          return !answeredPrompts.includes(it.name);
+        }
+      });
+    }
+
     while (promptQueue.length > 0) {
       const currentPrompt: PromptQuestion = promptQueue.shift()!;
 
@@ -161,19 +213,7 @@ export default function (plop: NodePlopAPI): void {
 
       // when template decided, load template configuration
       if (currentPrompt?.name === "template") {
-        templateConfiguration = await TemplateConfiguration.loadFromTemplate(
-          currentAnswers.template!
-        );
-        for (const prompt of templateConfiguration.prompts) {
-          promptQueue.push(prompt);
-        }
-        for (const plugin of templateConfiguration.plugins) {
-          plugin.apply(hooks, pluginContext);
-        }
-        hooks.plop.call(plop);
-        await hooks.prompts.promise({
-          promptQueue,
-        });
+        await loadTemplateConfiguration(promptQueue, currentAnswers.template!);
       }
 
       // merge answers
@@ -204,7 +244,7 @@ export default function (plop: NodePlopAPI): void {
         .join(templatesFolder, template)
         .replace(/\\/g, "/");
 
-      const actions: ActionType[] = isDryRun
+      const actions: ActionType[] = plopCfg.dryRun
         ? []
         : [
             {
