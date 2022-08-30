@@ -1,6 +1,14 @@
 # Change Log - rush-init-project-plugin
 
-This log was last generated on Tue, 22 Mar 2022 03:26:29 GMT and should not be manually modified.
+This log was last generated on Tue, 30 Aug 2022 17:47:59 GMT and should not be manually modified.
+
+## 0.3.0
+Tue, 30 Aug 2022 17:47:59 GMT
+
+### Minor changes
+
+- Adds "decoupledLocalDependencies" and "tags" to the fields of the default rush project configuration
+- Add CLI parameters -a, --answer to accept answers from external JSON
 
 ## 0.2.2
 Tue, 22 Mar 2022 03:26:29 GMT
