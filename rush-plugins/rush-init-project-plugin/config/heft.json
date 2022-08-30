@@ -8,5 +8,9 @@
       "actionId": "defaultClean",
       "globsToDelete": ["lib"]
     }
+  ],
+
+  "heftPlugins": [
+    { "plugin": "@rushstack/heft-jest-plugin" }
   ]
 }
