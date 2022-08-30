@@ -26,19 +26,27 @@ const loaders: Record<string, (path: string) => IConfig> = {
   },
 };
 
+/**
+ * See https://rushjs.io/pages/configs/rush_json/
+ */
 export interface IDefaultProjectConfiguration {
   reviewCategory?: string;
+  /**
+   * @deprecated Use `decoupledLocalDependencies` instead.
+   */
   cyclicDependencyProjects?: string[];
+  decoupledLocalDependencies?: string[];
   shouldPublish?: boolean;
   skipRushCheck?: boolean;
   versionPolicyName?: string;
   publishFolder?: string;
+  tags?: string[];
 }
 
 export interface IConfig {
   prompts?: PromptQuestion[];
   plugins?: IPlugin[];
-  defaultProjectConfiguration: IDefaultProjectConfiguration;
+  defaultProjectConfiguration?: IDefaultProjectConfiguration;
 }
 
 export interface IPlugin {
