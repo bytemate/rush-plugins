@@ -23,7 +23,7 @@
     "build": "heft build --clean --lite",
     "build:watch": "heft build --lite --watch",
     "prepublishOnly": "npm run build",
-    "test": "heft test"
+    "test": ""
   },
   "dependencies": {
     "@rushstack/node-core-library": "3.44.1",
