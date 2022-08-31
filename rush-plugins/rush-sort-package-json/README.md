@@ -2,7 +2,13 @@
 
 Rush plugin for sort package.json file in the project.
 
-# Usage
+# Quick Start
+
+1. Enabling this rush plugin
+
+Please follow the [official doc](https://rushjs.io/pages/maintainer/using_rush_plugins/) to enable this plugin in your repo.
+
+2. Running `sort-package-json`
 
 ```
 rush sort-package-json
