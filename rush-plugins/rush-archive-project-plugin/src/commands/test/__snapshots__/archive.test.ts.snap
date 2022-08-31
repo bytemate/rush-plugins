@@ -1,0 +1,6 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`archive archive package with dependent should not work with package has dependent 1`] = `
+"Target project @my-company/my-lib is depended by other 1 project(s):
+@my-company/my-app"
+`;

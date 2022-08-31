@@ -117,10 +117,7 @@ describe("archive", () => {
         archive({
           packageName,
         })
-      ).rejects.toThrowErrorMatchingInlineSnapshot(`
-              "Target project @my-company/my-lib is depended by other 1 project(s):
-              @my-company/my-app"
-            `);
+      ).rejects.toThrowErrorMatchingSnapshot();
     });
   });
 });
