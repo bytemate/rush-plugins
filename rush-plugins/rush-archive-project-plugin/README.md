@@ -1,80 +1,45 @@
 # rush-archive-project-plugin
 
-Rush plugin for archive/unarchive project code in monorepo.
+A rush plugin for archive/unarchive project source code in monorepo.
 
 # Prerequisite
 
 Rush.js >= 5.57.0
 
-# Usage
+# Quick Start
+
+1. Enabling this rush plugin
+
+Please follow the [official doc](https://rushjs.io/pages/maintainer/using_rush_plugins/) to enable this plugin in your repo.
+
+
+2. Running archive project command
 
 ```
 rush archive-project --package-name <your_package_name>
-rush unarchive-project --package-name <your_package_name>
 ```
 
-# How archive works
+> restoring your code by `rush unarchive-project --package-name <your_package_name>`
 
-1. find project configuration via Rush.js, such as project folder
-2. check whether there are projects depends on target project
-3. `git clean -xdf` under project folder
-4. record project configuration into `rush-metadata.json` file
-5. run sth like `tar -czf <unscoped_package_name>.tar.gz -C <project_folder> .` to create a tarball
-6. move tarball to `common/_graveyard` folder
-7. remove project config to `rush.json`
-8. delete project folder
+# Archive working process
 
-# How unarchive works
+1. Find project configuration by Rush.js SDK
+2. Check whether there are projects depends on target project
+3. Run `git clean -xdf` under project folder
+4. Record project configuration into `rush-metadata.json` file
+5. Create a tarball by running `tar -czf <unscoped_package_name>.tar.gz -C <project_folder> .`
+6. Move the tarball to `common/_graveyard` folder
+7. Remove project config to `rush.json`
+8. Delete project folder
 
-1. extract tarball by `packageName`
-2. run std like `tar xf <package_name>.tar.gz` to extract tarball
-3. read metadata file to get project configuration
-4. move source code to project folder
-5. resume project configuration into `rush.json`
-6. delete metadata file and tarball
+# Unarchive working process
 
-# How to use
-
-1. Create an autoinstaller
-
-> NOTE: you can also reuse a existing autoinstaller. If so, skip this step.
-
-```
-rush init-autoinstaller --name command-plugins
-```
-
-2. Install this plugin into autoinstaller
-
-```
-cd common/autoinstallers/command-plugins
-pnpm install rush-archive-project-plugin
-rush update-autoinstaller --name command-plugins
-```
-
-3. Update `common/config/rush/rush-plugins.json`
-
-```
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/rush-plugins.schema.json",
-  "plugins": [
-    {
-      "packageName": "rush-archive-project-plugin",
-      "pluginName": "rush-archive-project-plugin",
-      "autoinstallerName": "command-plugins" // the name of autoinstaller you created before
-    }
-  ]
-}
-```
-
-4. Run `rush update`
-
-After rush update, `rush-plugin-manifest.json` and `command-line.json` will be synced. They should be committed into git.
-
-All done!
-
-Run `rush archive-project --package-name <package_name>` to archive a project.
-
-And `rush unarchive-project --package-name <package_name>` to unarchive a project.
+1. Find the tarball by `packageName`
+2. Extract the tarball by running `tar xf <package_name>.tar.gz`
+3. Get project configuration by reading `rush-metadata.json`
+4. Move the code to project folder
+5. Restore project configuration into `rush.json`
+6. Delete metadata file and tarball
 
 # LICENSE
 
