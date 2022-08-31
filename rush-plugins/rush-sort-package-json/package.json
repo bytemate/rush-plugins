@@ -1,6 +1,6 @@
 {
   "name": "rush-sort-package-json",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Rush plugin for sort package.json file in the project",
   "keywords": [
     "rush",

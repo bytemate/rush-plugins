@@ -1,6 +1,6 @@
 {
   "name": "rush-print-log-if-error-plugin",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Rush plugin for print entire log if error log exists",
   "keywords": [
     "rush",

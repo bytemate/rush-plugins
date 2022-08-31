@@ -2,6 +2,18 @@
   "name": "rush-sort-package-json",
   "entries": [
     {
+      "version": "0.0.4",
+      "tag": "rush-sort-package-json_v0.0.4",
+      "date": "Wed, 31 Aug 2022 04:09:13 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Update readme"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.0.3",
       "tag": "rush-sort-package-json_v0.0.3",
       "date": "Sat, 11 Jun 2022 08:01:34 GMT",

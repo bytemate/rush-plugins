@@ -1,6 +1,13 @@
 # Change Log - rush-print-log-if-error-plugin
 
-This log was last generated on Thu, 24 Feb 2022 11:57:31 GMT and should not be manually modified.
+This log was last generated on Wed, 31 Aug 2022 04:09:13 GMT and should not be manually modified.
+
+## 0.0.5
+Wed, 31 Aug 2022 04:09:13 GMT
+
+### Patches
+
+- Update readme
 
 ## 0.0.4
 Thu, 24 Feb 2022 11:57:31 GMT
