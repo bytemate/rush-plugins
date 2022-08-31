@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-init-project-plugin",
+      "comment": "",
+      "type": "none"
+    }
+  ],
+  "packageName": "rush-init-project-plugin"
+}

@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-sort-package-json",
+      "comment": "Update readme",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-sort-package-json"
+}
