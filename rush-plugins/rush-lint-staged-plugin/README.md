@@ -29,6 +29,18 @@ rush lint-staged
 node common/scripts/install-run-rush.js lint-staged || exit $?
 ```
 
+4. Add a placeholder `lint-staged` config in root path.
+
+The reason of adding this file is the fact that `lint-staged` behaves differently with the number of config files. With this placeholder config, `lint-staged` will always find multiple config files in your monorepo, which corrects the working directory of each task.
+
+**<monorepo_root_path>/.lintstagedrc.json**
+
+```
+{
+  "*": "echo ok"
+}
+```
+
 # Rational
 
 `lint-staged@>=12.2.1` supports a new feature called multiple config files. With this feature, each staged files can load different lint-staged configuration. This plugin invokes `lintStaged` for you. No more no less.
