@@ -2,7 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   rush-archive-project-plugin: 1.1.3
-  rush-audit-cache-plugin: 0.0.1
+  rush-audit-cache-plugin: 0.0.2
   rush-init-project-plugin: 0.2.1
   rush-lint-staged-plugin: 0.1.2
   rush-sort-package-json: 0.0.3
@@ -11,7 +11,7 @@ specifiers:
 
 dependencies:
   rush-archive-project-plugin: 1.1.3
-  rush-audit-cache-plugin: 0.0.1
+  rush-audit-cache-plugin: 0.0.2
   rush-init-project-plugin: 0.2.1_typescript@4.4.2
   rush-lint-staged-plugin: 0.1.2
   rush-sort-package-json: 0.0.3
@@ -2937,8 +2937,8 @@ packages:
       yargs: 17.3.1
     dev: false
 
-  /rush-audit-cache-plugin/0.0.1:
-    resolution: {integrity: sha512-ABIRW3tsUiCJx8rfVCGwNPTRaQeT4iKUgwfquKfRcbu6OpINxsFeq/fSGl6OjmyMZAP41RYr6SwZbgUxPLv9Sw==}
+  /rush-audit-cache-plugin/0.0.2:
+    resolution: {integrity: sha512-texnPnt6UTW585gd7VIP7NnSQ0Nank/tJGMScH5yBnvfPtdVAG/nwyvVZXBv1BQbC7pwfy9nE3b65mBEVygj3A==}
     dependencies:
       '@rushstack/node-core-library': 3.44.1
       '@rushstack/rush-sdk': 5.62.4
