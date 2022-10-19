@@ -17,7 +17,7 @@
       "shortName": "-p",
       "argumentName": "PACKAGE_NAME",
       "associatedCommands": [ "audit-cache" ],
-      "required": true
+      "required": false
     },
     {
       "parameterKind": "string",

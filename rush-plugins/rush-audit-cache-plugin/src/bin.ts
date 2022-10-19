@@ -31,6 +31,10 @@ async function main(): Promise<void> {
       .option('-v, --verbose', 'verbosity that can be increased', increaseVerbosity, 0)
       .action(async (opts: { project: string; verbose: number }) => {
         const projectName: string = opts.project;
+        if (!projectName) {
+          terminal.writeErrorLine('--project parameter is required');
+          program.help();
+        }
         if (opts.verbose > 0) {
           let cliLevel: string = '';
           switch (opts.verbose) {
