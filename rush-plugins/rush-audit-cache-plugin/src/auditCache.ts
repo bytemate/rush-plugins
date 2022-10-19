@@ -6,7 +6,7 @@ import { Colors, FileSystem, ITerminal } from '@rushstack/node-core-library';
 import { AUDIT_CACHE_FOLDER } from './helpers/constants';
 import { TraceExecutorFactory } from './core/TraceExecutor';
 import { BaseTraceExecutor, IBaseTraceExecutorOptions, ITraceResult } from './core/base/BaseTraceExecutor';
-import { AuditCacheAnalyzer, IAnalyzeResult, IRisk } from './core/Analyzer';
+import { AuditCacheAnalyzer, IAnalyzeResult } from './core/Analyzer';
 import { getSortedAllDependencyProjects } from './helpers/rushProject';
 
 export interface IAuditCacheOptions {
