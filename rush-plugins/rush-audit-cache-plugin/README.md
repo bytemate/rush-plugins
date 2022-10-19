@@ -4,7 +4,8 @@ A diagnostic tool for rush build cache
 
 # Prerequisite
 
-Rush.js >= 5.57.0
+- Rush.js >= 5.57.0
+- strace >= 4.26 in Linux
 
 # Quick Start
 
