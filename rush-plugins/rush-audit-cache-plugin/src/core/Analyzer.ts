@@ -1,5 +1,8 @@
 import * as path from "path";
-import { JsonFile, Path } from "@rushstack/node-core-library";
+import { FileSystem, JsonFile } from "@rushstack/node-core-library";
+import ignore, { Ignore } from 'ignore';
+
+import { getSortedAllDependencyProjects } from "../helpers/rushProject";
 
 import type {
   RushConfiguration,
@@ -38,19 +41,19 @@ export interface IAnalyzeResult {
   };
 }
 
+const lowRiskGlobs: string[] = [
+  // nvm
+  ".nvm", ".npm", ".npmrc",
+  // system
+  "/usr/lib/**",
+  "/etc/**",
+  "/sys/**",
+  "/proc/**",
+  "/dev/null",
+]
+
 export class AuditCacheAnalyzer {
   private _rushConfiguration: RushConfiguration;
-  private _nodeFilePaths: string[] = [".nvm", ".npm", ".npmrc"];
-  private _systemFilePaths: string[] = [
-    "/usr/lib",
-    "/etc",
-    "/sys",
-    "/proc",
-    "/dev/null",
-  ];
-  private _projectToDependencies: {
-    [projectName: string]: RushConfigurationProject[];
-  } = {};
 
   public constructor(options: IAnalyzerOptions) {
     this._rushConfiguration = options.rushConfiguration;
@@ -62,42 +65,49 @@ export class AuditCacheAnalyzer {
         const project: RushConfigurationProject | undefined =
           this._rushConfiguration.getProjectByName(projectName);
 
-        let outputFolderNames: string[] = [];
-        let ignoreInputFolderNames: string[] = [];
-
         if (!project) {
           throw new Error(`no project ${projectName} RushConfigurationProject`);
         }
         const { projectFolder, projectRushConfigFolder } = project;
 
+        const safeReadMatcher: Ignore = ignore();
+
+        // dependency project folders
+        const allDependencyProjectFolders: string[] = getSortedAllDependencyProjects(project).map(p => p.projectFolder);
+        if (allDependencyProjectFolders.length > 0) {
+          safeReadMatcher.add(`${allDependencyProjectFolders}/**`);
+        }
+
+        const lowRiskMatcher: Ignore = ignore();
+
+        // low risk globs
+        lowRiskMatcher.add(lowRiskGlobs);
+
+        let outputFolderNames: string[] = [];
         try {
           const rushProjectJson: IRushProjectJson = JsonFile.load(
             path.join(projectRushConfigFolder, "./rush-project.json")
           );
           const { operationSettings = [], incrementalBuildIgnoredGlobs = [] } =
             rushProjectJson;
-          ignoreInputFolderNames = incrementalBuildIgnoredGlobs.map((p) =>
-            path.join(projectFolder, p)
-          );
-          const buildOutputFolderNames:
+          if (incrementalBuildIgnoredGlobs.length > 0) {
+            safeReadMatcher.add(incrementalBuildIgnoredGlobs);
+          }
+          const operationSetting:
             | IRushProjectJson["operationSettings"][number]
             | undefined = operationSettings.find(
             ({ operationName }) => operationName === "build"
           );
 
-          if (buildOutputFolderNames) {
-            outputFolderNames = buildOutputFolderNames.outputFolderNames.map(
-              (p) => path.join(projectFolder, p)
-            );
+          if (operationSetting) {
+            outputFolderNames = operationSetting.outputFolderNames;
           }
         } catch (e) {
-          outputFolderNames = [];
-        }
-
-        if (!this._projectToDependencies[projectName]) {
-          this._projectToDependencies[projectName] = [
-            ...project.dependencyProjects,
-          ];
+          if (FileSystem.isFileDoesNotExistError(e as Error)) {
+            outputFolderNames = [];
+          } else {
+            throw e;
+          }
         }
 
         if (!acc[projectName]) {
@@ -108,10 +118,14 @@ export class AuditCacheAnalyzer {
         }
 
         for (const readFilePath of readFiles) {
+          // Safe
+          if (safeReadMatcher.ignores(readFilePath)) {
+            continue;
+          }
+
+          // Low risk
           if (
-            this._systemFilePaths.find((systemPath) =>
-              Path.isUnderOrEqual(readFilePath, systemPath)
-            )
+            lowRiskMatcher.ignores(readFilePath)
           ) {
             acc[projectName].lowRisk.push({
               kind: "readFile",
@@ -120,34 +134,25 @@ export class AuditCacheAnalyzer {
             continue;
           }
 
-          if (
-            ignoreInputFolderNames.find((fullPath) =>
-              Path.isUnderOrEqual(readFilePath, fullPath)
-            )
-          ) {
-            continue;
-          }
-          if (
-            this._projectToDependencies[projectName].find(({ projectFolder }) =>
-              Path.isUnderOrEqual(readFilePath, projectFolder)
-            )
-          ) {
-            continue;
-          }
+          // Otherwise, high risk
           acc[projectName].highRisk.push({
             kind: "readFile",
             filePath: readFilePath,
           });
         }
 
+        const safeWriteMatcher: Ignore = ignore();
+        safeWriteMatcher.add(outputFolderNames.map((outputFolderName) => `${projectFolder}/${outputFolderName}/**`));
+
         for (const writeFilePath of writeFiles) {
+          // safe
           if (
-            outputFolderNames.find(
-              (fullPath) => !Path.isUnderOrEqual(writeFilePath, fullPath)
-            )
+            safeWriteMatcher.ignores(writeFilePath)
           ) {
             continue;
           }
+
+          // Otherwise, high risk
           acc[projectName].highRisk.push({
             kind: "readFile",
             filePath: writeFilePath,

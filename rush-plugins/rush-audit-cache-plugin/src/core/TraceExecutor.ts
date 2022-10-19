@@ -15,7 +15,7 @@ export class TraceExecutorFactory {
         return new LinuxTraceExecutorModule.LinuxTraceExecutor(options);
       }
       default: {
-        throw new Error(`Unsupported platform: ${platform}`);
+        throw new Error(`Unsupported OS platform: ${platform}, only linux is supported now.`);
       }
     }
   }

@@ -5,6 +5,7 @@ import { FileSystem } from "@rushstack/node-core-library";
 
 import type { RushConfigurationProject } from "@rushstack/rush-sdk";
 import { ITraceResult } from "../base/BaseTraceExecutor";
+import { getSortedAllDependencyProjects } from "../../helpers/rushProject";
 
 export interface IStraceLogParserOptions {
   project: RushConfigurationProject;
@@ -50,7 +51,7 @@ export class StraceLogParser {
     this.projectParseContextMap = new Map<string, IProjectParseContext>();
 
     for (const project of [options.project].concat(
-      Array.from(options.project.dependencyProjects)
+      getSortedAllDependencyProjects(options.project)
     )) {
       const parsedLogFilePath: string = path.join(
         options.logFolder,

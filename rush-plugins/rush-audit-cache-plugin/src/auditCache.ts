@@ -7,6 +7,7 @@ import { AUDIT_CACHE_FOLDER } from './helpers/constants';
 import { TraceExecutorFactory } from './core/TraceExecutor';
 import { BaseTraceExecutor, IBaseTraceExecutorOptions, ITraceResult } from './core/base/BaseTraceExecutor';
 import { AuditCacheAnalyzer, IAnalyzeResult } from './core/Analyzer';
+import { getSortedAllDependencyProjects } from './helpers/rushProject';
 
 export interface IAuditCacheOptions {
   projectName: string;
@@ -34,7 +35,10 @@ export async function auditCache(options: IAuditCacheOptions): Promise<IAuditCac
 
   FileSystem.ensureEmptyFolder(auditCacheFolder);
 
-  terminal.writeDebugLine(`The dependencies of the project ${projectName} are ${Array.from(project.dependencyProjects).map(p => p.packageName)}`);
+  const allDependencyProjects: ReadonlyArray<RushConfigurationProject> = getSortedAllDependencyProjects(project);
+  const allDependencyPackageNames: string[] = allDependencyProjects.map(p => p.packageName);
+
+  terminal.writeDebugLine(`The dependencies of the project ${projectName} are ${allDependencyPackageNames.join(',')}`);
 
   const traceExecutorOptions: IBaseTraceExecutorOptions = {
     project,
@@ -61,7 +65,7 @@ export async function auditCache(options: IAuditCacheOptions): Promise<IAuditCac
 
   terminal.writeVerboseLine(`Audit cache result saved to ${resultJsonFile}`);
 
-  terminal.writeLine(`Audit cache for project ${project.packageName}${project.dependencyProjects.size > 0 ? ` and its dependencies ${Array.from(project.dependencyProjects.values()).map(p => p.packageName).join(',')}` : ''}`);
+  terminal.writeLine(`Audit cache for project ${project.packageName}${allDependencyProjects.length > 0 ? ` and its dependencies ${allDependencyPackageNames.join(',')}` : ''}`);
 
   Object.entries(analyzeResult).forEach(([packageName, result]) => {
     terminal.writeLine(`======== project ${packageName} ========`);
