@@ -5,7 +5,7 @@
       "name": "audit-cache",
       "commandKind": "global",
       "summary": "Audit cache configuration by diagnosing the build processes of the target project and its dependencies",
-      "shellCommand": "node <packageFolder>/lib/index.js",
+      "shellCommand": "node <packageFolder>/lib/bin.js",
       "safeForSimultaneousRushProcesses": true
     }
   ],
