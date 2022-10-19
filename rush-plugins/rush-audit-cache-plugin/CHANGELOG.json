@@ -2,6 +2,18 @@
   "name": "rush-audit-cache-plugin",
   "entries": [
     {
+      "version": "0.0.2",
+      "tag": "rush-audit-cache-plugin_v0.0.2",
+      "date": "Wed, 19 Oct 2022 14:08:21 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix shellCommand"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.0.1",
       "tag": "rush-audit-cache-plugin_v0.0.1",
       "date": "Wed, 19 Oct 2022 14:02:29 GMT",
