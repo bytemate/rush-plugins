@@ -29,8 +29,6 @@
     "@rushstack/node-core-library": "3.44.1",
     "@rushstack/rush-sdk": "5.62.4",
     "commander": "~9.4.0",
-    "pegjs": "~0.10.0",
-    "winston": "3.8.1",
     "ignore": "5.1.9"
   },
   "devDependencies": {

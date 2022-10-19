@@ -58,6 +58,10 @@ export class StraceLogParser {
         project.packageName,
         "strace.log"
       );
+      FileSystem.deleteFile(parsedLogFilePath);
+      FileSystem.writeFile(parsedLogFilePath, "", {
+        ensureFolderExists: true,
+      });
       const projectParseContext: IProjectParseContext = {
         packageName: project.packageName,
         started: false,
@@ -135,7 +139,7 @@ export class StraceLogParser {
             this._pidToProjectParseContext[pId] = projectParseContext;
             FileSystem.appendToFile(
               projectParseContext.parsedLogFilePath,
-              line
+              `${line}\n`
             );
             return true;
           }
@@ -143,7 +147,7 @@ export class StraceLogParser {
         }
       );
     } else {
-      FileSystem.appendToFile(projectParseContext.parsedLogFilePath, line);
+      FileSystem.appendToFile(projectParseContext.parsedLogFilePath, `${line}\n`);
 
       // handle fork process
       const childProcessId: string | undefined =

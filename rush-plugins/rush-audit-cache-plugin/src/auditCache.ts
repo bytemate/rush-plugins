@@ -1,12 +1,12 @@
 import path from 'path';
 
 import { RushConfiguration, RushConfigurationProject } from '@rushstack/rush-sdk';
-import { FileSystem, ITerminal } from '@rushstack/node-core-library';
+import { Colors, FileSystem, ITerminal } from '@rushstack/node-core-library';
 
 import { AUDIT_CACHE_FOLDER } from './helpers/constants';
 import { TraceExecutorFactory } from './core/TraceExecutor';
 import { BaseTraceExecutor, IBaseTraceExecutorOptions, ITraceResult } from './core/base/BaseTraceExecutor';
-import { AuditCacheAnalyzer, IAnalyzeResult } from './core/Analyzer';
+import { AuditCacheAnalyzer, IAnalyzeResult, IRisk } from './core/Analyzer';
 import { getSortedAllDependencyProjects } from './helpers/rushProject';
 
 export interface IAuditCacheOptions {
@@ -53,6 +53,9 @@ export async function auditCache(options: IAuditCacheOptions): Promise<IAuditCac
     rushConfiguration,
   });
 
+  terminal.writeLine('');
+  terminal.writeLine('Analyzing trace result...');
+
   const analyzeResult: IAnalyzeResult = analyzer.analyze(traceResult);
 
   const resultJsonFile: string = path.join(auditCacheFolder, 'result.json');
@@ -71,10 +74,14 @@ export async function auditCache(options: IAuditCacheOptions): Promise<IAuditCac
     terminal.writeLine(`======== project ${packageName} ========`);
 
     const { highRisk, lowRisk } = result;
-    terminal.writeLine(`It has ${highRisk.length} high risk issues and ${lowRisk.length} low risk issues`);
+    terminal.write('It has ');
+    terminal.write(Colors.red(String(highRisk.length)));
+    terminal.write(' high risk issues and ');
+    terminal.write(Colors.yellow(String(lowRisk.length)));
+    terminal.write(' low risk issues\n');
 
     if (highRisk.length > 0) {
-      terminal.writeLine('High risks are');
+      terminal.writeLine(Colors.red('High risks are'));
       for (const risk of highRisk) {
         switch (risk.kind) {
           case 'readFile': {
@@ -83,12 +90,22 @@ export async function auditCache(options: IAuditCacheOptions): Promise<IAuditCac
           }
           case 'writeFile': {
             terminal.writeLine(`Writes ${risk.filePath}`);
+            break;
+          }
+          case 'text': {
+            terminal.writeLine(risk.content);
+            break;
+          }
+          default: {
+            const _risk: never = risk;
+            throw new Error(`Unrecognized risk kind: ${(_risk as any).kind}`);
           }
         }
       }
     }
   });
 
+  terminal.writeLine('');
   terminal.writeLine(`For more details, you can check ${resultJsonFile}`);
 
   return {

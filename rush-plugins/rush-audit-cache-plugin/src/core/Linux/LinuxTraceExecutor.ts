@@ -43,15 +43,21 @@ export class LinuxTraceExecutor extends BaseTraceExecutor {
       this._project.packageName,
     ];
 
+    this._terminal.writeLine('');
     this._terminal.writeLine(`Running "strace ${args.join(' ')}"...`);
+    this._terminal.writeLine('');
 
     const spawnResult: SpawnSyncReturns<string> = Executable.spawnSync(this._stracePath, args, {
       currentWorkingDirectory: this._logFolder,
+      stdio: 'inherit',
     });
 
     if (spawnResult.status !== 0) {
       throw new Error(`strace failed with exit code ${spawnResult.status}`);
     }
+
+    this._terminal.writeLine('');
+    this._terminal.writeLine('Parsing strace log...');
 
     return await this._straceLogParser.parseAsync();
   }

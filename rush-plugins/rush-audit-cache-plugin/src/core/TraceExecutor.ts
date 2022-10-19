@@ -2,7 +2,7 @@ import { BaseTraceExecutor, IBaseTraceExecutorOptions } from "./base/BaseTraceEx
 import * as os from 'os';
 import { Import } from "@rushstack/node-core-library";
 
-const LinuxTraceExecutorModule: typeof import('./Linux/LinuxTraceExecutor') = Import.lazy("./Linux/TraceRunner", require);
+const LinuxTraceExecutorModule: typeof import('./Linux/LinuxTraceExecutor') = Import.lazy("./Linux/LinuxTraceExecutor", require);
 
 export class TraceExecutorFactory {
 
