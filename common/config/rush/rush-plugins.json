@@ -32,6 +32,11 @@
       "autoinstallerName": "command-plugins" // the name of autoinstaller you created before
     },
     {
+      "packageName": "rush-audit-cache-plugin",
+      "pluginName": "rush-audit-cache-plugin",
+      "autoinstallerName": "command-plugins" // the name of autoinstaller you created before
+    },
+    {
       "packageName": "rush-lint-staged-plugin",
       "pluginName": "rush-lint-staged-plugin",
       "autoinstallerName": "command-plugins" // the name of autoinstaller you created before
