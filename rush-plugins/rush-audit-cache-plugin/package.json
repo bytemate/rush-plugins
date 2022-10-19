@@ -1,0 +1,44 @@
+{
+  "name": "rush-audit-cache-plugin",
+  "version": "0.0.0",
+  "description": "A diagnostic tool for rush build cache",
+  "keywords": [
+    "rush",
+    "plugin",
+    "command",
+    "build",
+    "cache"
+  ],
+  "homepage": "https://github.com/bytesfriends/rush-plugins#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bytesfriends/rush-plugins",
+    "directory": "rush-plugins/rush-audit-cache-plugin"
+  },
+  "license": "MIT",
+  "author": "heyunfeng",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "scripts": {
+    "build": "heft build --clean",
+    "build:watch": "heft build --watch",
+    "prepublishOnly": "npm run build",
+    "test": "heft test"
+  },
+  "dependencies": {
+    "@rushstack/node-core-library": "3.44.1",
+    "@rushstack/rush-sdk": "5.62.4",
+    "commander": "~9.4.0",
+    "pegjs": "~0.10.0",
+    "winston": "3.8.1"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-config": "2.4.5",
+    "@rushstack/heft": "0.43.2",
+    "@rushstack/heft-node-rig": "1.2.31",
+    "@types/heft-jest": "1.0.1",
+    "@types/node": "12.20.24",
+    "eslint": "7.32.0",
+    "typescript": "4.4.2"
+  }
+}

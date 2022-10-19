@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/command-line.schema.json",
+  "commands": [
+    {
+      "name": "audit-cache",
+      "commandKind": "global",
+      "summary": "Audit cache configuration by diagnosing the build processes of the target project and its dependencies",
+      "shellCommand": "node <packageFolder>/lib/index.js",
+      "safeForSimultaneousRushProcesses": true
+    }
+  ],
+  "parameters": [
+    {
+      "parameterKind": "string",
+      "description": "The package name of the project",
+      "longName": "--project",
+      "shortName": "-p",
+      "argumentName": "PACKAGE_NAME",
+      "associatedCommands": [ "audit-cache" ],
+      "required": true
+    },
+    {
+      "parameterKind": "string",
+      "description": "verbosity that can be increased",
+      "longName": "--verbose",
+      "shortName": "-v",
+      "argumentName": "VERBOSE",
+      "associatedCommands": [ "audit-cache" ],
+      "required": false
+    },
+    {
+      "parameterKind": "flag",
+      "description": "show current version",
+      "longName": "--version",
+      "shortName": "-V",
+      "associatedCommands": [ "audit-cache" ],
+      "required": false
+    }
+  ]
+}
