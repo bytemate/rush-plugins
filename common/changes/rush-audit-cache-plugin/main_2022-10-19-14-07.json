@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-audit-cache-plugin",
+      "comment": "Fix shellCommand",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-audit-cache-plugin"
+}
