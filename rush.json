@@ -489,7 +489,8 @@
     },
     {
       "packageName": "rush-audit-cache-plugin",
-      "projectFolder": "rush-plugins/rush-audit-cache-plugin"
+      "projectFolder": "rush-plugins/rush-audit-cache-plugin",
+      "shouldPublish": true
     }
   ]
 }
