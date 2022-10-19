@@ -1,10 +1,10 @@
-import * as path from 'path';
-import * as fs from 'fs';
-import { createInterface, Interface } from 'readline';
-import { FileSystem } from '@rushstack/node-core-library';
+import * as path from "path";
+import * as fs from "fs";
+import { createInterface, Interface } from "readline";
+import { FileSystem } from "@rushstack/node-core-library";
 
 import type { RushConfigurationProject } from "@rushstack/rush-sdk";
-import { ITraceResult } from '../base/BaseTraceExecutor';
+import { ITraceResult } from "../base/BaseTraceExecutor";
 
 export interface IStraceLogParserOptions {
   project: RushConfigurationProject;
@@ -16,10 +16,13 @@ const OPERATION_START_LINE_PREFIX: string = 'chdir("';
 const OPERATION_START_LINE_SUFFIX: string = '") = 0';
 const CHILD_PROCESS_REGEX: RegExp = /^.+clone.+child_stack.+flags.+ = (\d+)$/;
 const PID_REGEX: RegExp = /^(\d+) .+$/;
-// const FILE_PATH_REGEX: RegExp = /^\d+<(.+)>$/;
+const OPEN_AT_FINISH_REGEX: RegExp =
+  /^([0-9]+) openat\(([A-Z_]+), "(.+)", ([A-Z_|]+)(, [0-9]+)?\) = [0-9]+<(.+)>$/gi;
+const OPEN_AT_UN_FINISH_REGEX: RegExp =
+  /^([0-9]+) openat\(([A-Z_]+), "(.+)", ([A-Z_|]+)(, [0-9]+)? <unfinished \.\.\.>$/gi;
 
 interface IFileAccessResult {
-  kind: 'read' | 'write';
+  kind: "read" | "write";
   filePath: string;
 }
 
@@ -33,7 +36,10 @@ interface IProjectParseContext {
 
 export class StraceLogParser {
   private _straceLogFilePath: string;
-  private _startLinesToProjectParseContext: Record<string, IProjectParseContext> = {};
+  private _startLinesToProjectParseContext: Record<
+    string,
+    IProjectParseContext
+  > = {};
   private _pidToProjectParseContext: Record<string, IProjectParseContext> = {};
 
   public readonly projectParseContextMap: Map<string, IProjectParseContext>;
@@ -43,15 +49,21 @@ export class StraceLogParser {
 
     this.projectParseContextMap = new Map<string, IProjectParseContext>();
 
-    for (const project of [options.project].concat(Array.from(options.project.dependencyProjects))) {
-      const parsedLogFilePath: string = path.join(options.logFolder, project.packageName, 'strace.log');
+    for (const project of [options.project].concat(
+      Array.from(options.project.dependencyProjects)
+    )) {
+      const parsedLogFilePath: string = path.join(
+        options.logFolder,
+        project.packageName,
+        "strace.log"
+      );
       const projectParseContext: IProjectParseContext = {
         packageName: project.packageName,
         started: false,
         writeFiles: new Set<string>(),
         readFiles: new Set<string>(),
         parsedLogFilePath,
-      }
+      };
       this.projectParseContextMap.set(project.packageName, projectParseContext);
 
       const startLine: string = `${OPERATION_START_LINE_PREFIX}${project.projectFolder}${OPERATION_START_LINE_SUFFIX}`;
@@ -60,7 +72,9 @@ export class StraceLogParser {
   }
 
   public async parseAsync(): Promise<ITraceResult> {
-    const straceReadStream: fs.ReadStream = fs.createReadStream(this._straceLogFilePath);
+    const straceReadStream: fs.ReadStream = fs.createReadStream(
+      this._straceLogFilePath
+    );
     const rl: Interface = createInterface({
       input: straceReadStream,
       crlfDelay: Infinity,
@@ -77,17 +91,24 @@ export class StraceLogParser {
       result[projectParseContext.packageName] = {
         writeFiles: projectParseContext.writeFiles,
         readFiles: projectParseContext.readFiles,
-      }
+      };
     }
-    const resultFilePath: string = path.join(path.dirname(this._straceLogFilePath), 'parseResult.json');
+    const resultFilePath: string = path.join(
+      path.dirname(this._straceLogFilePath),
+      "parseResult.json"
+    );
     FileSystem.writeFile(
       resultFilePath,
-      JSON.stringify(result, (key, value) => {
-        if (value instanceof Set) {
-          return Array.from(value);
-        }
-        return value;
-      }, 2)
+      JSON.stringify(
+        result,
+        (key, value) => {
+          if (value instanceof Set) {
+            return Array.from(value);
+          }
+          return value;
+        },
+        2
+      )
     );
 
     return result;
@@ -99,38 +120,47 @@ export class StraceLogParser {
       return;
     }
 
-    let projectParseContext: IProjectParseContext | undefined = this._pidToProjectParseContext[pId];
+    let projectParseContext: IProjectParseContext | undefined =
+      this._pidToProjectParseContext[pId];
 
     if (!projectParseContext) {
-      Object.keys(this._startLinesToProjectParseContext).some((startLine: string) => {
-        if (line.includes(startLine)) {
-          projectParseContext = this._startLinesToProjectParseContext[startLine];
-          // project operation start
-          projectParseContext.started = true;
-          this._pidToProjectParseContext[pId] = projectParseContext;
-          FileSystem.appendToFile(projectParseContext.parsedLogFilePath, line);
-          return true;
+      Object.keys(this._startLinesToProjectParseContext).some(
+        (startLine: string) => {
+          if (line.includes(startLine)) {
+            projectParseContext =
+              this._startLinesToProjectParseContext[startLine];
+            // project operation start
+            projectParseContext.started = true;
+            this._pidToProjectParseContext[pId] = projectParseContext;
+            FileSystem.appendToFile(
+              projectParseContext.parsedLogFilePath,
+              line
+            );
+            return true;
+          }
+          return false;
         }
-        return false;
-      });
+      );
     } else {
       FileSystem.appendToFile(projectParseContext.parsedLogFilePath, line);
 
       // handle fork process
-      const childProcessId: string | undefined = this._parseChildProcessId(line);
+      const childProcessId: string | undefined =
+        this._parseChildProcessId(line);
       if (childProcessId) {
         this._pidToProjectParseContext[childProcessId] = projectParseContext;
       }
 
       // record read/write files
-      const fileAccessResult: IFileAccessResult | undefined = this._parseFileAccess(line);
+      const fileAccessResult: IFileAccessResult | undefined =
+        this._parseFileAccess(line);
       if (fileAccessResult) {
         switch (fileAccessResult.kind) {
-          case 'read': {
+          case "read": {
             projectParseContext.readFiles.add(fileAccessResult.filePath);
             break;
           }
-          case 'write': {
+          case "write": {
             projectParseContext.writeFiles.add(fileAccessResult.filePath);
             break;
           }
@@ -140,7 +170,6 @@ export class StraceLogParser {
         }
       }
     }
-
   }
 
   private _parseChildProcessId(line: string): string | undefined {
@@ -148,7 +177,26 @@ export class StraceLogParser {
   }
 
   private _parseFileAccess(line: string): IFileAccessResult | undefined {
-    // TODO: implement
+    const parseOpenAtLineResult: RegExpExecArray | null =
+      OPEN_AT_FINISH_REGEX.exec(line) ?? OPEN_AT_UN_FINISH_REGEX.exec(line);
+    if (parseOpenAtLineResult?.length) {
+      const operations: string[] = parseOpenAtLineResult[4].split("|");
+      const kind: IFileAccessResult["kind"] | null = operations.find(
+        (operation) => operation === "O_RDONLY"
+      )
+        ? "read"
+        : operations.find((operation) => operation === "O_WRONLY")
+        ? "write"
+        : null;
+      if (!kind) {
+        return;
+      }
+      return {
+        kind,
+        filePath: parseOpenAtLineResult[6] ?? parseOpenAtLineResult[3],
+      };
+    }
+
     return;
   }
 }
