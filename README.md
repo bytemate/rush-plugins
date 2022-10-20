@@ -33,6 +33,14 @@ Sometimes build errors are collapsed in a remote machine, use this plugin to pri
 
 [More](./rush-plugins/rush-print-log-if-error-plugin/README.md)
 
+# rush-sort-package-json
+
+[![npm](https://img.shields.io/npm/dt/rush-sort-package-json.svg?style=flat-square)](https://www.npmjs.com/package/rush-sort-package-json)
+
+This plugin leverages the great work of [sort-package-json](https://www.npmjs.com/package/sort-package-json) to sort `package.json` in your monorepo, and keep it consistent.
+
+[More](./rush-plugins/rush-sort-package-json/README.md)
+
 # rush-lint-staged-plugin
 
 [![npm](https://img.shields.io/npm/dt/rush-lint-staged-plugin.svg?style=flat-square)](https://www.npmjs.com/package/rush-lint-staged-plugin)
