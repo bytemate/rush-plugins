@@ -40,3 +40,11 @@ Sometimes build errors are collapsed in a remote machine, use this plugin to pri
 Are you finding alternative to `husky` in your monorepo? Rush takes care of Git hooks natively by sync hook scripts under `common/git-hooks/` folder into `.git/hooks`. So, all you need is `lint-staged`. Use this plugin to setup `lint-staged` in your monorepo!
 
 [More](./rush-plugins/rush-lint-staged-plugin/README.md)
+
+# rush-audit-cache-plugin
+
+[![npm](https://img.shields.io/npm/dt/rush-audit-cache-plugin.svg?style=flat-square)](https://www.npmjs.com/package/rush-audit-cache-plugin)
+
+Use of rush build cache is a great way to speed up your build. But, how to know if the configuration for cache is working as expected? This plugin is for you!
+
+[More](./rush-plugins/rush-audit-cache-plugin/README.md)
