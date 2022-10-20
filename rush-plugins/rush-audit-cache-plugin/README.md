@@ -23,6 +23,8 @@ rush audit-cache --project <package_name>
 
 Please check [this demo repo](https://github.com/chengcyber/rush-build-diagnostic-demo)
 
+![rush-audit-cache-demo-usage](./docs/media/rush-audit-cache-demo-usage.png)
+
 # Tech Note
 
 [rush audit-cache tech note](./docs/rush-audit-cache-tech-note.md)
