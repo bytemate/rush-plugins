@@ -2,6 +2,18 @@
   "name": "rush-audit-cache-plugin",
   "entries": [
     {
+      "version": "0.0.3",
+      "tag": "rush-audit-cache-plugin_v0.0.3",
+      "date": "Fri, 21 Oct 2022 01:41:04 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix rush project json path"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.0.2",
       "tag": "rush-audit-cache-plugin_v0.0.2",
       "date": "Wed, 19 Oct 2022 14:08:21 GMT",
