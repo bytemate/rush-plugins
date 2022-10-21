@@ -82,7 +82,7 @@ export class AuditCacheAnalyzer {
         if (!project) {
           throw new Error(`no project ${projectName} RushConfigurationProject`);
         }
-        const { projectFolder, projectRushConfigFolder } = project;
+        const { projectFolder } = project;
 
         const projectSafeReadMatcher: Ignore = ignore();
 
@@ -91,8 +91,9 @@ export class AuditCacheAnalyzer {
 
         let outputFolderNames: string[] = [];
         try {
+          const rushProjectJsonPath: string = path.join(projectFolder, "./config/rush-project.json");
           const rushProjectJson: IRushProjectJson = JsonFile.load(
-            path.join(projectRushConfigFolder, "./rush-project.json")
+            rushProjectJsonPath,
           );
           const { operationSettings = [], incrementalBuildIgnoredGlobs = [] } =
             rushProjectJson;
