@@ -5,10 +5,9 @@ import { FileSystem } from "@rushstack/node-core-library";
 
 import type { RushConfigurationProject } from "@rushstack/rush-sdk";
 import { ITraceResult } from "../base/BaseTraceExecutor";
-import { getSortedAllDependencyProjects } from "../../helpers/rushProject";
 
 export interface IStraceLogParserOptions {
-  project: RushConfigurationProject;
+  projects: RushConfigurationProject[];
   straceLogFilePath: string;
   logFolder: string;
 }
@@ -50,9 +49,7 @@ export class StraceLogParser {
 
     this.projectParseContextMap = new Map<string, IProjectParseContext>();
 
-    for (const project of [options.project].concat(
-      getSortedAllDependencyProjects(options.project)
-    )) {
+    for (const project of options.projects) {
       const parsedLogFilePath: string = path.join(
         options.logFolder,
         project.packageName,
@@ -147,7 +144,10 @@ export class StraceLogParser {
         }
       );
     } else {
-      FileSystem.appendToFile(projectParseContext.parsedLogFilePath, `${line}\n`);
+      FileSystem.appendToFile(
+        projectParseContext.parsedLogFilePath,
+        `${line}\n`
+      );
 
       // handle fork process
       const childProcessId: string | undefined =
