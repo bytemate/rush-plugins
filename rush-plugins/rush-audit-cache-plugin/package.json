@@ -1,6 +1,6 @@
 {
   "name": "rush-audit-cache-plugin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A diagnostic tool for rush build cache",
   "keywords": [
     "rush",
