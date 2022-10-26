@@ -1,6 +1,10 @@
 import * as path from "path";
-import { Colors, FileSystem, IColorableSequence, JsonFile, Path } from "@rushstack/node-core-library";
-import ignore, { Ignore } from 'ignore';
+import {
+  Colors,
+  IColorableSequence,
+  Path,
+} from "@rushstack/node-core-library";
+import ignore, { Ignore } from "ignore";
 
 import { getSortedAllDependencyProjects } from "../helpers/rushProject";
 
@@ -10,19 +14,16 @@ import type {
 } from "@rushstack/rush-sdk";
 import type { ITraceResult } from "./base/BaseTraceExecutor";
 
+import {
+  IRushProjectJson,
+  tryLoadJsonForProject,
+} from "../helpers/rushProject";
+
 export interface IAnalyzerOptions {
   rushConfiguration: RushConfiguration;
 }
 
 export type IRisk = IReadFileRisk | IWriteFileRisk | IRiskText;
-
-export interface IRushProjectJson {
-  operationSettings: {
-    operationName: string;
-    outputFolderNames: string[];
-  }[];
-  incrementalBuildIgnoredGlobs: string[];
-}
 
 export interface IReadFileRisk {
   readonly kind: "readFile";
@@ -35,7 +36,7 @@ export interface IWriteFileRisk {
 }
 
 export interface IRiskText {
-  readonly kind: 'text',
+  readonly kind: "text";
   content: string | IColorableSequence;
 }
 
@@ -48,7 +49,9 @@ export interface IAnalyzeResult {
 
 const lowRiskReadFiles: string[] = [
   // nvm
-  ".nvm", ".npm", ".npmrc",
+  ".nvm",
+  ".npm",
+  ".npmrc",
 ];
 
 const lowRiskReadFolders: string[] = [
@@ -60,7 +63,7 @@ const lowRiskReadFolders: string[] = [
   "/sys",
   "/proc",
   "/dev/null",
-]
+];
 
 export class AuditCacheAnalyzer {
   private _rushConfiguration: RushConfiguration;
@@ -70,7 +73,7 @@ export class AuditCacheAnalyzer {
     this._rushConfiguration = options.rushConfiguration;
 
     this._repoSafeReadMatcher = ignore();
-    this._repoSafeReadMatcher.add('common/temp/node_modules/**');
+    this._repoSafeReadMatcher.add("common/temp/node_modules/**");
   }
 
   public analyze(input: ITraceResult): IAnalyzeResult {
@@ -87,14 +90,17 @@ export class AuditCacheAnalyzer {
         const projectSafeReadMatcher: Ignore = ignore();
 
         // dependency project folders
-        const allDependencyProjectFolders: string[] = getSortedAllDependencyProjects(project).map(p => p.projectFolder);
+        const allDependencyProjectFolders: string[] =
+          getSortedAllDependencyProjects(project).map((p) => p.projectFolder);
 
         let outputFolderNames: string[] = [];
-        try {
-          const rushProjectJsonPath: string = path.join(projectFolder, "./config/rush-project.json");
-          const rushProjectJson: IRushProjectJson = JsonFile.load(
-            rushProjectJsonPath,
-          );
+        const rushProjectJsonPath: string = path.join(
+          projectFolder,
+          "./config/rush-project.json"
+        );
+        const rushProjectJson: IRushProjectJson | undefined =
+          tryLoadJsonForProject(rushProjectJsonPath);
+        if (rushProjectJson) {
           const { operationSettings = [], incrementalBuildIgnoredGlobs = [] } =
             rushProjectJson;
           if (incrementalBuildIgnoredGlobs.length > 0) {
@@ -109,12 +115,6 @@ export class AuditCacheAnalyzer {
           if (operationSetting) {
             outputFolderNames = operationSetting.outputFolderNames;
           }
-        } catch (e) {
-          if (FileSystem.isFileDoesNotExistError(e as Error)) {
-            outputFolderNames = [];
-          } else {
-            throw e;
-          }
         }
 
         if (!acc[projectName]) {
@@ -126,23 +126,42 @@ export class AuditCacheAnalyzer {
 
         for (const readFilePath of readFiles) {
           // Safe
-          if (ignore.isPathValid(readFilePath) && projectSafeReadMatcher.ignores(readFilePath)) {
+          if (
+            ignore.isPathValid(readFilePath) &&
+            projectSafeReadMatcher.ignores(readFilePath)
+          ) {
             continue;
           } else {
-            const relativePathToProjectFolder: string = path.relative(projectFolder, readFilePath);
-            if (ignore.isPathValid(relativePathToProjectFolder) && projectSafeReadMatcher.ignores(relativePathToProjectFolder)) {
+            const relativePathToProjectFolder: string = path.relative(
+              projectFolder,
+              readFilePath
+            );
+            if (
+              ignore.isPathValid(relativePathToProjectFolder) &&
+              projectSafeReadMatcher.ignores(relativePathToProjectFolder)
+            ) {
               continue;
             }
-            const relativePathToRepoRoot: string = path.relative(this._rushConfiguration.rushJsonFolder, readFilePath);
-            if (ignore.isPathValid(relativePathToRepoRoot) && this._repoSafeReadMatcher.ignores(relativePathToRepoRoot)) {
+            const relativePathToRepoRoot: string = path.relative(
+              this._rushConfiguration.rushJsonFolder,
+              readFilePath
+            );
+            if (
+              ignore.isPathValid(relativePathToRepoRoot) &&
+              this._repoSafeReadMatcher.ignores(relativePathToRepoRoot)
+            ) {
               continue;
             }
           }
 
-          const allProjectFolders: string[] = [project.projectFolder].concat(allDependencyProjectFolders);
-          if (allProjectFolders.find((dependencyProjectFolder) => {
-            return Path.isUnderOrEqual(readFilePath, dependencyProjectFolder);
-          })) {
+          const allProjectFolders: string[] = [project.projectFolder].concat(
+            allDependencyProjectFolders
+          );
+          if (
+            allProjectFolders.find((dependencyProjectFolder) => {
+              return Path.isUnderOrEqual(readFilePath, dependencyProjectFolder);
+            })
+          ) {
             continue;
           }
 
@@ -174,17 +193,25 @@ export class AuditCacheAnalyzer {
 
         if (outputFolderNames.length === 0) {
           acc[projectName].highRisk.push({
-            kind: 'text',
-            content: Colors.red(`"outputFolderNames" are not defined for build operation of project "${projectName}"`)
+            kind: "text",
+            content: Colors.red(
+              `"outputFolderNames" are not defined for build operation of project "${projectName}"`
+            ),
           });
         }
 
         for (const writeFilePath of writeFiles) {
           // safe
-          if (ignore.isPathValid(writeFilePath) && safeWriteMatcher.ignores(writeFilePath)) {
+          if (
+            ignore.isPathValid(writeFilePath) &&
+            safeWriteMatcher.ignores(writeFilePath)
+          ) {
             continue;
           } else {
-            const relativePathToProjectFolder: string = path.relative(projectFolder, writeFilePath);
+            const relativePathToProjectFolder: string = path.relative(
+              projectFolder,
+              writeFilePath
+            );
             if (
               ignore.isPathValid(relativePathToProjectFolder) &&
               safeWriteMatcher.ignores(relativePathToProjectFolder)
