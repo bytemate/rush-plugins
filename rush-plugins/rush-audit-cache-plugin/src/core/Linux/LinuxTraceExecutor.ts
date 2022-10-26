@@ -36,7 +36,7 @@ export class LinuxTraceExecutor extends BaseTraceExecutor {
   public async execAsync(): Promise<ITraceResult> {
     const projectArgs: string[] = this._projects.reduce(
       (acc, { packageName }) => {
-        acc.push("--only");
+        acc.push("--to");
         acc.push(packageName);
         return acc;
       },
