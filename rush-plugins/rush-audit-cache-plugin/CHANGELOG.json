@@ -2,6 +2,18 @@
   "name": "rush-audit-cache-plugin",
   "entries": [
     {
+      "version": "0.1.0",
+      "tag": "rush-audit-cache-plugin_v0.1.0",
+      "date": "Wed, 26 Oct 2022 07:19:37 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add --all parameter to select all cache configured projects"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.0.3",
       "tag": "rush-audit-cache-plugin_v0.0.3",
       "date": "Fri, 21 Oct 2022 01:41:04 GMT",
