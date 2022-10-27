@@ -16,7 +16,15 @@
       "longName": "--project",
       "shortName": "-p",
       "argumentName": "PACKAGE_NAME",
-      "associatedCommands": [ "audit-cache" ],
+      "associatedCommands": ["audit-cache"],
+      "required": false
+    },
+    {
+      "parameterKind": "flag",
+      "description": "Audit all cache configured project",
+      "longName": "--all",
+      "shortName": "-a",
+      "associatedCommands": ["audit-cache"],
       "required": false
     },
     {
@@ -25,7 +33,7 @@
       "longName": "--verbose",
       "shortName": "-v",
       "argumentName": "VERBOSE",
-      "associatedCommands": [ "audit-cache" ],
+      "associatedCommands": ["audit-cache"],
       "required": false
     },
     {
@@ -33,7 +41,7 @@
       "description": "show current version",
       "longName": "--version",
       "shortName": "-V",
-      "associatedCommands": [ "audit-cache" ],
+      "associatedCommands": ["audit-cache"],
       "required": false
     }
   ]

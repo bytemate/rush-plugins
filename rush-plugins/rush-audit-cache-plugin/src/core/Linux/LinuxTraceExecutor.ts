@@ -8,6 +8,7 @@ import {
 } from "../base/BaseTraceExecutor";
 import { StraceLogParser } from "./StraceLogParser";
 import { TRACE_LOG_FILENAME } from "../../helpers/constants";
+import { installProjects } from "../../helpers/rushProject";
 
 import type { SpawnSyncReturns } from "child_process";
 
@@ -42,6 +43,14 @@ export class LinuxTraceExecutor extends BaseTraceExecutor {
       },
       [] as string[]
     );
+
+    this._terminal.writeLine("");
+    this._terminal.writeLine(
+      `Running "rush install ${projectArgs.join(" ")}"...`
+    );
+    this._terminal.writeLine("");
+    installProjects(this._projects);
+
     const args: string[] = [
       "-f",
       "-y",

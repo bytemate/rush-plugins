@@ -1,10 +1,13 @@
 import * as path from "path";
+import { Executable } from "@rushstack/node-core-library";
 
 import {
   RushConfiguration,
   RushConfigurationProject,
 } from "@rushstack/rush-sdk";
 import { FileSystem, JsonFile } from "@rushstack/node-core-library";
+
+import type { SpawnSyncReturns } from "child_process";
 
 export interface IRushProjectJson {
   operationSettings: {
@@ -113,4 +116,33 @@ export function getAllCacheConfiguredProjects(
     const { operationSettings = [] } = rushProjectJson;
     return Boolean(operationSettings.length);
   });
+}
+
+/**
+ * install projects
+ */
+export function installProjects(projects: RushConfigurationProject[]): void {
+  const rushPath: string | undefined = Executable.tryResolve("rush");
+  if (!rushPath) {
+    throw new Error(`rush is not present.`);
+  }
+  const projectArgs: string[] = projects.reduce((acc, { packageName }) => {
+    acc.push("--to");
+    acc.push(packageName);
+    return acc;
+  }, [] as string[]);
+
+  const args: string[] = ["install", ...projectArgs];
+
+  const spawnResult: SpawnSyncReturns<string> = Executable.spawnSync(
+    rushPath,
+    args,
+    {
+      stdio: "inherit",
+    }
+  );
+
+  if (spawnResult.status !== 0) {
+    throw new Error(`rush install failed with exit code ${spawnResult.status}`);
+  }
 }
