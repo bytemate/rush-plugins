@@ -23,6 +23,7 @@ export interface IAuditCacheOptions {
   projectName: string;
   terminal: ITerminal;
   checkAllCacheConfiguredProject: boolean;
+  exclude: string[];
 }
 
 export interface IAuditCacheResult {
@@ -33,7 +34,8 @@ export interface IAuditCacheResult {
 export async function auditCache(
   options: IAuditCacheOptions
 ): Promise<IAuditCacheResult> {
-  const { projectName, terminal, checkAllCacheConfiguredProject } = options;
+  const { projectName, terminal, checkAllCacheConfiguredProject, exclude } =
+    options;
 
   const rushConfiguration: RushConfiguration =
     RushConfiguration.loadFromDefaultLocation();
@@ -64,9 +66,14 @@ export async function auditCache(
     if (!allCacheConfiguredProjects.length) {
       throw new Error("there is no cache configured project to audit");
     }
-    auditCacheProjects.push(...allCacheConfiguredProjects);
+    const allNeedCacheAuditProjects: RushConfigurationProject[] =
+      allCacheConfiguredProjects.filter(
+        ({ packageName }) => !exclude.find((name) => name === packageName)
+      );
+
+    auditCacheProjects.push(...allNeedCacheAuditProjects);
     const allBuildCacheConfiguredProjects: string[] =
-      allCacheConfiguredProjects.map((p) => p.packageName);
+      allNeedCacheAuditProjects.map((p) => p.packageName);
     terminal.writeDebugLine(
       `Find build cache configured projects ${allBuildCacheConfiguredProjects.join(
         ","

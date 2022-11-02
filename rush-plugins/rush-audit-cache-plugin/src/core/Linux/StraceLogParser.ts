@@ -187,8 +187,10 @@ export class StraceLogParser {
     if (parseOpenAtLineResult?.length) {
       const operations: string[] = parseOpenAtLineResult[4].split("|");
       const kind: IFileAccessResult["kind"] | null = operations.find(
-        (operation) => operation === "O_RDONLY"
+        (operation) => operation === "O_DIRECTORY"
       )
+        ? null
+        : operations.find((operation) => operation === "O_RDONLY")
         ? "read"
         : operations.find((operation) => operation === "O_WRONLY")
         ? "write"
