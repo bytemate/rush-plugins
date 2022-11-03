@@ -29,6 +29,15 @@
     },
     {
       "parameterKind": "string",
+      "description": "Exclude package from audit cache",
+      "longName": "--exclude",
+      "shortName": "-e",
+      "argumentName": "EXCLUDE_PACKAGE_NAME",
+      "associatedCommands": ["audit-cache"],
+      "required": false
+    },
+    {
+      "parameterKind": "string",
       "description": "verbosity that can be increased",
       "longName": "--verbose",
       "shortName": "-v",

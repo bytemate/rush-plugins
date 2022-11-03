@@ -30,6 +30,10 @@ async function main(): Promise<void> {
       .name("rush-audit-cache")
       .version(version)
       .option("-p, --project [project]", "package name of the target project")
+      .option(
+        "-e, --exclude [exclude...]",
+        "exclude package from audit cache"
+      )
       .option("-a, --all", "audit all cache configured project")
       .option(
         "-v, --verbose",
@@ -38,7 +42,12 @@ async function main(): Promise<void> {
         0
       )
       .action(
-        async (opts: { project: string; verbose: number; all: boolean }) => {
+        async (opts: {
+          project: string;
+          verbose: number;
+          all: boolean;
+          exclude?: string[];
+        }) => {
           const checkAllCacheConfiguredProject: boolean = opts.all;
           const projectName: string = opts.project;
           if (checkAllCacheConfiguredProject && projectName) {
@@ -72,6 +81,7 @@ async function main(): Promise<void> {
             projectName,
             terminal,
             checkAllCacheConfiguredProject,
+            exclude: opts.exclude ?? []
           });
         }
       );
