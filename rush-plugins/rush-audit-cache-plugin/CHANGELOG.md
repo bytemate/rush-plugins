@@ -1,6 +1,13 @@
 # Change Log - rush-audit-cache-plugin
 
-This log was last generated on Thu, 27 Oct 2022 13:12:33 GMT and should not be manually modified.
+This log was last generated on Thu, 03 Nov 2022 02:10:44 GMT and should not be manually modified.
+
+## 0.1.3
+Thu, 03 Nov 2022 02:10:44 GMT
+
+### Patches
+
+- rush audit cache add --exclude parameter and filter directory
 
 ## 0.1.2
 Thu, 27 Oct 2022 13:12:33 GMT
