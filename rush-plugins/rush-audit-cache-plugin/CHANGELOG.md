@@ -1,6 +1,13 @@
 # Change Log - rush-audit-cache-plugin
 
-This log was last generated on Thu, 03 Nov 2022 02:10:44 GMT and should not be manually modified.
+This log was last generated on Mon, 07 Nov 2022 08:20:01 GMT and should not be manually modified.
+
+## 0.1.4
+Mon, 07 Nov 2022 08:20:01 GMT
+
+### Patches
+
+- use -ff to separate strace log and disable rush build cache when rebuild
 
 ## 0.1.3
 Thu, 03 Nov 2022 02:10:44 GMT
