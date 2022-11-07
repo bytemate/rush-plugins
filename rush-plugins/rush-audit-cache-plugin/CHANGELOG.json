@@ -2,6 +2,18 @@
   "name": "rush-audit-cache-plugin",
   "entries": [
     {
+      "version": "0.1.6",
+      "tag": "rush-audit-cache-plugin_v0.1.6",
+      "date": "Mon, 07 Nov 2022 13:26:33 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "rush audit cache add some low risk path"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.1.5",
       "tag": "rush-audit-cache-plugin_v0.1.5",
       "date": "Mon, 07 Nov 2022 12:07:21 GMT",
