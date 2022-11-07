@@ -15,10 +15,12 @@ export interface IStraceLogParserOptions {
 
 const OPERATION_START_LINE_PREFIX: string = 'chdir("';
 const OPERATION_START_LINE_SUFFIX: string = '") = 0';
-const CHILD_PROCESS_REGEX: RegExp = /^.+clone.+child_stack.+flags.+ = (\d+)$/;
+const CHILD_PROCESS_REGEX: RegExp = /^clone\(.+\) = (\d+)$/;
 const OPEN_AT_FINISH_REGEX: RegExp =
   /^openat\(([A-Z_]+), "(.+)", ([A-Z_|]+)(, [0-9]+)?\) = [0-9]+<(.+)>$/gi;
-
+const OPEN_FINISH_REGEX: RegExp =
+  /^open\("(.+)", ([A-Z_|]+)(, [0-9]+)?\) = [0-9]+<(.+)>$/gi;
+// open("/opt/tiger/tiktok_web_monorepo/packages/libs/tux-h5-color/package.json", O_RDONLY|O_CLOEXEC) = 17</opt/tiger/tiktok_web_monorepo/packages/libs/tux-h5-color/package.json>
 interface IFileAccessResult {
   kind: "read" | "write";
   filePath: string;
@@ -198,6 +200,31 @@ export class StraceLogParser {
   }
 
   private _parseFileAccess(line: string): IFileAccessResult | undefined {
+    const parseOpenLineResult: RegExpExecArray | null =
+      OPEN_FINISH_REGEX.exec(line);
+    if (parseOpenLineResult?.length) {
+      terminal.writeDebugLine(
+        `parseOpenLineResult ${JSON.stringify(parseOpenLineResult)}`
+      );
+      const operations: string[] = parseOpenLineResult[2].split("|");
+      const kind: IFileAccessResult["kind"] | null = operations.find(
+        (operation) => operation === "O_DIRECTORY"
+      )
+        ? null
+        : operations.find((operation) => operation === "O_RDONLY")
+        ? "read"
+        : operations.find((operation) => operation === "O_WRONLY")
+        ? "write"
+        : null;
+      if (!kind) {
+        return;
+      }
+      return {
+        kind,
+        filePath: parseOpenLineResult[4] ?? parseOpenLineResult[1],
+      };
+    }
+
     const parseOpenAtLineResult: RegExpExecArray | null =
       OPEN_AT_FINISH_REGEX.exec(line);
     if (parseOpenAtLineResult?.length) {
