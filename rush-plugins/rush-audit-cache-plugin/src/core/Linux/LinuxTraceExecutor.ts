@@ -1,5 +1,5 @@
 import * as path from "path";
-import { Executable } from "@rushstack/node-core-library";
+import { Executable, FileSystem } from "@rushstack/node-core-library";
 
 import {
   BaseTraceExecutor,
@@ -26,7 +26,8 @@ export class LinuxTraceExecutor extends BaseTraceExecutor {
     }
     this._stracePath = stracePath;
 
-    this._straceLogFilePath = path.join(this._logFolder, TRACE_LOG_FILENAME);
+    this._straceLogFilePath = path.join(this._logFolder, "logs");
+    FileSystem.ensureEmptyFolder(this._straceLogFilePath);
     this._straceLogParser = new StraceLogParser({
       projects: options.projects,
       logFolder: options.logFolder,
@@ -52,12 +53,14 @@ export class LinuxTraceExecutor extends BaseTraceExecutor {
     installProjects(this._projects);
 
     const args: string[] = [
-      "-f",
+      "-ff",
       "-y",
       "-s",
       "200",
       "-o",
       TRACE_LOG_FILENAME,
+      "-E",
+      "RUSH_BUILD_CACHE_ENABLED=0",
       "rush",
       "rebuild",
       ...projectArgs,
@@ -71,7 +74,7 @@ export class LinuxTraceExecutor extends BaseTraceExecutor {
       this._stracePath,
       args,
       {
-        currentWorkingDirectory: this._logFolder,
+        currentWorkingDirectory: this._straceLogFilePath,
         stdio: "inherit",
       }
     );

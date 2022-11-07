@@ -1,9 +1,5 @@
 import * as path from "path";
-import {
-  Colors,
-  IColorableSequence,
-  Path,
-} from "@rushstack/node-core-library";
+import { Colors, IColorableSequence, Path } from "@rushstack/node-core-library";
 import ignore, { Ignore } from "ignore";
 
 import { getSortedAllDependencyProjects } from "../helpers/rushProject";
@@ -18,6 +14,7 @@ import {
   IRushProjectJson,
   tryLoadJsonForProject,
 } from "../helpers/rushProject";
+import { terminal } from "../helpers/terminal";
 
 export interface IAnalyzerOptions {
   rushConfiguration: RushConfiguration;
@@ -125,11 +122,13 @@ export class AuditCacheAnalyzer {
         }
 
         for (const readFilePath of readFiles) {
+          terminal.writeDebugLine(`readFilePath: ${readFilePath}`);
           // Safe
           if (
             ignore.isPathValid(readFilePath) &&
             projectSafeReadMatcher.ignores(readFilePath)
           ) {
+            terminal.writeDebugLine(`readFilePath: ${readFilePath} is safe`);
             continue;
           } else {
             const relativePathToProjectFolder: string = path.relative(
@@ -140,6 +139,9 @@ export class AuditCacheAnalyzer {
               ignore.isPathValid(relativePathToProjectFolder) &&
               projectSafeReadMatcher.ignores(relativePathToProjectFolder)
             ) {
+              terminal.writeDebugLine(
+                `readFilePath: ${readFilePath}, relativePathToProjectFolder: ${relativePathToProjectFolder} is safe`
+              );
               continue;
             }
             const relativePathToRepoRoot: string = path.relative(
@@ -150,6 +152,9 @@ export class AuditCacheAnalyzer {
               ignore.isPathValid(relativePathToRepoRoot) &&
               this._repoSafeReadMatcher.ignores(relativePathToRepoRoot)
             ) {
+              terminal.writeDebugLine(
+                `readFilePath: ${readFilePath}, relativePathToRepoRoot: ${relativePathToRepoRoot} is safe`
+              );
               continue;
             }
           }
@@ -162,13 +167,16 @@ export class AuditCacheAnalyzer {
               return Path.isUnderOrEqual(readFilePath, dependencyProjectFolder);
             })
           ) {
+            terminal.writeDebugLine(
+              `readFilePath: ${readFilePath}, allProjectFolders: ${allProjectFolders.toString()} is safe`
+            );
             continue;
           }
 
           // Low risk
           if (
             lowRiskReadFiles.find((lowRiskReadFile) => {
-              return readFilePath.endsWith(lowRiskReadFile);
+              return readFilePath.includes(lowRiskReadFile);
             }) ||
             lowRiskReadFolders.find((lowRiskReadFolder) => {
               return Path.isUnderOrEqual(readFilePath, lowRiskReadFolder);
@@ -178,9 +186,13 @@ export class AuditCacheAnalyzer {
               kind: "readFile",
               filePath: readFilePath,
             });
+            terminal.writeDebugLine(
+              `readFilePath: ${readFilePath}, lowRiskReadFiles: ${lowRiskReadFiles.toString()}, lowRiskReadFolders: ${lowRiskReadFolders.toString()} is low risk`
+            );
             continue;
           }
 
+          terminal.writeDebugLine(`readFilePath: ${readFilePath} is high risk`);
           // Otherwise, high risk
           acc[projectName].highRisk.push({
             kind: "readFile",
@@ -206,6 +218,7 @@ export class AuditCacheAnalyzer {
             ignore.isPathValid(writeFilePath) &&
             safeWriteMatcher.ignores(writeFilePath)
           ) {
+            terminal.writeDebugLine(`writeFilePath: ${writeFilePath} is safe`);
             continue;
           } else {
             const relativePathToProjectFolder: string = path.relative(
@@ -216,9 +229,17 @@ export class AuditCacheAnalyzer {
               ignore.isPathValid(relativePathToProjectFolder) &&
               safeWriteMatcher.ignores(relativePathToProjectFolder)
             ) {
+              terminal.writeDebugLine(
+                `writeFilePath: ${writeFilePath}, safeWriteMatcher: ${safeWriteMatcher}, relativePathToProjectFolder: ${relativePathToProjectFolder} is safe`
+              );
+
               continue;
             }
           }
+
+          terminal.writeDebugLine(
+            `writeFilePath: ${writeFilePath} is high risk`
+          );
 
           // Otherwise, high risk
           acc[projectName].highRisk.push({

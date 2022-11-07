@@ -37,6 +37,8 @@ export async function auditCache(
   const { projectName, terminal, checkAllCacheConfiguredProject, exclude } =
     options;
 
+  terminal.writeDebugLine(`exclude: ${exclude}`);
+
   const rushConfiguration: RushConfiguration =
     RushConfiguration.loadFromDefaultLocation();
   terminal.writeVerboseLine("Rush configuration loaded");

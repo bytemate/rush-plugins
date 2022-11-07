@@ -5,7 +5,8 @@ import { FileSystem } from "@rushstack/node-core-library";
 
 import type { RushConfigurationProject } from "@rushstack/rush-sdk";
 import { ITraceResult } from "../base/BaseTraceExecutor";
-
+import { TRACE_LOG_FILENAME } from "../../helpers/constants";
+import { terminal } from "../../helpers/terminal";
 export interface IStraceLogParserOptions {
   projects: RushConfigurationProject[];
   straceLogFilePath: string;
@@ -15,11 +16,8 @@ export interface IStraceLogParserOptions {
 const OPERATION_START_LINE_PREFIX: string = 'chdir("';
 const OPERATION_START_LINE_SUFFIX: string = '") = 0';
 const CHILD_PROCESS_REGEX: RegExp = /^.+clone.+child_stack.+flags.+ = (\d+)$/;
-const PID_REGEX: RegExp = /^(\d+) .+$/;
 const OPEN_AT_FINISH_REGEX: RegExp =
-  /^([0-9]+) openat\(([A-Z_]+), "(.+)", ([A-Z_|]+)(, [0-9]+)?\) = [0-9]+<(.+)>$/gi;
-const OPEN_AT_UN_FINISH_REGEX: RegExp =
-  /^([0-9]+) openat\(([A-Z_]+), "(.+)", ([A-Z_|]+)(, [0-9]+)? <unfinished \.\.\.>$/gi;
+  /^openat\(([A-Z_]+), "(.+)", ([A-Z_|]+)(, [0-9]+)?\) = [0-9]+<(.+)>$/gi;
 
 interface IFileAccessResult {
   kind: "read" | "write";
@@ -36,6 +34,7 @@ interface IProjectParseContext {
 
 export class StraceLogParser {
   private _straceLogFilePath: string;
+  private _logFolder: string;
   private _startLinesToProjectParseContext: Record<
     string,
     IProjectParseContext
@@ -46,6 +45,7 @@ export class StraceLogParser {
 
   public constructor(options: IStraceLogParserOptions) {
     this._straceLogFilePath = options.straceLogFilePath;
+    this._logFolder = options.logFolder;
 
     this.projectParseContextMap = new Map<string, IProjectParseContext>();
 
@@ -74,31 +74,47 @@ export class StraceLogParser {
   }
 
   public async parseAsync(): Promise<ITraceResult> {
-    const straceReadStream: fs.ReadStream = fs.createReadStream(
+    //Warning: This API is now obsolete.
+    // Use FileSystem.readFolderItemNames() instead.
+    const allLogs: string[] = FileSystem.readFolder(
       this._straceLogFilePath
-    );
-    const rl: Interface = createInterface({
-      input: straceReadStream,
-      crlfDelay: Infinity,
+    ).filter((name) => name.startsWith(`${TRACE_LOG_FILENAME}.`));
+    allLogs.sort((nameA, nameB) => {
+      const pidA: number = +nameA.split(".")[2];
+      const pidB: number = +nameB.split(".")[2];
+      return pidA - pidB;
     });
-
-    for await (const line of rl) {
-      this._parseLine(line);
-    }
 
     const result: ITraceResult = {};
 
-    // write result in json files for each projects
-    for (const projectParseContext of this.projectParseContextMap.values()) {
-      result[projectParseContext.packageName] = {
-        writeFiles: projectParseContext.writeFiles,
-        readFiles: projectParseContext.readFiles,
-      };
+    for (const logName of allLogs) {
+      const pId: string = logName.split(".")[2];
+      const straceReadStream: fs.ReadStream = fs.createReadStream(
+        path.join(this._straceLogFilePath, logName)
+      );
+      const rl: Interface = createInterface({
+        input: straceReadStream,
+        crlfDelay: Infinity,
+      });
+
+      for await (const line of rl) {
+        this._parseLine(line, pId);
+      }
+
+      // write result in json files for each projects
+      for (const projectParseContext of this.projectParseContextMap.values()) {
+        result[projectParseContext.packageName] = {
+          writeFiles: projectParseContext.writeFiles,
+          readFiles: projectParseContext.readFiles,
+        };
+      }
     }
+
     const resultFilePath: string = path.join(
-      path.dirname(this._straceLogFilePath),
+      this._logFolder,
       "parseResult.json"
     );
+
     FileSystem.writeFile(
       resultFilePath,
       JSON.stringify(
@@ -116,8 +132,7 @@ export class StraceLogParser {
     return result;
   }
 
-  private _parseLine(line: string): void {
-    const pId: string | undefined = line.match(PID_REGEX)?.[1];
+  private _parseLine(line: string, pId: string): void {
     if (!pId) {
       return;
     }
@@ -129,6 +144,7 @@ export class StraceLogParser {
       Object.keys(this._startLinesToProjectParseContext).some(
         (startLine: string) => {
           if (line.includes(startLine)) {
+            terminal.writeDebugLine(`start line ${startLine}`);
             projectParseContext =
               this._startLinesToProjectParseContext[startLine];
             // project operation start
@@ -183,9 +199,12 @@ export class StraceLogParser {
 
   private _parseFileAccess(line: string): IFileAccessResult | undefined {
     const parseOpenAtLineResult: RegExpExecArray | null =
-      OPEN_AT_FINISH_REGEX.exec(line) ?? OPEN_AT_UN_FINISH_REGEX.exec(line);
+      OPEN_AT_FINISH_REGEX.exec(line);
     if (parseOpenAtLineResult?.length) {
-      const operations: string[] = parseOpenAtLineResult[4].split("|");
+      terminal.writeDebugLine(
+        `parseOpenAtLineResult ${JSON.stringify(parseOpenAtLineResult)}`
+      );
+      const operations: string[] = parseOpenAtLineResult[3].split("|");
       const kind: IFileAccessResult["kind"] | null = operations.find(
         (operation) => operation === "O_DIRECTORY"
       )
@@ -200,7 +219,7 @@ export class StraceLogParser {
       }
       return {
         kind,
-        filePath: parseOpenAtLineResult[6] ?? parseOpenAtLineResult[3],
+        filePath: parseOpenAtLineResult[5] ?? parseOpenAtLineResult[2],
       };
     }
 
