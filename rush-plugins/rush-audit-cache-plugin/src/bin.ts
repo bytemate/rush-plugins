@@ -20,31 +20,19 @@ try {
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
 main();
 
-function increaseVerbosity(u: unknown, previous: number): number {
-  return previous + 1;
-}
-
 async function main(): Promise<void> {
   try {
     program
       .name("rush-audit-cache")
       .version(version)
       .option("-p, --project [project]", "package name of the target project")
-      .option(
-        "-e, --exclude [exclude...]",
-        "exclude package from audit cache"
-      )
+      .option("-e, --exclude [exclude...]", "exclude package from audit cache")
       .option("-a, --all", "audit all cache configured project")
-      .option(
-        "-v, --verbose",
-        "verbosity that can be increased",
-        increaseVerbosity,
-        0
-      )
+      .option("-v, --verbose [verbose]", "set log level, default is 0, 1 for verbose, 2 for debug")
       .action(
         async (opts: {
           project: string;
-          verbose: number;
+          verbose: string;
           all: boolean;
           exclude?: string[];
         }) => {
@@ -62,9 +50,10 @@ async function main(): Promise<void> {
             );
             program.help();
           }
-          if (opts.verbose > 0) {
+          const verbose: number = +(opts.verbose ?? 0);
+          if (verbose > 0) {
             let cliLevel: string = "";
-            switch (opts.verbose) {
+            switch (verbose) {
               case 1:
                 cliLevel = "verbose";
                 terminalProvider.verboseEnabled = true;
@@ -81,7 +70,7 @@ async function main(): Promise<void> {
             projectName,
             terminal,
             checkAllCacheConfiguredProject,
-            exclude: opts.exclude ?? []
+            exclude: opts.exclude ?? [],
           });
         }
       );
