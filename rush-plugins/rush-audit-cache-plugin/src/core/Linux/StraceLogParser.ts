@@ -145,7 +145,10 @@ export class StraceLogParser {
     if (!projectParseContext) {
       Object.keys(this._startLinesToProjectParseContext).some(
         (startLine: string) => {
-          if (line.includes(startLine)) {
+          if (
+            line.includes(startLine) &&
+            !this._startLinesToProjectParseContext[startLine].started
+          ) {
             terminal.writeDebugLine(`start line ${startLine}`);
             projectParseContext =
               this._startLinesToProjectParseContext[startLine];

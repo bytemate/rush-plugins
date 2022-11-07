@@ -48,7 +48,9 @@ const lowRiskReadFiles: string[] = [
   // nvm
   ".nvm",
   ".npm",
+  ".pnpm",
   ".npmrc",
+  ".git"
 ];
 
 const lowRiskReadFolders: string[] = [
@@ -203,6 +205,10 @@ export class AuditCacheAnalyzer {
         const safeWriteMatcher: Ignore = ignore();
         safeWriteMatcher.add(outputFolderNames);
 
+        const lowRiskWriteMatcher: Ignore = ignore();
+        lowRiskWriteMatcher.add("node_modules/.cache");
+        lowRiskWriteMatcher.add("node_modules/.pnpm");
+
         if (outputFolderNames.length === 0) {
           acc[projectName].highRisk.push({
             kind: "text",
@@ -231,6 +237,32 @@ export class AuditCacheAnalyzer {
             ) {
               terminal.writeDebugLine(
                 `writeFilePath: ${writeFilePath}, safeWriteMatcher: ${safeWriteMatcher}, relativePathToProjectFolder: ${relativePathToProjectFolder} is safe`
+              );
+
+              continue;
+            }
+          }
+
+          // low risk
+          if (
+            ignore.isPathValid(writeFilePath) &&
+            lowRiskWriteMatcher.ignores(writeFilePath)
+          ) {
+            terminal.writeDebugLine(
+              `writeFilePath: ${writeFilePath} is low risk`
+            );
+            continue;
+          } else {
+            const relativePathToProjectFolder: string = path.relative(
+              projectFolder,
+              writeFilePath
+            );
+            if (
+              ignore.isPathValid(relativePathToProjectFolder) &&
+              lowRiskWriteMatcher.ignores(relativePathToProjectFolder)
+            ) {
+              terminal.writeDebugLine(
+                `writeFilePath: ${writeFilePath}, lowRiskWriteMatcher: ${lowRiskWriteMatcher}, relativePathToProjectFolder: ${relativePathToProjectFolder} is low risk`
               );
 
               continue;
