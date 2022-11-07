@@ -9,7 +9,7 @@ import { TRACE_LOG_FILENAME } from "../../helpers/constants";
 import { terminal } from "../../helpers/terminal";
 export interface IStraceLogParserOptions {
   projects: RushConfigurationProject[];
-  straceLogFilePath: string;
+  straceLogFolderPath: string;
   logFolder: string;
 }
 
@@ -33,7 +33,7 @@ interface IProjectParseContext {
 }
 
 export class StraceLogParser {
-  private _straceLogFilePath: string;
+  private _straceLogFolderPath: string;
   private _logFolder: string;
   private _startLinesToProjectParseContext: Record<
     string,
@@ -44,7 +44,7 @@ export class StraceLogParser {
   public readonly projectParseContextMap: Map<string, IProjectParseContext>;
 
   public constructor(options: IStraceLogParserOptions) {
-    this._straceLogFilePath = options.straceLogFilePath;
+    this._straceLogFolderPath = options.straceLogFolderPath;
     this._logFolder = options.logFolder;
 
     this.projectParseContextMap = new Map<string, IProjectParseContext>();
@@ -77,7 +77,7 @@ export class StraceLogParser {
     //Warning: This API is now obsolete.
     // Use FileSystem.readFolderItemNames() instead.
     const allLogs: string[] = FileSystem.readFolder(
-      this._straceLogFilePath
+      this._straceLogFolderPath
     ).filter((name) => name.startsWith(`${TRACE_LOG_FILENAME}.`));
     allLogs.sort((nameA, nameB) => {
       const pidA: number = +nameA.split(".")[2];
@@ -90,7 +90,7 @@ export class StraceLogParser {
     for (const logName of allLogs) {
       const pId: string = logName.split(".")[2];
       const straceReadStream: fs.ReadStream = fs.createReadStream(
-        path.join(this._straceLogFilePath, logName)
+        path.join(this._straceLogFolderPath, logName)
       );
       const rl: Interface = createInterface({
         input: straceReadStream,

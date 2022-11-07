@@ -15,7 +15,7 @@ import type { SpawnSyncReturns } from "child_process";
 export class LinuxTraceExecutor extends BaseTraceExecutor {
   private _stracePath: string;
   private _straceLogParser: StraceLogParser;
-  private _straceLogFilePath: string;
+  private _straceLogFolderPath: string;
 
   public constructor(options: IBaseTraceExecutorOptions) {
     super(options);
@@ -26,12 +26,12 @@ export class LinuxTraceExecutor extends BaseTraceExecutor {
     }
     this._stracePath = stracePath;
 
-    this._straceLogFilePath = path.join(this._logFolder, "logs");
-    FileSystem.ensureEmptyFolder(this._straceLogFilePath);
+    this._straceLogFolderPath = path.join(this._logFolder, "logs");
+    FileSystem.ensureEmptyFolder(this._straceLogFolderPath);
     this._straceLogParser = new StraceLogParser({
       projects: options.projects,
       logFolder: options.logFolder,
-      straceLogFilePath: this._straceLogFilePath,
+      straceLogFolderPath: this._straceLogFolderPath,
     });
   }
 
@@ -74,7 +74,7 @@ export class LinuxTraceExecutor extends BaseTraceExecutor {
       this._stracePath,
       args,
       {
-        currentWorkingDirectory: this._straceLogFilePath,
+        currentWorkingDirectory: this._straceLogFolderPath,
         stdio: "inherit",
       }
     );
