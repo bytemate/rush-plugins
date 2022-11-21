@@ -21,7 +21,7 @@ const OPEN_AT_FINISH_REGEX: RegExp =
 const OPEN_FINISH_REGEX: RegExp =
   /^open\("(.+)", ([A-Z_|]+)(, [0-9]+)?\) = [0-9]+<(.+)>$/gi;
 // open("/opt/tiger/tiktok_web_monorepo/packages/libs/tux-h5-color/package.json", O_RDONLY|O_CLOEXEC) = 17</opt/tiger/tiktok_web_monorepo/packages/libs/tux-h5-color/package.json>
-interface IFileAccessResult {
+interface IFileOperateKindResult {
   kind: "read" | "write";
   filePath: string;
 }
@@ -178,16 +178,16 @@ export class StraceLogParser {
       }
 
       // record read/write files
-      const fileAccessResult: IFileAccessResult | undefined =
-        this._parseFileAccess(line);
-      if (fileAccessResult) {
-        switch (fileAccessResult.kind) {
+      const fileOperateKindResult: IFileOperateKindResult | undefined =
+        this._parseIFileOperateKind(line);
+      if (fileOperateKindResult) {
+        switch (fileOperateKindResult.kind) {
           case "read": {
-            projectParseContext.readFiles.add(fileAccessResult.filePath);
+            projectParseContext.readFiles.add(fileOperateKindResult.filePath);
             break;
           }
           case "write": {
-            projectParseContext.writeFiles.add(fileAccessResult.filePath);
+            projectParseContext.writeFiles.add(fileOperateKindResult.filePath);
             break;
           }
           default: {
@@ -202,7 +202,9 @@ export class StraceLogParser {
     return line.match(CHILD_PROCESS_REGEX)?.[1];
   }
 
-  private _parseFileAccess(line: string): IFileAccessResult | undefined {
+  private _parseIFileOperateKind(
+    line: string
+  ): IFileOperateKindResult | undefined {
     const parseOpenLineResult: RegExpExecArray | null =
       OPEN_FINISH_REGEX.exec(line);
     if (parseOpenLineResult?.length) {
@@ -210,7 +212,7 @@ export class StraceLogParser {
         `parseOpenLineResult ${JSON.stringify(parseOpenLineResult)}`
       );
       const operations: string[] = parseOpenLineResult[2].split("|");
-      const kind: IFileAccessResult["kind"] | null = operations.find(
+      const kind: IFileOperateKindResult["kind"] | null = operations.find(
         (operation) => operation === "O_DIRECTORY"
       )
         ? null
@@ -235,7 +237,7 @@ export class StraceLogParser {
         `parseOpenAtLineResult ${JSON.stringify(parseOpenAtLineResult)}`
       );
       const operations: string[] = parseOpenAtLineResult[3].split("|");
-      const kind: IFileAccessResult["kind"] | null = operations.find(
+      const kind: IFileOperateKindResult["kind"] | null = operations.find(
         (operation) => operation === "O_DIRECTORY"
       )
         ? null
