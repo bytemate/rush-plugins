@@ -37,6 +37,8 @@ export class BaseFileResolver {
 
   private _matcherToResult: Map<Ignore, IFileResolveResult> = new Map();
 
+  public projectSafeMatcher: Ignore = ignore();
+
   protected constructor() {}
 
   private _applyUserBeforeFilter(
@@ -105,6 +107,10 @@ export class BaseFileResolver {
     const relativePathToRoot: string = path.relative("/", filePath);
     if (!ignore.isPathValid(relativePathToRoot)) {
       throw new Error(`wrong path ${relativePathToRoot}`);
+    }
+
+    if (this.projectSafeMatcher.ignores(relativePathToRoot)) {
+      return this._applyUserAfterFilter({ level: "safe", kind: "project" });
     }
 
     const ignored: Ignore | undefined = [...this._matcherToResult.keys()].find(

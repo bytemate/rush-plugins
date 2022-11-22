@@ -1,6 +1,5 @@
 import * as path from "path";
 import { Colors, IColorableSequence } from "@rushstack/node-core-library";
-import ignore, { Ignore } from "ignore";
 
 import {
   getSortedAllDependencyProjects,
@@ -85,21 +84,16 @@ export class AuditCacheAnalyzer {
         const rushProjectAuditCacheJson: IAuditCacheFileFilter | undefined =
           tryLoadJson<IAuditCacheFileFilter>(rushProjectAuditCacheJsonPath);
 
-        const { fileFilters = [] } = rushProjectAuditCacheJson ?? {
-          fileFilters: [],
-        };
-
-        // prepare project safe read and write matcher
-        const projectSafeReadMatcher: Ignore = ignore();
-        const projectSafeWriteMatcher: Ignore = ignore();
-
         // dependency project folders
         const allDependencyProjectFolders: string[] =
           getSortedAllDependencyProjects(project).map((p) => p.projectFolder);
 
-        projectSafeReadMatcher.add(
+        readFileResolver.projectSafeMatcher.add(
           [project.projectFolder].concat(allDependencyProjectFolders)
         );
+
+        const fileFilters: IAuditCacheFileFilter["fileFilters"] =
+          rushProjectAuditCacheJson?.fileFilters ?? [];
 
         let outputFolderNames: string[] = [];
         const rushProjectJsonPath: string = path.join(
@@ -108,11 +102,12 @@ export class AuditCacheAnalyzer {
         );
         const rushProjectJson: IRushProjectJson | undefined =
           tryLoadJson<IRushProjectJson>(rushProjectJsonPath);
+
         if (rushProjectJson) {
           const { operationSettings = [], incrementalBuildIgnoredGlobs = [] } =
             rushProjectJson;
           if (incrementalBuildIgnoredGlobs.length > 0) {
-            projectSafeReadMatcher.add(
+            readFileResolver.projectSafeMatcher.add(
               incrementalBuildIgnoredGlobs.map((p) =>
                 path.join(project.projectFolder, p)
               )
@@ -128,18 +123,11 @@ export class AuditCacheAnalyzer {
             outputFolderNames = operationSetting.outputFolderNames;
           }
         }
-        projectSafeWriteMatcher.add(outputFolderNames);
+        writeFileResolver.projectSafeMatcher.add(outputFolderNames);
 
         // prepare project context
         readFileResolver.loadProjectFilterConfig(fileFilters);
         writeFileResolver.loadProjectFilterConfig(fileFilters);
-
-        readFileResolver.setMatcher(projectSafeReadMatcher, {
-          level: "safe",
-        });
-        writeFileResolver.setMatcher(projectSafeWriteMatcher, {
-          level: "safe",
-        });
 
         if (!acc[projectName]) {
           acc[projectName] = {

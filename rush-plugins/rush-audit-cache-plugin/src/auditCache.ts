@@ -138,7 +138,7 @@ export async function auditCache(
   }
 
   const writeProjectAnalyzeResult = (params: {
-    result: IAnalyzeResult["key"];
+    result: IAnalyzeResult[string];
     packageName: string;
   }): void => {
     const { result, packageName } = params;
