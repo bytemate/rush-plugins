@@ -2,6 +2,18 @@
   "name": "rush-audit-cache-plugin",
   "entries": [
     {
+      "version": "0.1.7",
+      "tag": "rush-audit-cache-plugin_v0.1.7",
+      "date": "Tue, 22 Nov 2022 05:52:22 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "change output of audit specific project and support rush-audit-cache.json"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.1.6",
       "tag": "rush-audit-cache-plugin_v0.1.6",
       "date": "Mon, 07 Nov 2022 13:26:33 GMT",
