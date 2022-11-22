@@ -29,6 +29,7 @@ import {
   getTemplateNameList,
   getTemplatesFolder,
 } from "./logic/templateFolder";
+import { getGitUserName } from "./logic/GitConfig";
 import type { ICliParams } from "./init-project";
 
 export interface IExtendedAnswers extends Answers {
@@ -83,6 +84,9 @@ export default function (
       type: "input",
       name: "authorName",
       message: "What is your name? (used in package.json)",
+      default() {
+        return getGitUserName(monorepoRoot).trim();
+      },
       validate(input: string) {
         return Boolean(input);
       },
