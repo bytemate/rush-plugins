@@ -1,8 +1,14 @@
 import * as path from "path";
-import { Colors, IColorableSequence, Path } from "@rushstack/node-core-library";
-import ignore, { Ignore } from "ignore";
+import { Colors, IColorableSequence } from "@rushstack/node-core-library";
 
-import { getSortedAllDependencyProjects } from "../helpers/rushProject";
+import {
+  getSortedAllDependencyProjects,
+  tryLoadJson,
+} from "../helpers/rushProject";
+import type {
+  IRushProjectJson,
+  IAuditCacheFileFilter,
+} from "../helpers/rushProject";
 
 import type {
   RushConfiguration,
@@ -10,11 +16,15 @@ import type {
 } from "@rushstack/rush-sdk";
 import type { ITraceResult } from "./base/BaseTraceExecutor";
 
-import {
-  IRushProjectJson,
-  tryLoadJsonForProject,
-} from "../helpers/rushProject";
+import { ReadFileResolver } from "./ReadFileResolver";
+import { WriteFileResolver } from "./WriteFileResolver";
+import type { IFileResolveResult } from "./base/BaseFileResolver";
+
 import { terminal } from "../helpers/terminal";
+import {
+  RUSH_PROJECT_JSON_RELATIVE_PATH,
+  RUSH_AUDIT_CACHE_JSON_RELATIVE_PATH,
+} from "../helpers/constants";
 
 export interface IAnalyzerOptions {
   rushConfiguration: RushConfiguration;
@@ -44,35 +54,11 @@ export interface IAnalyzeResult {
   };
 }
 
-const lowRiskReadFiles: string[] = [
-  // nvm
-  ".nvm",
-  ".npm",
-  ".pnpm",
-  ".npmrc",
-  ".git"
-];
-
-const lowRiskReadFolders: string[] = [
-  // system
-  "/usr/lib",
-  "/usr/share/locale",
-  "/lib",
-  "/etc",
-  "/sys",
-  "/proc",
-  "/dev/null",
-];
-
 export class AuditCacheAnalyzer {
   private _rushConfiguration: RushConfiguration;
-  private _repoSafeReadMatcher: Ignore;
 
   public constructor(options: IAnalyzerOptions) {
     this._rushConfiguration = options.rushConfiguration;
-
-    this._repoSafeReadMatcher = ignore();
-    this._repoSafeReadMatcher.add("common/temp/node_modules/**");
   }
 
   public analyze(input: ITraceResult): IAnalyzeResult {
@@ -84,26 +70,48 @@ export class AuditCacheAnalyzer {
         if (!project) {
           throw new Error(`no project ${projectName} RushConfigurationProject`);
         }
+        const readFileResolver: ReadFileResolver = new ReadFileResolver();
+        const writeFileResolver: WriteFileResolver = new WriteFileResolver();
+
         const { projectFolder } = project;
 
-        const projectSafeReadMatcher: Ignore = ignore();
+        // get user project rush audit cache config
+        const rushProjectAuditCacheJsonPath: string = path.join(
+          projectFolder,
+          RUSH_AUDIT_CACHE_JSON_RELATIVE_PATH
+        );
+
+        const rushProjectAuditCacheJson: IAuditCacheFileFilter | undefined =
+          tryLoadJson<IAuditCacheFileFilter>(rushProjectAuditCacheJsonPath);
 
         // dependency project folders
         const allDependencyProjectFolders: string[] =
           getSortedAllDependencyProjects(project).map((p) => p.projectFolder);
 
+        readFileResolver.projectSafeMatcher.add(
+          [project.projectFolder].concat(allDependencyProjectFolders)
+        );
+
+        const fileFilters: IAuditCacheFileFilter["fileFilters"] =
+          rushProjectAuditCacheJson?.fileFilters ?? [];
+
         let outputFolderNames: string[] = [];
         const rushProjectJsonPath: string = path.join(
           projectFolder,
-          "./config/rush-project.json"
+          RUSH_PROJECT_JSON_RELATIVE_PATH
         );
         const rushProjectJson: IRushProjectJson | undefined =
-          tryLoadJsonForProject(rushProjectJsonPath);
+          tryLoadJson<IRushProjectJson>(rushProjectJsonPath);
+
         if (rushProjectJson) {
           const { operationSettings = [], incrementalBuildIgnoredGlobs = [] } =
             rushProjectJson;
           if (incrementalBuildIgnoredGlobs.length > 0) {
-            projectSafeReadMatcher.add(incrementalBuildIgnoredGlobs);
+            readFileResolver.projectSafeMatcher.add(
+              incrementalBuildIgnoredGlobs.map((p) =>
+                path.join(project.projectFolder, p)
+              )
+            );
           }
           const operationSetting:
             | IRushProjectJson["operationSettings"][number]
@@ -115,6 +123,11 @@ export class AuditCacheAnalyzer {
             outputFolderNames = operationSetting.outputFolderNames;
           }
         }
+        writeFileResolver.projectSafeMatcher.add(outputFolderNames);
+
+        // prepare project context
+        readFileResolver.loadProjectFilterConfig(fileFilters);
+        writeFileResolver.loadProjectFilterConfig(fileFilters);
 
         if (!acc[projectName]) {
           acc[projectName] = {
@@ -122,92 +135,34 @@ export class AuditCacheAnalyzer {
             highRisk: [],
           };
         }
-
         for (const readFilePath of readFiles) {
           terminal.writeDebugLine(`readFilePath: ${readFilePath}`);
-          // Safe
-          if (
-            ignore.isPathValid(readFilePath) &&
-            projectSafeReadMatcher.ignores(readFilePath)
-          ) {
-            terminal.writeDebugLine(`readFilePath: ${readFilePath} is safe`);
-            continue;
-          } else {
-            const relativePathToProjectFolder: string = path.relative(
-              projectFolder,
-              readFilePath
-            );
-            if (
-              ignore.isPathValid(relativePathToProjectFolder) &&
-              projectSafeReadMatcher.ignores(relativePathToProjectFolder)
-            ) {
-              terminal.writeDebugLine(
-                `readFilePath: ${readFilePath}, relativePathToProjectFolder: ${relativePathToProjectFolder} is safe`
-              );
-              continue;
-            }
-            const relativePathToRepoRoot: string = path.relative(
-              this._rushConfiguration.rushJsonFolder,
-              readFilePath
-            );
-            if (
-              ignore.isPathValid(relativePathToRepoRoot) &&
-              this._repoSafeReadMatcher.ignores(relativePathToRepoRoot)
-            ) {
-              terminal.writeDebugLine(
-                `readFilePath: ${readFilePath}, relativePathToRepoRoot: ${relativePathToRepoRoot} is safe`
-              );
-              continue;
-            }
-          }
-
-          const allProjectFolders: string[] = [project.projectFolder].concat(
-            allDependencyProjectFolders
+          const result: IFileResolveResult =
+            readFileResolver.resolve(readFilePath);
+          terminal.writeDebugLine(
+            `resolve readFilePath result: ${readFilePath} ${JSON.stringify(
+              result
+            )}`
           );
-          if (
-            allProjectFolders.find((dependencyProjectFolder) => {
-              return Path.isUnderOrEqual(readFilePath, dependencyProjectFolder);
-            })
-          ) {
-            terminal.writeDebugLine(
-              `readFilePath: ${readFilePath}, allProjectFolders: ${allProjectFolders.toString()} is safe`
-            );
+
+          if (result.level === "safe") {
             continue;
           }
 
-          // Low risk
-          if (
-            lowRiskReadFiles.find((lowRiskReadFile) => {
-              return readFilePath.includes(lowRiskReadFile);
-            }) ||
-            lowRiskReadFolders.find((lowRiskReadFolder) => {
-              return Path.isUnderOrEqual(readFilePath, lowRiskReadFolder);
-            })
-          ) {
+          if (result.level === "low") {
             acc[projectName].lowRisk.push({
               kind: "readFile",
               filePath: readFilePath,
             });
-            terminal.writeDebugLine(
-              `readFilePath: ${readFilePath}, lowRiskReadFiles: ${lowRiskReadFiles.toString()}, lowRiskReadFolders: ${lowRiskReadFolders.toString()} is low risk`
-            );
             continue;
           }
 
-          terminal.writeDebugLine(`readFilePath: ${readFilePath} is high risk`);
           // Otherwise, high risk
           acc[projectName].highRisk.push({
             kind: "readFile",
             filePath: readFilePath,
           });
         }
-
-        const safeWriteMatcher: Ignore = ignore();
-        safeWriteMatcher.add(outputFolderNames);
-
-        const lowRiskWriteMatcher: Ignore = ignore();
-        lowRiskWriteMatcher.add("node_modules/.cache");
-        lowRiskWriteMatcher.add("node_modules/.pnpm");
 
         if (outputFolderNames.length === 0) {
           acc[projectName].highRisk.push({
@@ -219,59 +174,26 @@ export class AuditCacheAnalyzer {
         }
 
         for (const writeFilePath of writeFiles) {
-          // safe
-          if (
-            ignore.isPathValid(writeFilePath) &&
-            safeWriteMatcher.ignores(writeFilePath)
-          ) {
-            terminal.writeDebugLine(`writeFilePath: ${writeFilePath} is safe`);
-            continue;
-          } else {
-            const relativePathToProjectFolder: string = path.relative(
-              projectFolder,
-              writeFilePath
-            );
-            if (
-              ignore.isPathValid(relativePathToProjectFolder) &&
-              safeWriteMatcher.ignores(relativePathToProjectFolder)
-            ) {
-              terminal.writeDebugLine(
-                `writeFilePath: ${writeFilePath}, safeWriteMatcher: ${safeWriteMatcher}, relativePathToProjectFolder: ${relativePathToProjectFolder} is safe`
-              );
-
-              continue;
-            }
-          }
-
-          // low risk
-          if (
-            ignore.isPathValid(writeFilePath) &&
-            lowRiskWriteMatcher.ignores(writeFilePath)
-          ) {
-            terminal.writeDebugLine(
-              `writeFilePath: ${writeFilePath} is low risk`
-            );
-            continue;
-          } else {
-            const relativePathToProjectFolder: string = path.relative(
-              projectFolder,
-              writeFilePath
-            );
-            if (
-              ignore.isPathValid(relativePathToProjectFolder) &&
-              lowRiskWriteMatcher.ignores(relativePathToProjectFolder)
-            ) {
-              terminal.writeDebugLine(
-                `writeFilePath: ${writeFilePath}, lowRiskWriteMatcher: ${lowRiskWriteMatcher}, relativePathToProjectFolder: ${relativePathToProjectFolder} is low risk`
-              );
-
-              continue;
-            }
-          }
-
+          terminal.writeDebugLine(`writeFilePath: ${writeFilePath}`);
+          const result: IFileResolveResult =
+            writeFileResolver.resolve(writeFilePath);
           terminal.writeDebugLine(
-            `writeFilePath: ${writeFilePath} is high risk`
+            `resolve writeFilePath result: ${writeFilePath} ${JSON.stringify(
+              result
+            )}`
           );
+
+          if (result.level === "safe") {
+            continue;
+          }
+
+          if (result.level === "low") {
+            acc[projectName].lowRisk.push({
+              kind: "writeFile",
+              filePath: writeFilePath,
+            });
+            continue;
+          }
 
           // Otherwise, high risk
           acc[projectName].highRisk.push({

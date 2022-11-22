@@ -58,9 +58,9 @@ export async function auditCache(
     );
     auditCacheProjects.push(...[project, ...allDependencyProjects]);
     terminal.writeDebugLine(
-      `The dependencies of the project ${projectName} are ${allDependencyPackageNames.join(
-        ","
-      )}`
+      `The dependencies of the project ${projectName} are ${allDependencyPackageNames
+        .filter((name) => name !== projectName)
+        .join(",")}`
     );
   } else {
     const allCacheConfiguredProjects: RushConfigurationProject[] =
@@ -137,7 +137,11 @@ export async function auditCache(
     );
   }
 
-  Object.entries(analyzeResult).forEach(([packageName, result]) => {
+  const writeProjectAnalyzeResult = (params: {
+    result: IAnalyzeResult[string];
+    packageName: string;
+  }): void => {
+    const { result, packageName } = params;
     terminal.writeLine(`======== project ${packageName} ========`);
 
     const { highRisk, lowRisk } = result;
@@ -170,7 +174,50 @@ export async function auditCache(
         }
       }
     }
-  });
+  };
+
+  if (checkAllCacheConfiguredProject) {
+    Object.entries(analyzeResult).forEach(([packageName, result]) => {
+      writeProjectAnalyzeResult({
+        packageName,
+        result,
+      });
+    });
+  } else {
+    const targetProjectAnalyzeResult: IAnalyzeResult["key"] =
+      analyzeResult[projectName];
+
+    const otherAnalyzedProjects: string[] = Object.keys(analyzeResult).filter(
+      (name) => name !== projectName
+    );
+
+    writeProjectAnalyzeResult({
+      packageName: projectName,
+      result: targetProjectAnalyzeResult,
+    });
+
+    const highRiskProjects: string[] = [];
+    let totalOtherHighRisks: number = 0;
+    for (const packageName of otherAnalyzedProjects) {
+      const { highRisk } = analyzeResult[packageName];
+      if (highRisk.length > 0) {
+        highRiskProjects.push(packageName);
+        totalOtherHighRisks += highRisk.length;
+      }
+    }
+    terminal.writeLine("");
+    if (highRiskProjects.length === 0) {
+      terminal.writeLine(
+        `There is no high risk in dependencies of the project ${projectName}.`
+      );
+    } else {
+      terminal.writeLine(
+        `Find total ${totalOtherHighRisks} high risk in the dependencies of the project ${projectName}, include ${highRiskProjects.join(
+          ","
+        )}.`
+      );
+    }
+  }
 
   terminal.writeLine("");
   terminal.writeLine(`For more details, you can check ${resultJsonFile}`);

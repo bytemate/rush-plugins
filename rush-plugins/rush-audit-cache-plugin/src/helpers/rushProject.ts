@@ -7,6 +7,9 @@ import {
 } from "@rushstack/rush-sdk";
 import { FileSystem, JsonFile } from "@rushstack/node-core-library";
 
+import { RUSH_PROJECT_JSON_RELATIVE_PATH } from "./constants";
+
+import type { IUserProjectFileFilter } from "../core/base/BaseFileResolver";
 import type { SpawnSyncReturns } from "child_process";
 
 export interface IRushProjectJson {
@@ -15,6 +18,10 @@ export interface IRushProjectJson {
     outputFolderNames: string[];
   }[];
   incrementalBuildIgnoredGlobs: string[];
+}
+
+export interface IAuditCacheFileFilter {
+  fileFilters: IUserProjectFileFilter[];
 }
 
 const packageNameToAllDependencyProjects: Record<
@@ -75,17 +82,13 @@ function recursiveGetAndSortAllDependencyProjects(
 }
 
 /**
- * try to load json for project
+ * try to load json by path
  */
 
-export function tryLoadJsonForProject(
-  resolvedConfigurationFilePath: string
-): IRushProjectJson | undefined {
+export function tryLoadJson<T>(jsonFilePath: string): T | undefined {
   try {
-    const rushProjectJson: IRushProjectJson = JsonFile.load(
-      resolvedConfigurationFilePath
-    );
-    return rushProjectJson;
+    const loadedJson: T = JsonFile.load(jsonFilePath);
+    return loadedJson;
   } catch (e) {
     if (FileSystem.isFileDoesNotExistError(e as Error)) {
       return;
@@ -105,11 +108,11 @@ export function getAllCacheConfiguredProjects(
   return projects.filter((project) => {
     const rushProjectJsonPath: string = path.join(
       project.projectFolder,
-      "./config/rush-project.json"
+      RUSH_PROJECT_JSON_RELATIVE_PATH
     );
 
     const rushProjectJson: IRushProjectJson | undefined =
-      tryLoadJsonForProject(rushProjectJsonPath);
+      tryLoadJson(rushProjectJsonPath);
     if (!rushProjectJson) {
       return false;
     }
