@@ -14,6 +14,9 @@ export const getGitUserName = (cwd: string): string => {
       ['config', 'user.name'],
       options
     );
+    if (result.status !== 0) {
+      return '';
+    }
     return result.stdout.toString() ?? '';
   } catch (e) {
     // no-catch
