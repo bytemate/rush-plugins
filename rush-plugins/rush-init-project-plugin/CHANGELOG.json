@@ -2,6 +2,18 @@
   "name": "rush-init-project-plugin",
   "entries": [
     {
+      "version": "0.4.0",
+      "tag": "rush-init-project-plugin_v0.4.0",
+      "date": "Wed, 23 Nov 2022 06:29:45 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "set git config user.name as default authorName"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.3.1",
       "tag": "rush-init-project-plugin_v0.3.1",
       "date": "Wed, 31 Aug 2022 04:09:13 GMT",

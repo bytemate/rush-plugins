@@ -1,6 +1,13 @@
 # Change Log - rush-init-project-plugin
 
-This log was last generated on Wed, 31 Aug 2022 04:09:13 GMT and should not be manually modified.
+This log was last generated on Wed, 23 Nov 2022 06:29:45 GMT and should not be manually modified.
+
+## 0.4.0
+Wed, 23 Nov 2022 06:29:45 GMT
+
+### Minor changes
+
+- set git config user.name as default authorName
 
 ## 0.3.1
 Wed, 31 Aug 2022 04:09:13 GMT
