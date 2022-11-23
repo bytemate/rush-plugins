@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-init-project-plugin",
+      "comment": "set git config user.name as default authorName",
+      "type": "minor"
+    }
+  ],
+  "packageName": "rush-init-project-plugin"
+}
