@@ -28,13 +28,21 @@ async function main(): Promise<void> {
       .option("-p, --project [project]", "package name of the target project")
       .option("-e, --exclude [exclude...]", "exclude package from audit cache")
       .option("-a, --all", "audit all cache configured project")
-      .option("-v, --verbose [verbose]", "set log level, default is 0, 1 for verbose, 2 for debug")
+      .option(
+        "-c, --parallelism [parallelism]",
+        "Specifies the maximum number of concurrent processes to launch during a build. (eg. '50% | '5')"
+      )
+      .option(
+        "-v, --verbose [verbose]",
+        "set log level, default is 0, 1 for verbose, 2 for debug"
+      )
       .action(
         async (opts: {
           project: string;
           verbose: string;
           all: boolean;
           exclude?: string[];
+          parallelism?: string;
         }) => {
           const checkAllCacheConfiguredProject: boolean = opts.all;
           const projectName: string = opts.project;
@@ -71,6 +79,7 @@ async function main(): Promise<void> {
             terminal,
             checkAllCacheConfiguredProject,
             exclude: opts.exclude ?? [],
+            parallelism: opts.parallelism,
           });
         }
       );

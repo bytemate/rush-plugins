@@ -7,7 +7,7 @@ import type {
 
 export class WriteFileResolver extends BaseFileResolver {
   private _lowRiskNodeWrite: string[] = [
-    "**/update-notifier-npm.json.*",
+    "**/update-notifier-npm.json*",
     "**/node_modules/.cache/",
     "**/node_modules/.pnpm/",
   ];

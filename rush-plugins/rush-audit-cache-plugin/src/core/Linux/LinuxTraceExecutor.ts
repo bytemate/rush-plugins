@@ -16,9 +16,12 @@ export class LinuxTraceExecutor extends BaseTraceExecutor {
   private _stracePath: string;
   private _straceLogParser: StraceLogParser;
   private _straceLogFolderPath: string;
+  private _parallelism?: string;
 
   public constructor(options: IBaseTraceExecutorOptions) {
     super(options);
+
+    this._parallelism = options.parallelism;
 
     const stracePath: string | undefined = Executable.tryResolve("strace");
     if (!stracePath) {
@@ -52,6 +55,10 @@ export class LinuxTraceExecutor extends BaseTraceExecutor {
     this._terminal.writeLine("");
     installProjects(this._projects);
 
+    const parallelismArgs: string[] = this._parallelism
+      ? ["--parallelism", this._parallelism]
+      : [];
+
     const args: string[] = [
       "-ff",
       "-y",
@@ -63,6 +70,7 @@ export class LinuxTraceExecutor extends BaseTraceExecutor {
       "RUSH_BUILD_CACHE_ENABLED=0",
       "rush",
       "rebuild",
+      ...parallelismArgs,
       ...projectArgs,
     ];
 

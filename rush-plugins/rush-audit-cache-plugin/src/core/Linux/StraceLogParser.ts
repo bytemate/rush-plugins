@@ -179,7 +179,7 @@ export class StraceLogParser {
 
       // record read/write files
       const fileOperateKindResult: IFileOperateKindResult | undefined =
-        this._parseIFileOperateKind(line);
+        this._parseFileOperateKind(line);
       if (fileOperateKindResult) {
         switch (fileOperateKindResult.kind) {
           case "read": {
@@ -202,7 +202,37 @@ export class StraceLogParser {
     return line.match(CHILD_PROCESS_REGEX)?.[1];
   }
 
-  private _parseIFileOperateKind(
+  private _handleFileOperate(params: {
+    operations: string[];
+    filePath: string;
+  }): IFileOperateKindResult | undefined {
+    const { operations, filePath } = params;
+    const kind: IFileOperateKindResult["kind"] | null = operations.find(
+      (operation) => operation === "O_DIRECTORY"
+    )
+      ? null
+      : operations.find((operation) => operation === "O_RDONLY")
+      ? "read"
+      : operations.find((operation) => operation === "O_WRONLY")
+      ? "write"
+      : null;
+    if (!kind) {
+      return;
+    }
+    try {
+      if (fs.statSync(filePath).isDirectory()) {
+        return;
+      }
+    } catch (e) {
+      // do nothing
+    }
+    return {
+      kind,
+      filePath,
+    };
+  }
+
+  private _parseFileOperateKind(
     line: string
   ): IFileOperateKindResult | undefined {
     const parseOpenLineResult: RegExpExecArray | null =
@@ -212,22 +242,10 @@ export class StraceLogParser {
         `parseOpenLineResult ${JSON.stringify(parseOpenLineResult)}`
       );
       const operations: string[] = parseOpenLineResult[2].split("|");
-      const kind: IFileOperateKindResult["kind"] | null = operations.find(
-        (operation) => operation === "O_DIRECTORY"
-      )
-        ? null
-        : operations.find((operation) => operation === "O_RDONLY")
-        ? "read"
-        : operations.find((operation) => operation === "O_WRONLY")
-        ? "write"
-        : null;
-      if (!kind) {
-        return;
-      }
-      return {
-        kind,
+      return this._handleFileOperate({
+        operations,
         filePath: parseOpenLineResult[4] ?? parseOpenLineResult[1],
-      };
+      });
     }
 
     const parseOpenAtLineResult: RegExpExecArray | null =
@@ -237,22 +255,10 @@ export class StraceLogParser {
         `parseOpenAtLineResult ${JSON.stringify(parseOpenAtLineResult)}`
       );
       const operations: string[] = parseOpenAtLineResult[3].split("|");
-      const kind: IFileOperateKindResult["kind"] | null = operations.find(
-        (operation) => operation === "O_DIRECTORY"
-      )
-        ? null
-        : operations.find((operation) => operation === "O_RDONLY")
-        ? "read"
-        : operations.find((operation) => operation === "O_WRONLY")
-        ? "write"
-        : null;
-      if (!kind) {
-        return;
-      }
-      return {
-        kind,
+      return this._handleFileOperate({
+        operations,
         filePath: parseOpenAtLineResult[5] ?? parseOpenAtLineResult[2],
-      };
+      });
     }
 
     return;

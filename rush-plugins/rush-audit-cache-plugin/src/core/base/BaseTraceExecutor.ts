@@ -5,13 +5,14 @@ export interface IBaseTraceExecutorOptions {
   projects: RushConfigurationProject[];
   logFolder: string;
   terminal: ITerminal;
-};
+  parallelism?: string;
+}
 
 export interface ITraceResult {
   [packageName: string]: {
     readFiles: ReadonlySet<string>;
     writeFiles: ReadonlySet<string>;
-  }
+  };
 }
 
 export abstract class BaseTraceExecutor {
