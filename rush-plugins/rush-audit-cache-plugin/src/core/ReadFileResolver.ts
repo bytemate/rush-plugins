@@ -28,6 +28,7 @@ export class ReadFileResolver extends BaseFileResolver {
     "**/.pnpm/",
     "**/.npmrc",
     "**/.nvmrc",
+    "**/update-notifier-npm.json*",
   ];
   private _lowRiskNodeReadMatcher: Ignore = ignore();
   private _lowRiskToolRead: string[] = ["**/.git/", "**/.gitconfig"];

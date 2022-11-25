@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-audit-cache-plugin",
+      "comment": "fix rush-audit-cache-plugin parser file director error",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-audit-cache-plugin"
+}
