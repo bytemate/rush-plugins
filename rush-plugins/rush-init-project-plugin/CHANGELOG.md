@@ -1,6 +1,13 @@
 # Change Log - rush-init-project-plugin
 
-This log was last generated on Wed, 23 Nov 2022 06:29:45 GMT and should not be manually modified.
+This log was last generated on Mon, 28 Nov 2022 03:27:55 GMT and should not be manually modified.
+
+## 0.5.0
+Mon, 28 Nov 2022 03:27:55 GMT
+
+### Minor changes
+
+- Support displayName to IConfig in init config file for rush-init-project-plugin
 
 ## 0.4.0
 Wed, 23 Nov 2022 06:29:45 GMT
