@@ -150,9 +150,7 @@ export default function (
     );
     const templateChoices: { name: string; value: string }[] =
       templateNameList.map((x) => ({
-        name: x.displayName
-          ? `${x.displayName} (${x.folderName})`
-          : x.folderName,
+        name: x.displayName ? x.displayName : x.folderName,
         value: x.folderName,
       }));
     defaultPrompts.unshift({
