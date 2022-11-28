@@ -93,7 +93,7 @@ describe("WriteFileResolver", () => {
     ]);
   });
 
-  it("should load project config, audit 1 high risk, 1 low risk and 2 safe file read", async () => {
+  it("should load global config, audit 1 high risk, 1 low risk and 2 safe file read", async () => {
     const writeFiles = [
       "/tmp/rollup-plugin-progress",
       "/root/node_modules/.cache/rollup-plugin-typescript2/umd/rpt2_ce91b375290c4fee5b255c9d9f687d89e0587857/code/cache/435d89aa78",
@@ -108,7 +108,7 @@ describe("WriteFileResolver", () => {
     };
 
     writeFileResolver.projectSafeMatcher.add("/workspaceRepo/a/dist");
-    writeFileResolver.loadProjectFilterConfig([
+    writeFileResolver.loadGlobalFilterConfig([
       { operate: "write", kind: "node", level: "high" },
       {
         operate: "write",
@@ -138,6 +138,70 @@ describe("WriteFileResolver", () => {
         },
       ],
       safe: [
+        {
+          filePath: "/workspaceRepo/a/dist/src/utils/types.js",
+          kind: "writeFile",
+        },
+        {
+          filePath: "/workspaceRepo/a/dist/src/utils/uid.js",
+          kind: "writeFile",
+        },
+      ],
+    });
+  });
+
+  it("should load project and repo config, audit 0 high risk, 1 low risk and 3 safe file read", async () => {
+    const writeFiles = [
+      "/tmp/rollup-plugin-progress",
+      "/root/node_modules/.cache/rollup-plugin-typescript2/umd/rpt2_ce91b375290c4fee5b255c9d9f687d89e0587857/code/cache/435d89aa78",
+      "/workspaceRepo/a/dist/src/utils/types.js",
+      "/workspaceRepo/a/dist/src/utils/uid.js",
+    ];
+    const writeFileResolver = new WriteFileResolver();
+    const result: IAnalyzeResultWithSafe = {
+      lowRisk: [],
+      highRisk: [],
+      safe: [],
+    };
+
+    writeFileResolver.projectSafeMatcher.add("/workspaceRepo/a/dist");
+    writeFileResolver.loadGlobalFilterConfig([
+      { operate: "write", kind: "node", level: "high" },
+      {
+        operate: "write",
+        pattern: "^/tmp/rollup-plugin-progress$",
+        level: "low",
+      },
+    ]);
+    writeFileResolver.loadProjectFilterConfig([
+      { operate: "write", kind: "node", level: "low" },
+      {
+        operate: "write",
+        pattern: "^/tmp/rollup-plugin-progress$",
+        level: "safe",
+      },
+    ]);
+
+    for (const writeFilePath of writeFiles) {
+      const resolveResult: IFileResolveResult =
+        writeFileResolver.resolve(writeFilePath);
+      handleResolveResult(result, resolveResult, writeFilePath);
+    }
+
+    expect(result).toEqual({
+      highRisk: [],
+      lowRisk: [
+        {
+          filePath:
+            "/root/node_modules/.cache/rollup-plugin-typescript2/umd/rpt2_ce91b375290c4fee5b255c9d9f687d89e0587857/code/cache/435d89aa78",
+          kind: "writeFile",
+        },
+      ],
+      safe: [
+        {
+          filePath: "/tmp/rollup-plugin-progress",
+          kind: "writeFile",
+        },
         {
           filePath: "/workspaceRepo/a/dist/src/utils/types.js",
           kind: "writeFile",

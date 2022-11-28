@@ -75,6 +75,20 @@ export class ReadFileResolver extends BaseFileResolver {
     fileFilters.forEach((fileFilter) => {
       if (fileFilter.operate === "read") {
         if ("kind" in fileFilter) {
+          this._userProjectAfterFileFilters.unshift(
+            fileFilter as IUserProjectAfterFileFilter
+          );
+        } else {
+          this._userProjectBeforeFileFilters.unshift(fileFilter);
+        }
+      }
+    });
+  }
+
+  public loadGlobalFilterConfig(fileFilters: IUserProjectFileFilter[]): void {
+    fileFilters.forEach((fileFilter) => {
+      if (fileFilter.operate === "read") {
+        if ("kind" in fileFilter) {
           this._userProjectAfterFileFilters.push(
             fileFilter as IUserProjectAfterFileFilter
           );

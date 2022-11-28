@@ -63,11 +63,11 @@ export class BaseFileResolver {
     const matcherResult: IFileResolveResult = {
       ...originMatcherResult,
     };
-
-    for (const userProjectFilter of this._userProjectAfterFileFilters) {
-      if (matcherResult.kind === userProjectFilter.kind) {
-        matcherResult.level = userProjectFilter.level;
+    for (const fileFilter of this._userProjectAfterFileFilters) {
+      if (matcherResult.kind === fileFilter.kind) {
+        matcherResult.level = fileFilter.level;
       }
+
       break;
     }
     return matcherResult;

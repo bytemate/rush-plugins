@@ -24,6 +24,7 @@ import { terminal } from "../helpers/terminal";
 import {
   RUSH_PROJECT_JSON_RELATIVE_PATH,
   RUSH_AUDIT_CACHE_JSON_RELATIVE_PATH,
+  PLUGIN_NAME,
 } from "../helpers/constants";
 
 export interface IAnalyzerOptions {
@@ -62,6 +63,22 @@ export class AuditCacheAnalyzer {
   }
 
   public analyze(input: ITraceResult): IAnalyzeResult {
+    // prepare global audit cache config
+    const pluginOptionsJsonFilePath: string = path.join(
+      this._rushConfiguration.rushPluginOptionsFolder,
+      `${PLUGIN_NAME}.json`
+    );
+
+    const globalAuditCacheJson: IAuditCacheFileFilter | undefined =
+      tryLoadJson<IAuditCacheFileFilter>(pluginOptionsJsonFilePath);
+
+    const globalFileFilters: IAuditCacheFileFilter["fileFilters"] =
+      globalAuditCacheJson?.fileFilters ?? [];
+
+    terminal.writeLine(
+      `Found ${globalFileFilters.length} filters in ${pluginOptionsJsonFilePath}`
+    );
+
     return Object.entries(input).reduce(
       (acc, [projectName, { readFiles, writeFiles }]) => {
         const project: RushConfigurationProject | undefined =
@@ -84,6 +101,13 @@ export class AuditCacheAnalyzer {
         const rushProjectAuditCacheJson: IAuditCacheFileFilter | undefined =
           tryLoadJson<IAuditCacheFileFilter>(rushProjectAuditCacheJsonPath);
 
+        const fileFilters: IAuditCacheFileFilter["fileFilters"] =
+          rushProjectAuditCacheJson?.fileFilters ?? [];
+
+        terminal.writeLine(
+          `Found ${fileFilters.length} filters in project ${projectName}`
+        );
+
         // dependency project folders
         const allDependencyProjectFolders: string[] =
           getSortedAllDependencyProjects(project).map((p) => p.projectFolder);
@@ -91,9 +115,6 @@ export class AuditCacheAnalyzer {
         readFileResolver.projectSafeMatcher.add(
           [project.projectFolder].concat(allDependencyProjectFolders)
         );
-
-        const fileFilters: IAuditCacheFileFilter["fileFilters"] =
-          rushProjectAuditCacheJson?.fileFilters ?? [];
 
         let outputFolderNames: string[] = [];
         const rushProjectJsonPath: string = path.join(
@@ -125,7 +146,11 @@ export class AuditCacheAnalyzer {
         }
         writeFileResolver.projectSafeMatcher.add(outputFolderNames);
 
-        // prepare project context
+        // prepare audit cache global config
+        readFileResolver.loadGlobalFilterConfig(globalFileFilters);
+        writeFileResolver.loadGlobalFilterConfig(globalFileFilters);
+
+        // prepare audit cache project config
         readFileResolver.loadProjectFilterConfig(fileFilters);
         writeFileResolver.loadProjectFilterConfig(fileFilters);
 
