@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-init-project-plugin",
+      "comment": "Support displayName to IConfig in init config file for rush-init-project-plugin",
+      "type": "minor"
+    }
+  ],
+  "packageName": "rush-init-project-plugin"
+}

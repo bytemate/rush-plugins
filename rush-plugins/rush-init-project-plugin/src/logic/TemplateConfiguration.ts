@@ -47,6 +47,7 @@ export interface IConfig {
   prompts?: PromptQuestion[];
   plugins?: IPlugin[];
   defaultProjectConfiguration?: IDefaultProjectConfiguration;
+  displayName?: string;
 }
 
 export interface IPlugin {
@@ -62,6 +63,7 @@ export class TemplateConfiguration {
   private _prompts: PromptQuestion[];
   private _plugins: IPlugin[];
   private _defaultProjectConfiguration: IDefaultProjectConfiguration;
+  public displayName: string;
 
   private constructor(template: string) {
     const templateFolder: string = getTemplateFolder(template);
@@ -72,6 +74,7 @@ export class TemplateConfiguration {
     this._prompts = [];
     this._plugins = [];
     this._defaultProjectConfiguration = {};
+    this.displayName = "";
     if (result && result.config) {
       if (result.config.prompts) {
         this._prompts = result.config.prompts;
@@ -82,6 +85,9 @@ export class TemplateConfiguration {
       if (result.config.defaultProjectConfiguration) {
         this._defaultProjectConfiguration =
           result.config.defaultProjectConfiguration;
+      }
+      if (result.config.displayName) {
+        this.displayName = result.config.displayName;
       }
     }
   }

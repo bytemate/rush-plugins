@@ -27,7 +27,7 @@ import { TerminalSingleton } from "./terminal";
       TerminalSingleton.setVerboseEnabled(params?.verbose ?? false);
       const terminal: Terminal = TerminalSingleton.getInstance();
       try {
-        getTemplatesFolderAndValidate();
+        await getTemplatesFolderAndValidate();
         await initProject(params);
       } catch (error: any) {
         if (error.message) {
