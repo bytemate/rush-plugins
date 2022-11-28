@@ -7,6 +7,7 @@ import type { RushConfigurationProject } from "@rushstack/rush-sdk";
 import { ITraceResult } from "../base/BaseTraceExecutor";
 import { TRACE_LOG_FILENAME } from "../../helpers/constants";
 import { terminal } from "../../helpers/terminal";
+import { durationToString } from "../../helpers/utils";
 export interface IStraceLogParserOptions {
   projects: RushConfigurationProject[];
   straceLogFolderPath: string;
@@ -42,6 +43,7 @@ export class StraceLogParser {
     IProjectParseContext
   > = {};
   private _pidToProjectParseContext: Record<string, IProjectParseContext> = {};
+  private _filePathType: Record<string, "file" | "director" | "no_exist"> = {};
 
   public readonly projectParseContextMap: Map<string, IProjectParseContext>;
 
@@ -76,6 +78,7 @@ export class StraceLogParser {
   }
 
   public async parseAsync(): Promise<ITraceResult> {
+    const startTime: number = Date.now();
     //Warning: This API is now obsolete.
     // Use FileSystem.readFolderItemNames() instead.
     const allLogs: string[] = FileSystem.readFolder(
@@ -130,7 +133,11 @@ export class StraceLogParser {
         2
       )
     );
+    const endTime: number = Date.now();
 
+    const duration: string = durationToString((endTime - startTime) / 1000);
+
+    terminal.writeLine(`Parsing strace log end (${duration})`);
     return result;
   }
 
@@ -220,12 +227,23 @@ export class StraceLogParser {
       return;
     }
     try {
-      if (fs.statSync(filePath).isDirectory()) {
+      const fileType: "file" | "director" | "no_exist" =
+        this._filePathType[filePath];
+      if (fileType === "director") {
         return;
       }
+      if (!fileType) {
+        this._filePathType[filePath] = "file";
+
+        if (fs.statSync(filePath).isDirectory()) {
+          this._filePathType[filePath] = "director";
+          return;
+        }
+      }
     } catch (e) {
-      // do nothing
+      this._filePathType[filePath] = "no_exist";
     }
+
     return {
       kind,
       filePath,

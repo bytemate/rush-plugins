@@ -92,7 +92,7 @@ export class LinuxTraceExecutor extends BaseTraceExecutor {
     }
 
     this._terminal.writeLine("");
-    this._terminal.writeLine("Parsing strace log...");
+    this._terminal.writeLine("Parsing strace log start...");
 
     return await this._straceLogParser.parseAsync();
   }
