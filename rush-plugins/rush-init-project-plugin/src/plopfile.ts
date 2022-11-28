@@ -161,7 +161,9 @@ export default function (
         if (!input) {
           return templateChoices;
         }
-        return templateChoices.filter((x) => x.name.includes(input));
+        return templateChoices.filter(
+          (x) => x.name.includes(input) || x.value.includes(input)
+        );
       },
       loop: false,
       pageSize: 20,
