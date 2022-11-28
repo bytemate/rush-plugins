@@ -2,6 +2,18 @@
   "name": "rush-audit-cache-plugin",
   "entries": [
     {
+      "version": "0.1.9",
+      "tag": "rush-audit-cache-plugin_v0.1.9",
+      "date": "Mon, 28 Nov 2022 08:16:15 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "add repo audit cache config"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.1.8",
       "tag": "rush-audit-cache-plugin_v0.1.8",
       "date": "Fri, 25 Nov 2022 06:42:23 GMT",
