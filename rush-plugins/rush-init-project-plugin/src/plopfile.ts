@@ -28,6 +28,7 @@ import {
 import {
   getTemplateNameList,
   getTemplatesFolder,
+  ITemplatePathNameType,
 } from "./logic/templateFolder";
 import { getGitUserName } from "./logic/GitConfig";
 import type { ICliParams } from "./init-project";
@@ -58,28 +59,7 @@ export default function (
   registerActions(plop);
   registerHelpers(plop);
 
-  const templatesFolder: string = getTemplatesFolder();
-  const templateNameList: string[] = getTemplateNameList(templatesFolder);
-  const templateChoices: { name: string; value: string }[] =
-    templateNameList.map((x) => ({
-      name: x,
-      value: x,
-    }));
-
   const defaultPrompts: PromptQuestion[] = [
-    {
-      type: "autocomplete",
-      name: "template",
-      message: "Please select a template",
-      source: (ans: unknown, input: string) => {
-        if (!input) {
-          return templateChoices;
-        }
-        return templateChoices.filter((x) => x.name.includes(input));
-      },
-      loop: false,
-      pageSize: 20,
-    } as any,
     {
       type: "input",
       name: "authorName",
@@ -163,6 +143,31 @@ export default function (
   ): Promise<Answers> => {
     const inquirer: Inquirer = inquirerPassed as unknown as Inquirer;
     inquirer.registerPrompt("autocomplete", autocompletePlugin);
+
+    const templatesFolder: string = getTemplatesFolder();
+    const templateNameList: ITemplatePathNameType[] = await getTemplateNameList(
+      templatesFolder
+    );
+    const templateChoices: { name: string; value: string }[] =
+      templateNameList.map((x) => ({
+        name: x.displayName
+          ? `${x.displayName} (${x.folderName})`
+          : x.folderName,
+        value: x.folderName,
+      }));
+    defaultPrompts.unshift({
+      type: "autocomplete",
+      name: "template",
+      message: "Please select a template",
+      source: (ans: unknown, input: string) => {
+        if (!input) {
+          return templateChoices;
+        }
+        return templateChoices.filter((x) => x.name.includes(input));
+      },
+      loop: false,
+      pageSize: 20,
+    } as any);
 
     let promptQueue: PromptQuestion[] = defaultPrompts.slice();
     let allAnswers: Partial<IExtendedAnswers> = {};

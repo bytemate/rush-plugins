@@ -1,8 +1,17 @@
 import * as path from "path";
 import { FileSystem } from "@rushstack/node-core-library";
 import { loadRushConfiguration } from "./loadRushConfiguration";
+import { TemplateConfiguration } from "./TemplateConfiguration";
 
-const templatesFolder2templateNameList: Record<string, string[]> = {};
+export interface ITemplatePathNameType {
+  folderName: string;
+  displayName?: string;
+}
+
+const templatesFolder2templateNameList: Record<
+  string,
+  Array<ITemplatePathNameType>
+> = {};
 
 export const getTemplatesFolder = (): string => {
   const { commonFolder } = loadRushConfiguration();
@@ -10,7 +19,7 @@ export const getTemplatesFolder = (): string => {
   return templatesFolder;
 };
 
-export const getTemplatesFolderAndValidate = (): string => {
+export const getTemplatesFolderAndValidate = async (): Promise<string> => {
   const templatesFolder: string = getTemplatesFolder();
   if (!FileSystem.exists(templatesFolder)) {
     FileSystem.ensureFolder(templatesFolder);
@@ -19,7 +28,9 @@ export const getTemplatesFolderAndValidate = (): string => {
     );
   }
 
-  const templateNameList: string[] = getTemplateNameList(templatesFolder);
+  const templateNameList: ITemplatePathNameType[] = await getTemplateNameList(
+    templatesFolder
+  );
   if (templateNameList.length === 0) {
     throw new Error(`Please setup template under ${templatesFolder}`);
   }
@@ -27,11 +38,13 @@ export const getTemplatesFolderAndValidate = (): string => {
   return templatesFolder;
 };
 
-export function getTemplateNameList(templatesFolder: string): string[] {
-  let templateNameList: string[] =
+export async function getTemplateNameList(
+  templatesFolder: string
+): Promise<ITemplatePathNameType[]> {
+  let templateNameList: ITemplatePathNameType[] =
     templatesFolder2templateNameList[templatesFolder];
   if (!templateNameList) {
-    templateNameList = FileSystem.readFolder(templatesFolder)
+    const templateFolderList: string[] = FileSystem.readFolder(templatesFolder)
       .filter((filename: string) => {
         return FileSystem.getStatistics(
           path.resolve(templatesFolder, filename)
@@ -40,6 +53,18 @@ export function getTemplateNameList(templatesFolder: string): string[] {
       .filter((filename: string) => {
         return !filename.startsWith("_");
       });
+    // try load displayName with TemplateConfiguration.loadFromTemplate
+    templateNameList = await Promise.all(
+      templateFolderList.map(async (templateFolder: string) => {
+        const templateConfig: TemplateConfiguration | undefined =
+          await TemplateConfiguration.loadFromTemplate(templateFolder);
+        return {
+          folderName: templateFolder,
+          displayName: templateConfig.displayName,
+        };
+      })
+    );
+    // eslint-disable-next-line require-atomic-updates
     templatesFolder2templateNameList[templatesFolder] = templateNameList;
   }
   return templateNameList;
