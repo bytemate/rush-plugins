@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-init-project-plugin",
+      "comment": "Add done hook",
+      "type": "minor"
+    }
+  ],
+  "packageName": "rush-init-project-plugin"
+}
