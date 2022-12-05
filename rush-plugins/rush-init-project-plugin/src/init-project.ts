@@ -1,10 +1,11 @@
 import { Colors, Terminal } from "@rushstack/node-core-library";
 import chalk from "chalk";
-import type { Answers } from "inquirer";
 import type { NodePlopAPI, PlopGenerator } from "node-plop";
 import nodePlop from "node-plop";
 import ora, { Ora } from "ora";
 import * as path from "path";
+import { getHooks, IHooks, IResult } from "./hooks";
+import type { IExtendedAnswers } from "./plopfile";
 import { TerminalSingleton } from "./terminal";
 
 export interface ICliParams {
@@ -51,8 +52,9 @@ async function doThePlop(
   generator: PlopGenerator,
   bypassArr: string[]
 ): Promise<void> {
+  const hooks: IHooks = getHooks();
   const spinner: Ora = ora();
-  const answers: Answers = await generator.runPrompts(bypassArr);
+  const answers: IExtendedAnswers = await generator.runPrompts(bypassArr);
   const noMap: boolean = false;
   let failedActions: boolean = false;
   await generator.runActions(answers, {
@@ -89,6 +91,8 @@ async function doThePlop(
     },
   });
   spinner.stop();
+  const result: IResult = failedActions ? "Failed" : "Succeeded";
+  await hooks.done.promise(result, answers);
   if (failedActions) {
     throw new Error("Failed to init project");
   }
