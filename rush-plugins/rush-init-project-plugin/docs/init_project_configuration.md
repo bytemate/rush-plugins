@@ -44,10 +44,13 @@ export default config;
 
 ❗️❗️❗️ **NOTE**:
 
-1. You should replace `autoinstallers/command-plugins` with a real directory `autoinstallers/<real_plugin_installed_autoinstaller_name>` to make type works.
-2. You should install `typescript` as a dependencies in according autoinstaller
+1. You should install `typescript` as a dependencies in according autoinstaller
+2. You should replace `autoinstallers/command-plugins` with a real directory `autoinstallers/<real_plugin_installed_autoinstaller_name>` to make type works.
+Or, you can add a `tsconfig.json` file under your `common/_templates/_plugins` folder and set up `paths` to make type works.
 
 e.g.
+
+**common/autoinstallers/command-plugins/package.json**
 
 ```json
 {
@@ -60,6 +63,25 @@ e.g.
   }
 }
 ```
+
+**common/_templates/_plugins/tsconfig.json**
+
+```json
+{
+  "compilerOptions": {
+    "paths": {
+      "rush-init-project-plugin": ["../../autoinstallers/command-plugins/node_modules/rush-init-project-plugin"],
+    }
+  }
+}
+```
+
+**common/_templates/_plugins/demoPlugin.ts**
+
+```typescript
+import type { IConfig, IPlugin } from 'rush-init-project-plugin';
+```
+
 
 ❗️❗️❗️
 
@@ -262,6 +284,11 @@ Plugin hooks Workflow:
 ┌──────────────▼──────────────────┐
 │ hooks.actions.call({ actions }) │
 └─────────────────────────────────┘
+               │
+               │
+┌──────────────▼──────────────────────┐
+│ hooks.done.promise(result, answers) │
+└─────────────────────────────────────┘
 ```
 
 ### prompts
@@ -335,6 +362,14 @@ default actions as follow:
 - Params: `NodePlopAPI`
 
 This hooks exposes the internal `plop` API.
+
+### done
+
+- AsyncSeriesHook
+- Params: `IResult`, `Answers`
+
+1. IResult = 'Failed' | 'Succeeded'
+2. `Answers` is all answers collected after the end of prompts.
 
 # How to develop a plugin
 
@@ -441,6 +476,26 @@ export class MyDataPlugin implements IPlugin {
       // mutate answers here 
       answers.foo = 'foo';
       answers.bar = 'bar';
+    });
+  };
+}
+```
+
+## Case 5: Report init-project usage to telemetry server
+
+```typescript
+import type { IAnswers, IPlugin, IHooks, IResult } from 'rush-init-project-plugin';
+
+export class MyTelemetryPlugin implements IPlugin {
+  apply(hooks: IHooks): void {
+    hooks.done.tapPromise("my-telemetry-plugin", async (result: IResult, answers: IAnswers) => {
+      // report to telemetry server...
+      await new Promise<void>((resolve) => {
+        setTimeout(() => {
+          console.log(result, answers);
+        }, 1000);
+        resolve();
+      });
     });
   };
 }

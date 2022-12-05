@@ -1,8 +1,8 @@
 import { AsyncSeriesHook, HookMap, SyncHook } from "tapable";
 
-import type { Answers } from "inquirer";
 import type { ActionType, NodePlopAPI, PromptQuestion } from "node-plop";
 import type { IDefaultProjectConfiguration } from "./logic/TemplateConfiguration";
+import type { IExtendedAnswers } from "./plopfile";
 
 export interface IPromptsHookParams {
   /**
@@ -18,34 +18,46 @@ export interface IActionsHookParams {
   actions: ActionType[];
 }
 
+type IAnswers = IExtendedAnswers
+
+export type IResult = 'Succeeded' | 'Failed';
+
 export interface IHooks {
   prompts: AsyncSeriesHook<IPromptsHookParams>;
   actions: SyncHook<IActionsHookParams>;
-  answers: AsyncSeriesHook<Answers>;
+  answers: AsyncSeriesHook<IAnswers>;
   plop: SyncHook<NodePlopAPI>;
   promptQuestion: HookMap<
-    SyncHook<[PromptQuestion, Answers], null | undefined>
+    SyncHook<[PromptQuestion, IAnswers], null | undefined>
   >;
   defaultProjectConfiguration: SyncHook<
-    [IDefaultProjectConfiguration, Answers]
+    [IDefaultProjectConfiguration, IAnswers]
   >;
+  done: AsyncSeriesHook<[IResult, IAnswers]>;
 }
 
-export const initHooks = (): IHooks => {
+const initHooks = (): IHooks => {
   return {
     prompts: new AsyncSeriesHook<IPromptsHookParams>(["promptsHookParams"]),
-    answers: new AsyncSeriesHook<Answers>(["answers"]),
+    answers: new AsyncSeriesHook<IAnswers>(["answers"]),
     actions: new SyncHook<IActionsHookParams>(["actionsHookParams"]),
     plop: new SyncHook<NodePlopAPI>(["plop"]),
     promptQuestion: new HookMap(
       (key: string) =>
-        new SyncHook<[PromptQuestion, Answers], null | undefined>([
+        new SyncHook<[PromptQuestion, IAnswers], null | undefined>([
           "promptQuestion",
           "answersSoFar",
         ])
     ),
     defaultProjectConfiguration: new SyncHook<
-      [IDefaultProjectConfiguration, Answers]
+      [IDefaultProjectConfiguration, IAnswers]
     >(["defaultProjectConfiguration", "answers"]),
+    done: new AsyncSeriesHook<[IResult, IAnswers]>(["result", "answers"]),
   };
 };
+
+const hooks: IHooks = initHooks();
+
+export const getHooks: () => IHooks = (): IHooks => {
+  return hooks;
+}

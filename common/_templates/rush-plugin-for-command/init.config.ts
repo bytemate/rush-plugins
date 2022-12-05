@@ -17,8 +17,17 @@ const config: IConfig = {
             (promptQuestion: PromptQuestion, answersSoFar: IAnswers) => {
               const { unscopedPackageName } = answersSoFar;
               promptQuestion.default = `rush-plugins/${unscopedPackageName}`;
+              return undefined;
             }
           );
+        // hooks.done.tapPromise("command-plugin", async (result, answers) => {
+        //   await new Promise<void>((resolve) => {
+        //     setTimeout(() => {
+        //       console.log(result, answers);
+        //     }, 1000);
+        //     resolve();
+        //   });
+        // });
       },
     },
   ],

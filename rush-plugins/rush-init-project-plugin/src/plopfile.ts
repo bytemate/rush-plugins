@@ -18,7 +18,7 @@ import validatePackageName from "validate-npm-package-name";
 import { addProjectToRushJson } from "./actions/addProjectToRushJson";
 import { runRushUpdate } from "./actions/rushRushUpdate";
 import { sortPackageJson } from "./actions/sortPackageJson";
-import { IHooks, initHooks } from "./hooks";
+import { IHooks, getHooks } from "./hooks";
 import { loadRushConfiguration } from "./logic/loadRushConfiguration";
 import {
   IDefaultProjectConfiguration,
@@ -50,7 +50,7 @@ export default function (
   const rushConfiguration: RushConfiguration = loadRushConfiguration();
   const monorepoRoot: string = rushConfiguration.rushJsonFolder;
 
-  const hooks: IHooks = initHooks();
+  const hooks: IHooks = getHooks();
   const pluginContext: IPluginContext = {
     isDryRun: plopCfg.dryRun || Boolean(process.env.DRY_RUN),
     cliAnswer: typeof plopCfg.answer === "object" ? plopCfg.answer : {},
@@ -229,7 +229,7 @@ export default function (
       allAnswers = { ...allAnswers, ...currentAnswers };
     }
 
-    await hooks.answers.promise(allAnswers);
+    await hooks.answers.promise(allAnswers as IExtendedAnswers);
 
     return allAnswers;
   };
