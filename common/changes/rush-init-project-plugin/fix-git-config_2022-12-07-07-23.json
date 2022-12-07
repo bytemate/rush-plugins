@@ -2,7 +2,7 @@
   "changes": [
     {
       "packageName": "rush-init-project-plugin",
-      "comment": "fix git config",
+      "comment": "fix getGitUserName logic",
       "type": "patch"
     }
   ],
