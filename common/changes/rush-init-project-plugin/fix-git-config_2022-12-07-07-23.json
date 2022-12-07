@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-init-project-plugin",
+      "comment": "fix getGitUserName logic",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-init-project-plugin"
+}
