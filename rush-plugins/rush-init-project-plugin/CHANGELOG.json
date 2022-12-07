@@ -2,6 +2,18 @@
   "name": "rush-init-project-plugin",
   "entries": [
     {
+      "version": "0.6.1",
+      "tag": "rush-init-project-plugin_v0.6.1",
+      "date": "Wed, 07 Dec 2022 09:05:36 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "fix getGitUserName logic"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.6.0",
       "tag": "rush-init-project-plugin_v0.6.0",
       "date": "Mon, 05 Dec 2022 13:00:38 GMT",
