@@ -7,8 +7,19 @@
       "heftEvent": "clean",
       "actionId": "defaultClean",
       "globsToDelete": ["lib"]
+    },
+    {
+      "actionKind": "copyFiles",
+      "heftEvent": "pre-compile",
+      "actionId": "copySchemas",
+      "copyOperations": [
+        {
+          "sourceFolder": "src",
+          "destinationFolders": ["lib"],
+          "includeGlobs": ["schemas/*.json"]
+        }
+      ]
     }
   ],
-
   "heftPlugins": [{ "plugin": "@rushstack/heft-jest-plugin" }]
 }

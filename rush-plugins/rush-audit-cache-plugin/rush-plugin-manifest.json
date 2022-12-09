@@ -4,7 +4,8 @@
     {
       "pluginName": "rush-audit-cache-plugin",
       "description": "A diagnostic tool for rush build cache",
-      "commandLineJsonFilePath": "command-line.json"
+      "commandLineJsonFilePath": "command-line.json",
+      "optionsSchema": "lib/schemas/plugin-options.schema.json"
     }
   ]
 }

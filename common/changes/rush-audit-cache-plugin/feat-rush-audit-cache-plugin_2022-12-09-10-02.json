@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-audit-cache-plugin",
+      "comment": "fix outputFolderNames bug and support schema",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-audit-cache-plugin"
+}

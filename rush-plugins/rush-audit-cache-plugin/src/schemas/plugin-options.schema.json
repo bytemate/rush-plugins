@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Configuration for Rush's build cache.",
+  "description": "For use with the Rush tool, this file provides per-project configuration options. See http://rushjs.io for details.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "description": "Part of the JSON Schema standard, this optional keyword declares the URL of the schema that the file conforms to. Editors may download the schema and use it to perform syntax highlighting.",
+      "type": "string"
+    },
+    "extends": {
+      "description": "Optionally specifies another JSON config file that this file extends from. This provides a way for standard settings to be shared across multiple projects.",
+      "type": "string"
+    },
+    "globalFileFilters": {
+      "type": "array",
+      "description": "Defines overrides for file operate level for kind or path. Through this setting you can hide specific file or give them a more important visibility.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "level": {
+            "type": "string",
+            "enum": ["low", "high", "safe"],
+            "description": "The risk level of file operate"
+          },
+          "operate": {
+            "type": "string",
+            "enum": ["read", "write"],
+            "description": "The operate of file access"
+          },
+          "kind": {
+            "type": "string",
+            "enums": ["system", "node", "tool", "project"],
+            "description": "The kind of file"
+          },
+          "pattern": {
+            "type": "string",
+            "description": "Use RegExp to match file path"
+          }
+        },
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enums": ["system", "node", "tool", "project"],
+                "description": "The kind of file"
+              }
+            },
+            "required": ["kind"]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "description": "Use RegExp to match file path"
+              }
+            },
+            "required": ["pattern"]
+          }
+        ]
+      }
+    }
+  }
+}

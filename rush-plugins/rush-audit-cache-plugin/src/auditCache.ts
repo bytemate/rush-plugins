@@ -136,7 +136,7 @@ export async function auditCache(
       `Audit cache for project ${auditCacheProjects[0].packageName}${
         auditCacheProjects.length > 1
           ? ` and its dependencies ${auditCacheProjects
-              .slice(0)
+              .slice(1)
               .map(({ packageName }) => packageName)
               .join(",")}`
           : ""
