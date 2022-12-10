@@ -13,6 +13,9 @@ export class WriteFileResolver extends BaseFileResolver {
   ];
   private _lowRiskNodeWriteMatcher: Ignore = ignore();
 
+  private _lowRiskSystemWrite: string[] = ["/dev/null", "/dev/null/"];
+  private _lowRiskSystemWriteMatcher: Ignore = ignore();
+
   public constructor() {
     super();
     this.initDefaultMatchers([
@@ -21,6 +24,13 @@ export class WriteFileResolver extends BaseFileResolver {
         paths: this._lowRiskNodeWrite,
         option: {
           kind: "node",
+        },
+      },
+      {
+        matcher: this._lowRiskSystemWriteMatcher,
+        paths: this._lowRiskSystemWrite,
+        option: {
+          kind: "system",
         },
       },
     ]);

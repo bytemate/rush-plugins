@@ -31,9 +31,10 @@ describe("WriteFileResolver", () => {
     });
   };
 
-  it("should audit 1 high risk and 1 low risk", async () => {
+  it("should audit 1 high risk and 2 low risk", async () => {
     const writeFiles = [
       "/tmp/rollup-plugin-progress",
+      "/dev/null",
       "/root/node_modules/.cache/rollup-plugin-typescript2/umd/rpt2_ce91b375290c4fee5b255c9d9f687d89e0587857/code/cache/435d89aa78",
     ];
     const writeFileResolver = new WriteFileResolver();
@@ -51,6 +52,10 @@ describe("WriteFileResolver", () => {
 
     expect(result).toEqual({
       lowRisk: [
+        {
+          filePath: "/dev/null",
+          kind: "writeFile",
+        },
         {
           filePath:
             "/root/node_modules/.cache/rollup-plugin-typescript2/umd/rpt2_ce91b375290c4fee5b255c9d9f687d89e0587857/code/cache/435d89aa78",
@@ -73,11 +78,15 @@ describe("WriteFileResolver", () => {
       "/root/node_modules/.cache/rollup-plugin-typescript2/umd/rpt2_ce91b375290c4fee5b255c9d9f687d89e0587857/code/cache/435d89aa78",
       "/workspaceRepo/a/dist/src/utils/types.js",
       "/workspaceRepo/a/dist/src/utils/uid.js",
+      "/workspaceRepo/a/example/icons/index.js",
     ];
     const writeFileResolver = new WriteFileResolver();
     const result: string[] = [];
 
-    writeFileResolver.projectSafeMatcher.add("/workspaceRepo/a/dist");
+    writeFileResolver.projectSafeMatcher.add([
+      "/workspaceRepo/a/dist",
+      "/workspaceRepo/a/example/icons",
+    ]);
 
     for (const writeFilePath of writeFiles) {
       const resolveResult: IFileResolveResult =
@@ -90,6 +99,7 @@ describe("WriteFileResolver", () => {
     expect(result).toEqual([
       "/workspaceRepo/a/dist/src/utils/types.js",
       "/workspaceRepo/a/dist/src/utils/uid.js",
+      "/workspaceRepo/a/example/icons/index.js",
     ]);
   });
 

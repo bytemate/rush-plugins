@@ -28,7 +28,7 @@
       "required": false
     },
     {
-      "parameterKind": "string",
+      "parameterKind": "stringList",
       "description": "Exclude package from audit cache",
       "longName": "--exclude",
       "shortName": "-e",

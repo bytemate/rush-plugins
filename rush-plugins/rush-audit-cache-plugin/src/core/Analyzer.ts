@@ -8,6 +8,7 @@ import {
 import type {
   IRushProjectJson,
   IAuditCacheFileFilter,
+  IAuditCacheGlobalFileFilter,
 } from "../helpers/rushProject";
 
 import type {
@@ -69,11 +70,11 @@ export class AuditCacheAnalyzer {
       `${PLUGIN_NAME}.json`
     );
 
-    const globalAuditCacheJson: IAuditCacheFileFilter | undefined =
-      tryLoadJson<IAuditCacheFileFilter>(pluginOptionsJsonFilePath);
+    const globalAuditCacheJson: IAuditCacheGlobalFileFilter | undefined =
+      tryLoadJson<IAuditCacheGlobalFileFilter>(pluginOptionsJsonFilePath);
 
-    const globalFileFilters: IAuditCacheFileFilter["fileFilters"] =
-      globalAuditCacheJson?.fileFilters ?? [];
+    const globalFileFilters: IAuditCacheGlobalFileFilter["globalFileFilters"] =
+      globalAuditCacheJson?.globalFileFilters ?? [];
 
     terminal.writeLine(
       `Found ${globalFileFilters.length} filters in ${pluginOptionsJsonFilePath}`
@@ -144,7 +145,11 @@ export class AuditCacheAnalyzer {
             outputFolderNames = operationSetting.outputFolderNames;
           }
         }
-        writeFileResolver.projectSafeMatcher.add(outputFolderNames);
+        writeFileResolver.projectSafeMatcher.add(
+          outputFolderNames.map((director) =>
+            path.join(project.projectFolder, director)
+          )
+        );
 
         // prepare audit cache global config
         readFileResolver.loadGlobalFilterConfig(globalFileFilters);

@@ -24,6 +24,11 @@ export interface IAuditCacheFileFilter {
   fileFilters: IUserProjectFileFilter[];
 }
 
+export interface IAuditCacheGlobalFileFilter {
+  globalFileFilters: IUserProjectFileFilter[];
+}
+
+
 const packageNameToAllDependencyProjects: Record<
   string,
   RushConfigurationProject[]
