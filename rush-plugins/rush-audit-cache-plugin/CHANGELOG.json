@@ -2,6 +2,18 @@
   "name": "rush-audit-cache-plugin",
   "entries": [
     {
+      "version": "0.1.10",
+      "tag": "rush-audit-cache-plugin_v0.1.10",
+      "date": "Mon, 12 Dec 2022 02:44:19 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "fix outputFolderNames bug and support schema"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.1.9",
       "tag": "rush-audit-cache-plugin_v0.1.9",
       "date": "Mon, 28 Nov 2022 08:16:15 GMT",
