@@ -1,6 +1,13 @@
 # Change Log - rush-audit-cache-plugin
 
-This log was last generated on Mon, 28 Nov 2022 08:16:15 GMT and should not be manually modified.
+This log was last generated on Mon, 12 Dec 2022 02:58:12 GMT and should not be manually modified.
+
+## 0.1.10
+Mon, 12 Dec 2022 02:58:12 GMT
+
+### Patches
+
+- fix outputFolderNames bug and support schema
 
 ## 0.1.9
 Mon, 28 Nov 2022 08:16:15 GMT
