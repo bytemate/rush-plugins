@@ -16,7 +16,7 @@
    * path segment in the "$schema" field for all your Rush config files.  This will ensure
    * correct error-underlining and tab-completion for editors such as VS Code.
    */
-  "rushVersion": "5.57.1",
+  "rushVersion": "5.83.2",
 
   /**
    * The next field selects which package manager should be installed and determines its version.
@@ -490,6 +490,11 @@
     {
       "packageName": "rush-audit-cache-plugin",
       "projectFolder": "rush-plugins/rush-audit-cache-plugin",
+      "shouldPublish": true
+    },
+    {
+      "packageName": "rush-git-lfs-check-plugin",
+      "projectFolder": "rush-plugins/rush-git-lfs-check-plugin",
       "shouldPublish": true
     }
   ]
