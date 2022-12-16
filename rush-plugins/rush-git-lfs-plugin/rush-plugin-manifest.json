@@ -2,7 +2,7 @@
   "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/rush-plugin-manifest.schema.json",
   "plugins": [
     {
-      "pluginName": "rush-git-lfs-check-plugin",
+      "pluginName": "git-lfs-check",
       "description": "Check if new files are correct managed by git-lfs",
       "commandLineJsonFilePath": "command-line.json",
       "optionsSchema": "./schema/git-lfs-check-options.schema.json"

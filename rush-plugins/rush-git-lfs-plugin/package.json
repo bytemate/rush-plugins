@@ -1,10 +1,11 @@
 {
-  "name": "rush-git-lfs-check-plugin",
+  "name": "rush-git-lfs-plugin",
   "version": "0.0.1",
-  "description": "Check if new files are correct managed by git-lfs",
+  "description": "Rush plugin for git-lfs",
   "keywords": [
     "rush",
     "plugin",
+    "git-lfs",
     "command"
   ],
   "homepage": "https://github.com/bytesfriends/rush-plugins#readme",

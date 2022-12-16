@@ -493,8 +493,8 @@
       "shouldPublish": true
     },
     {
-      "packageName": "rush-git-lfs-check-plugin",
-      "projectFolder": "rush-plugins/rush-git-lfs-check-plugin",
+      "packageName": "rush-git-lfs-plugin",
+      "projectFolder": "rush-plugins/rush-git-lfs-plugin",
       "shouldPublish": true
     }
   ]
