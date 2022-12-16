@@ -1,9 +1,7 @@
 import {
   Terminal,
   ConsoleTerminalProvider,
-  IColorableSequence,
 } from '@rushstack/node-core-library';
-import chalk from 'chalk';
 
 import { PluginName } from '../constant';
 
