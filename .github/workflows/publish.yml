@@ -1,0 +1,29 @@
+name: Publish
+# on:
+#   push:
+#     branches: ['main']
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+      - name: Git config user
+        uses: snow-actions/git-config-user@v1.0.0
+        with:
+          name: bytesfriends-bot
+          email: bytesfriendsbot@users.noreply.github.com
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Rush Install
+        run: node common/scripts/install-run-rush.js install
+      - name: Rush build
+        run: node common/scripts/install-run-rush.js build --verbose --production
+      - name: Rush test
+        run: node common/scripts/install-run-rush.js test --verbose
+      - name: Rush publish
+        run: node common/scripts/install-run-rush.js publish --apply --publish --target-branch ${{ github.ref_name }}
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
