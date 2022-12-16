@@ -7,6 +7,7 @@ import {
   findFileBelongProject,
   validateFilePaths,
 } from '../../helpers/file-path-analyser';
+import { terminal, terminalProvider } from '../../helpers/terminal';
 
 const mockCommandSyncReturn = (result: Partial<execa.ExecaSyncReturnValue>): void => {
   (
@@ -28,7 +29,9 @@ describe('test file path analyser', () => {
 
   it('should throw error if git diff run failed', () => {
     mockCommandSyncReturn({ exitCode: 1, stderr: 'This should be an error' });
+    terminal.unregisterProvider(terminalProvider);
     expect(getFilePathsFromChangedFiles).toThrowError();
+    terminal.registerProvider(terminalProvider);
   });
 
   it('should find file path belong package correctly', () => {
@@ -36,7 +39,7 @@ describe('test file path analyser', () => {
 
     const p2 = path.resolve(__dirname, '../../../../../rush.json');
     const p3 = path.resolve('/some/path/that/incorrect');
-    expect(findFileBelongProject(p1)?.packageName).toStrictEqual('rush-git-lfs-check-plugin');
+    expect(findFileBelongProject(p1)?.packageName).toStrictEqual('rush-git-lfs-plugin');
     expect(findFileBelongProject(p2)).toBeUndefined();
     expect(findFileBelongProject(p3)).toBeUndefined();
   });
