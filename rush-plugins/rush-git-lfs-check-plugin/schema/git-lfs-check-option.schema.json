@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Configuration for Rush Git LFS plugin",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "default": "http://json-schema.org/draft-04/schema#"
+    },
+    "checkPattern": {
+      "description": "Glob patterns that need to check",
+      "patternProperties": {
+        "^.+$": {
+          "type": "string",
+          "description": "Customized size threshold for this pattern."
+        }
+      }
+    },
+    "errorTips": {
+      "type": "string",
+      "description": "Tips that shown while there are check errors"
+    }
+  }
+}

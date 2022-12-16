@@ -1,0 +1,62 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/command-line.schema.json",
+  "commands": [
+    {
+      "name": "git-lfs-check",
+      "commandKind": "global",
+      "summary": "Check Git LFS file in rush project",
+      "shellCommand": "node <packageFolder>/lib/bin.js",
+      "safeForSimultaneousRushProcesses": true
+    }
+  ],
+  "parameters": [
+    {
+      "description": "Fix Git LFS status",
+      "parameterKind": "flag",
+      "longName": "--fix",
+      "associatedCommands": [
+        "git-lfs-check"
+      ],
+      "required": false
+    },
+    // {
+    //   "description": "The rush project names",
+    //   "parameterKind": "stringList",
+    //   "longName": "--to",
+    //   "argumentName": "PACKAGE_NAME",
+    //   "associatedCommands": [
+    //     "git-lfs"
+    //   ],
+    //   "required": false
+    // },
+    {
+      "description": "The path array of the files",
+      "parameterKind": "stringList",
+      "longName": "--file",
+      "argumentName": "FILE_PATH",
+      "required": false,
+      "associatedCommands": [
+        "git-lfs-check"
+      ]
+    },
+    {
+      "description": "The version of the plugin",
+      "parameterKind": "flag",
+      "longName": "--version",
+      "required": false,
+      "associatedCommands": [
+        "git-lfs-check"
+      ]
+    },
+    {
+      "parameterKind": "string",
+      "description": "verbosity that can be increased",
+      "longName": "--verbose",
+      "argumentName": "VERBOSE",
+      "associatedCommands": [
+        "git-lfs-check"
+      ],
+      "required": false
+    }
+  ]
+}
