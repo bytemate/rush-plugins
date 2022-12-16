@@ -307,5 +307,26 @@
     //     }
     //   ]
     // }
+    {
+      "longName": "--no-color",
+      "parameterKind": "flag",
+      "description": "disable colors in the build log, defaults to 'true'",
+      // "associatedPhases": ["_phase:build", "_phase:test"],
+      "associatedCommands": ["build", "rebuild", "test"]
+    },
+    {
+      "longName": "--update-snapshots",
+      "parameterKind": "flag",
+      "description": "Update Jest snapshots",
+      // "associatedPhases": ["_phase:test"],
+      "associatedCommands": ["test"]
+    },
+    {
+      "longName": "--production",
+      "parameterKind": "flag",
+      "description": "Perform a production build, including minification and localization steps",
+      // "associatedPhases": ["_phase:build", "_phase:test"],
+      "associatedCommands": ["build", "rebuild", "test"]
+    }
   ]
 }
