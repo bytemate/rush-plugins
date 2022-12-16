@@ -1,0 +1,17 @@
+{
+  "name": "rush-git-lfs-plugin",
+  "entries": [
+    {
+      "version": "0.1.0",
+      "tag": "rush-git-lfs-plugin_v0.1.0",
+      "date": "Fri, 16 Dec 2022 12:24:06 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add new plugin rush-git-lfs-plugin to support git-lfs check."
+          }
+        ]
+      }
+    }
+  ]
+}
