@@ -49,6 +49,15 @@ describe('lfs file detect', () => {
     expect(checker.isTrackedByLFS(lfsFile)).toBe(false);
   });
 
+  it('should add file to git correctly', () => {
+    const factory = FileFactory.getInstance();
+    const checker = new GitLFSCheckModule();
+
+    const tempFile = factory.createTextFile('tempFile');
+
+    expect(() => checker.addFileToGit(tempFile)).toThrow();
+  });
+
   afterAll(() => {
     FileFactory.getInstance().cleanTempFolder();
   });

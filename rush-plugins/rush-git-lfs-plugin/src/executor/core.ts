@@ -41,7 +41,7 @@ export const run = async (commandLineOption: ICommandLineOptions): Promise<void>
   const ctx: IGitLFSCheckModuleContext = normalizeCheckContext(commandLineOption);
   const checker: GitLFSCheckModule = new GitLFSCheckModule();
   await checker.run(ctx);
-  if (ctx.result.filter(e => typeof e.errorType !== 'undefined').length > 0) {
+  if (ctx.result.filter(e => typeof e.errorType !== 'undefined' && !e.fixed).length > 0) {
     if (ctx.option.errorTips) {
       terminal.writeLine(ctx.option.errorTips);
     }
