@@ -2,6 +2,18 @@
   "name": "rush-git-lfs-plugin",
   "entries": [
     {
+      "version": "0.1.1",
+      "tag": "rush-git-lfs-plugin_v0.1.1",
+      "date": "Mon, 19 Dec 2022 11:19:35 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "fix rush-git-lfs-plugin configuration and wrong constant"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.1.0",
       "tag": "rush-git-lfs-plugin_v0.1.0",
       "date": "Fri, 16 Dec 2022 12:24:06 GMT",
