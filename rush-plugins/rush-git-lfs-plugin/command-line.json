@@ -19,16 +19,6 @@
       ],
       "required": false
     },
-    // {
-    //   "description": "The rush project names",
-    //   "parameterKind": "stringList",
-    //   "longName": "--to",
-    //   "argumentName": "PACKAGE_NAME",
-    //   "associatedCommands": [
-    //     "git-lfs"
-    //   ],
-    //   "required": false
-    // },
     {
       "description": "The path array of the files",
       "parameterKind": "stringList",

@@ -23,11 +23,13 @@ export interface IGitLFSCheckModuleContext extends IGitLFSModuleContext {
 export interface IGitLFSCheckModuleFileError {
   file: string;
   errorType?: GitLFSCheckModuleErrorType;
+  fixed?: boolean;
 }
 
 export const enum GitLFSCheckModuleErrorType {
   FileNeedToBeTrackedByLFS,
   FixFileLFSStatusFail,
+  GitAddFail,
 }
 
 export class GitLFSCheckModule extends GitLFSBaseModule {
@@ -70,6 +72,20 @@ export class GitLFSCheckModule extends GitLFSBaseModule {
     if (exitCode !== 0) {
       throw GitLFSCheckModuleErrorType.FixFileLFSStatusFail;
     }
+    this.addFileToGit(path.resolve(runCWD, '.gitattributes'));
+    if (exitCode !== 0) {
+      throw GitLFSCheckModuleErrorType.GitAddFail;
+    }
+  };
+
+  public addFileToGit = (p: string): void => {
+    terminal.writeVerboseLine(withPrefix(`Trying git add on ${toRelativePath(p)}`));
+    const { exitCode } = execa.commandSync(`git add ${toRelativePath(p)}`, {
+      cwd: toAbsolutePath(RushRootFolder),
+    });
+    if (exitCode !== 0) {
+      throw GitLFSCheckModuleErrorType.GitAddFail;
+    }
   };
 
   public run = async (ctx: IGitLFSCheckModuleContext): Promise<IGitLFSCheckModuleFileError[]> => {
@@ -108,6 +124,7 @@ export class GitLFSCheckModule extends GitLFSBaseModule {
         try {
           this.fixFile(e.file);
           fixedCount++;
+          e.fixed = true;
           terminal.writeLine(withPrefix(e.file + ' ✅'));
         } catch (error) {
           terminal.writeErrorLine(

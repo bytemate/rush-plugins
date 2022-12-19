@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-git-lfs-plugin",
+      "comment": "fix rush-git-lfs-plugin configuration and wrong constant",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-git-lfs-plugin"
+}

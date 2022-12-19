@@ -6,4 +6,4 @@ export const DefaultOption: NestedRequired<IRushGitLFSPluginOption> = {
   errorTips: '',
 };
 
-export const PluginName: string = 'rush-git-lfs-check-plugin';
+export const PluginName: string = 'rush-git-lfs-plugin';
