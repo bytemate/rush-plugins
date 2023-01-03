@@ -38,9 +38,10 @@ ${consumingProjectNames.join(", ")}`);
   }
 
   if (gitCheckpoint) {
-      spinner = ora('attempting to create a git checkpoint');
-      const branchName: string = getCheckpointBranch(packageName);
-      spinner.succeed(`Git Checkpoint created at branch: ${branchName}`);
+    spinner = ora('attempting to create a git checkpoint');
+    const branchName: string = getCheckpointBranch(rushConfiguration.rushJsonFolder,packageName);
+    spinner.succeed(`Git Checkpoint created at branch: ${branchName}`);
+    return;
   }
 
   const { projectFolder, projectRelativeFolder } = project;

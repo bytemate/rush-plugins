@@ -53,9 +53,11 @@ export const gitCheckIgnored = (cwd: string, filePath: string): string => {
   return result;
 };
 
-export const getCheckpointBranch = (branchName: string): string => {
+export const getCheckpointBranch = (cwd: string, branchName: string): string => {
   const gitPath: string = getGitPathOrThrow();
   const archivedBranchName: string = `${branchName}-checkpoint-${new Date().toISOString()}`;
-  Executable.spawnSync(gitPath, ["branch", archivedBranchName]);
+  Executable.spawnSync(gitPath, ["branch", archivedBranchName], {
+    currentWorkingDirectory: cwd,
+  });
   return archivedBranchName;
 }
