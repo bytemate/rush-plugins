@@ -74,7 +74,6 @@ ${consumingProjectNames.join(", ")}`);
       description
     }
     JsonFile.save(archivedProjectMetadataObject, archivedProjectMetadataFilePath);
-    process.exit(0);
   }
 
   // create a metadata.json file
