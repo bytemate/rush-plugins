@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-archive-project-plugin",
+      "comment": "Updated to include a git checkpoint branch when archiving a project",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-archive-project-plugin"
+}
