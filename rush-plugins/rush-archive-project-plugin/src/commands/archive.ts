@@ -5,7 +5,7 @@ import type {
 import { FileSystem, JsonFile, JsonObject } from "@rushstack/node-core-library";
 import * as path from "path";
 import * as tar from "tar";
-import { gitCheckIgnored, gitFullClean } from "../logic/git";
+import { getCheckpointBranch, gitCheckIgnored, gitFullClean } from "../logic/git";
 import { getGraveyardInfo } from "../logic/graveyard";
 import { ProjectMetadata } from "../logic/projectMetadata";
 import ora from "ora";
@@ -13,9 +13,10 @@ import { loadRushConfiguration } from "../logic/rushConfiguration";
 
 interface IArchiveConfig {
   packageName: string;
+  gitCheckpoint: boolean;
 }
 
-export async function archive({ packageName }: IArchiveConfig): Promise<void> {
+export async function archive({ packageName, gitCheckpoint }: IArchiveConfig): Promise<void> {
   let spinner: ora.Ora | undefined;
   const rushConfiguration: RushConfiguration = loadRushConfiguration();
   const monoRoot: string = rushConfiguration.rushJsonFolder;
@@ -34,6 +35,12 @@ export async function archive({ packageName }: IArchiveConfig): Promise<void> {
       consumingProjectNames.length
     } project(s):
 ${consumingProjectNames.join(", ")}`);
+  }
+
+  if (gitCheckpoint) {
+      spinner = ora('attempting to create a git checkpoint');
+      const branchName: string = getCheckpointBranch(packageName);
+      spinner.succeed(`Git Checkpoint created at branch: ${branchName}`);
   }
 
   const { projectFolder, projectRelativeFolder } = project;

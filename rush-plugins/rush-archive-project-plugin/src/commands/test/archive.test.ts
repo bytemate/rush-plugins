@@ -45,6 +45,7 @@ describe("archive", () => {
       await expect(
         archive({
           packageName,
+          gitCheckpoint: false
         })
       ).rejects.toThrow(
         `Could not find project with package name ${packageName}`
@@ -57,6 +58,7 @@ describe("archive", () => {
         await expect(
           archive({
             packageName,
+            gitCheckpoint: false
           })
         ).resolves.toBeUndefined();
       });
@@ -87,6 +89,7 @@ describe("archive", () => {
       await expect(
         archive({
           packageName,
+          gitCheckpoint: false
         })
       ).resolves.toBeUndefined();
     });
@@ -116,6 +119,7 @@ describe("archive", () => {
       await expect(
         archive({
           packageName,
+          gitCheckpoint: false
         })
       ).rejects.toThrowErrorMatchingSnapshot();
     });

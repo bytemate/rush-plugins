@@ -25,7 +25,12 @@ async function main(): Promise<void> {
             type: "string",
             describe: "The name of the package to archive",
           })
-          .demandOption(["packageName"]);
+          .option("gitCheckpoint", {
+            type: "boolean",
+            describe: "Create a git checkpoint before archival"
+          })
+          .default('gitCheckpoint', true)
+          .demandOption(["packageName", "gitCheckpoint"]);
       },
       async (argv) => {
         const { archive } = await import("./commands/archive");
