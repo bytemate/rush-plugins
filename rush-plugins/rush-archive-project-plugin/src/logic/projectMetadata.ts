@@ -28,3 +28,9 @@ export class ProjectMetadata {
     return this._projectConfig;
   }
 }
+
+export interface IProjectCheckpointMetadata {
+  checkpointBranch: string;
+  archivedOn: string;
+  description: string;
+}

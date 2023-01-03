@@ -7,7 +7,7 @@ import * as path from "path";
 import * as tar from "tar";
 import { getCheckpointBranch, gitCheckIgnored, gitFullClean } from "../logic/git";
 import { getGraveyardInfo } from "../logic/graveyard";
-import { ProjectMetadata } from "../logic/projectMetadata";
+import { IProjectCheckpointMetadata, ProjectMetadata } from "../logic/projectMetadata";
 import ora from "ora";
 import { loadRushConfiguration } from "../logic/rushConfiguration";
 
@@ -57,13 +57,21 @@ ${consumingProjectNames.join(", ")}`);
     spinner.succeed(`Git Checkpoint created at branch: ${branchName}`);
     // Add data to metadata file
     const archivedProjectMetadataFilePath: string = `${tarballFolder}/projectCheckpoints.json`;
-    let archivedProjectMetadataObject: any = {};
+    let archivedProjectMetadataObject: { [key in string]: IProjectCheckpointMetadata } = {};
     if (FileSystem.exists(archivedProjectMetadataFilePath)) {
       archivedProjectMetadataObject = JsonFile.load(archivedProjectMetadataFilePath);
     }
+    // Try to pull a description from the package's package.json file
+    let description: string = "";
+    const projectJson: string = `${project.projectFolder}/package.json`;
+    if (FileSystem.exists(projectJson)) {
+      const packageJson: any = JsonFile.load(`${project.projectFolder}/package.json`);
+      description = packageJson.description || "";
+    }
     archivedProjectMetadataObject[packageName] = {
       checkpointBranch: branchName,
-      archivedOn: new Date().toISOString()
+      archivedOn: new Date().toISOString(),
+      description
     }
     JsonFile.save(archivedProjectMetadataObject, archivedProjectMetadataFilePath);
     process.exit(0);
