@@ -41,7 +41,7 @@ ${consumingProjectNames.join(", ")}`);
     spinner = ora('attempting to create a git checkpoint');
     const branchName: string = getCheckpointBranch(rushConfiguration.rushJsonFolder,packageName);
     spinner.succeed(`Git Checkpoint created at branch: ${branchName}`);
-    return;
+    process.exit(0);
   }
 
   const { projectFolder, projectRelativeFolder } = project;

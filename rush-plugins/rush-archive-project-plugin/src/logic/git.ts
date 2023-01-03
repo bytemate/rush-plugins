@@ -55,9 +55,14 @@ export const gitCheckIgnored = (cwd: string, filePath: string): string => {
 
 export const getCheckpointBranch = (cwd: string, branchName: string): string => {
   const gitPath: string = getGitPathOrThrow();
-  const archivedBranchName: string = `${branchName}-checkpoint-${new Date().toISOString()}`;
-  Executable.spawnSync(gitPath, ["branch", archivedBranchName], {
+  const currDate: string = new Date().toISOString().substring(0, 10);
+  const branchNameToCreate: string = `${branchName}-checkpoint-${currDate}`;
+  const process: SpawnSyncReturns<string> = Executable.spawnSync(gitPath, ["branch", branchNameToCreate], {
     currentWorkingDirectory: cwd,
   });
-  return archivedBranchName;
+  if (process.status === 128) {
+    throw new Error(`The passed branch name is invalid: ${branchNameToCreate}`)
+  }
+
+  return branchNameToCreate;
 }
