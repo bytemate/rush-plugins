@@ -3,7 +3,7 @@ import { FileSystem, JsonFile, JsonObject } from "@rushstack/node-core-library";
 import ora from "ora";
 import { getGraveyardInfo } from "../logic/graveyard";
 import * as tar from "tar";
-import { ProjectMetadata } from "../logic/projectMetadata";
+import { IProjectCheckpointMetadata, ProjectMetadata } from "../logic/projectMetadata";
 import { loadRushConfiguration } from "../logic/rushConfiguration";
 
 import type { RushConfiguration } from "@rushstack/rush-sdk";
@@ -49,6 +49,14 @@ export async function unarchive({
     cwd: extractWorkingFolder,
   });
   spinner.succeed();
+
+  // Remove checkpoint metadata from file
+  const archivedProjectMetadataFilePath: string = `${tarballFolder}/projectCheckpoints.json`;
+  if (FileSystem.exists(archivedProjectMetadataFilePath)) {
+    const metadataCheckpoints: { [key in string]: IProjectCheckpointMetadata } = JsonFile.load(archivedProjectMetadataFilePath);
+    delete metadataCheckpoints[packageName];
+    JsonFile.save(metadataCheckpoints, archivedProjectMetadataFilePath);
+  }
 
   // read metadata
   const projectMetadata: ProjectMetadata = ProjectMetadata.load(

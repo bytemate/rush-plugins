@@ -26,20 +26,23 @@ rush archive-project --package-name <your_package_name>
 1. Find project configuration by Rush.js SDK
 2. Check whether there are projects depends on target project
 3. Run `git clean -xdf` under project folder
-4. Record project configuration into `rush-metadata.json` file
-5. Create a tarball by running `tar -czf <unscoped_package_name>.tar.gz -C <project_folder> .`
-6. Move the tarball to `common/_graveyard` folder
-7. Remove project config to `rush.json`
-8. Delete project folder
+4. Create a checkpoint branch with the name `${projectName}-checkpoint-${date}`
+5. Update checkpoint branch information in `common/_graveyard/projectCheckpoints.json` file
+6. Record project configuration into `rush-metadata.json` file
+7. Create a tarball by running `tar -czf <unscoped_package_name>.tar.gz -C <project_folder> .`
+8. Move the tarball to `common/_graveyard` folder
+9. Remove project config to `rush.json`
+10. Delete project folder
 
 # Unarchive working process
 
 1. Find the tarball by `packageName`
 2. Extract the tarball by running `tar xf <package_name>.tar.gz`
 3. Get project configuration by reading `rush-metadata.json`
-4. Move the code to project folder
-5. Restore project configuration into `rush.json`
-6. Delete metadata file and tarball
+4. Remove checkpoint branch information from checkpoint metadata file if it exists
+5. Move the code to project folder
+6. Restore project configuration into `rush.json`
+7. Delete metadata file and tarball
 
 # LICENSE
 
