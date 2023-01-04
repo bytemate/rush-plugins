@@ -5,17 +5,18 @@ import type {
 import { FileSystem, JsonFile, JsonObject } from "@rushstack/node-core-library";
 import * as path from "path";
 import * as tar from "tar";
-import { gitCheckIgnored, gitFullClean } from "../logic/git";
+import { getCheckpointBranch, gitCheckIgnored, gitFullClean } from "../logic/git";
 import { getGraveyardInfo } from "../logic/graveyard";
-import { ProjectMetadata } from "../logic/projectMetadata";
+import { IProjectCheckpointMetadata, ProjectMetadata } from "../logic/projectMetadata";
 import ora from "ora";
 import { loadRushConfiguration } from "../logic/rushConfiguration";
 
 interface IArchiveConfig {
   packageName: string;
+  gitCheckpoint: boolean;
 }
 
-export async function archive({ packageName }: IArchiveConfig): Promise<void> {
+export async function archive({ packageName, gitCheckpoint }: IArchiveConfig): Promise<void> {
   let spinner: ora.Ora | undefined;
   const rushConfiguration: RushConfiguration = loadRushConfiguration();
   const monoRoot: string = rushConfiguration.rushJsonFolder;
@@ -43,6 +44,38 @@ ${consumingProjectNames.join(", ")}`);
   gitFullClean(projectFolder);
   spinner.succeed(`Clean ${projectRelativeFolder} complete`);
 
+  const { tarballRelativeFolder, tarballFolder, tarballName } =
+    getGraveyardInfo({
+      monoRoot,
+      packageName,
+    });
+  FileSystem.ensureFolder(tarballFolder);
+
+  if (gitCheckpoint) {
+    spinner = ora('Attempting to create a git checkpoint branch');
+    const branchName: string = getCheckpointBranch(rushConfiguration.rushJsonFolder,packageName);
+    spinner.succeed(`Git Checkpoint created at branch: ${branchName}`);
+    // Add data to metadata file
+    const archivedProjectMetadataFilePath: string = `${tarballFolder}/projectCheckpoints.json`;
+    let archivedProjectMetadataObject: { [key in string]: IProjectCheckpointMetadata } = {};
+    if (FileSystem.exists(archivedProjectMetadataFilePath)) {
+      archivedProjectMetadataObject = JsonFile.load(archivedProjectMetadataFilePath);
+    }
+    // Try to pull a description from the package's package.json file
+    let description: string = "";
+    const projectJson: string = `${project.projectFolder}/package.json`;
+    if (FileSystem.exists(projectJson)) {
+      const packageJson: any = JsonFile.load(`${project.projectFolder}/package.json`);
+      description = packageJson.description || "";
+    }
+    archivedProjectMetadataObject[packageName] = {
+      checkpointBranch: branchName,
+      archivedOn: new Date().toISOString(),
+      description
+    }
+    JsonFile.save(archivedProjectMetadataObject, archivedProjectMetadataFilePath);
+  }
+
   // create a metadata.json file
   spinner = ora(`Creating metadata.json for ${projectRelativeFolder}`).start();
   const rawRushJson: JsonObject = JsonFile.load(rushConfiguration.rushJsonFile);
@@ -52,6 +85,7 @@ ${consumingProjectNames.join(", ")}`);
   const projectMetadata: ProjectMetadata = new ProjectMetadata(
     rawProjectConfig
   );
+
   const projectMetadataFilepath: string = path.join(
     projectFolder,
     ProjectMetadata.FILENAME
@@ -61,12 +95,6 @@ ${consumingProjectNames.join(", ")}`);
 
   // create archive tarball
   spinner = ora(`Creating tarball for ${projectRelativeFolder}`).start();
-  const { tarballRelativeFolder, tarballFolder, tarballName } =
-    getGraveyardInfo({
-      monoRoot,
-      packageName,
-    });
-  FileSystem.ensureFolder(tarballFolder);
   try {
     //tar -czf test.tar.gz -C project_relative_folder .
     tar.create(
