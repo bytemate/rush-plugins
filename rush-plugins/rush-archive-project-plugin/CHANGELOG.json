@@ -2,6 +2,21 @@
   "name": "rush-archive-project-plugin",
   "entries": [
     {
+      "version": "1.1.5",
+      "tag": "rush-archive-project-plugin_v1.1.5",
+      "date": "Sat, 07 Jan 2023 01:07:03 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Updated to include a git checkpoint branch when archiving a project"
+          },
+          {
+            "comment": "Update README for archive plugin and add unarchiving support"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.1.4",
       "tag": "rush-archive-project-plugin_v1.1.4",
       "date": "Wed, 31 Aug 2022 04:09:13 GMT",

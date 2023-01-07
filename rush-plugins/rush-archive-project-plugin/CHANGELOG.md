@@ -1,6 +1,14 @@
 # Change Log - rush-archive-project-plugin
 
-This log was last generated on Wed, 31 Aug 2022 04:09:13 GMT and should not be manually modified.
+This log was last generated on Sat, 07 Jan 2023 01:07:03 GMT and should not be manually modified.
+
+## 1.1.5
+Sat, 07 Jan 2023 01:07:03 GMT
+
+### Patches
+
+- Updated to include a git checkpoint branch when archiving a project
+- Update README for archive plugin and add unarchiving support
 
 ## 1.1.4
 Wed, 31 Aug 2022 04:09:13 GMT
