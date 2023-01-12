@@ -21,6 +21,7 @@ importers:
       '@types/yargs': ~17.0.7
       eslint: 7.32.0
       inquirer: ~8.2.0
+      json2md: ~2.0.0
       ora: 5.4.1
       tar: ~6.1.11
       typescript: 4.4.2
@@ -29,6 +30,7 @@ importers:
       '@rushstack/node-core-library': 3.44.1
       '@rushstack/rush-sdk': 5.62.4
       inquirer: 8.2.0
+      json2md: 2.0.0
       ora: 5.4.1
       tar: 6.1.11
       yargs: 17.3.0
@@ -4106,6 +4108,10 @@ packages:
     resolution: {integrity: sha512-EdDDZu4A2OyIK7Lr/2zG+w5jmbuk1DVBnEwREQvBzspBJkCEbRa8GxU1lghYcaGJCnRWibjDXlq779X1/y5xwg==}
     engines: {node: '>=8'}
 
+  /indento/1.1.13:
+    resolution: {integrity: sha512-YZWk3mreBEM7sBPddsiQnW9Z8SGg/gNpFfscJq00HCDS7pxcQWWWMSVKJU7YkTRyDu1Zv2s8zaK8gQWKmCXHlg==}
+    dev: false
+
   /infer-owner/1.0.4:
     resolution: {integrity: sha512-IClj+Xz94+d7irH5qRyfJonOdfTzuDaifE6ZPWfx0N0+/ATZCbuTPq2prFl526urkQd90WyUKIh1DfBQ2hMz9A==}
     dev: false
@@ -5102,6 +5108,12 @@ packages:
   /json-stringify-safe/5.0.1:
     resolution: {integrity: sha1-Epai1Y/UXxmg9s4B1lcB4sc1tus=}
     dev: true
+
+  /json2md/2.0.0:
+    resolution: {integrity: sha512-4PIMtD0zTfQZWcUId1EyHY2BQ2EG/imHWHkGFbXYPlczW8G6wPJA/BRVN3e5v6NPwFUCcoFvUsCeo6rzV2CWww==}
+    dependencies:
+      indento: 1.1.13
+    dev: false
 
   /json5/2.2.0:
     resolution: {integrity: sha512-f+8cldu7X/y7RAJurMEJmdoKXGB/X550w2Nr3tTbezL6RwEE/iMcm+tZnXeoZtKuOq6ft8+CqzEkrIgx1fPoQA==}

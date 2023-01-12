@@ -9,6 +9,7 @@ import { getCheckpointBranch, gitCheckIgnored, gitFullClean } from "../logic/git
 import { getGraveyardInfo } from "../logic/graveyard";
 import { IProjectCheckpointMetadata, ProjectMetadata } from "../logic/projectMetadata";
 import ora from "ora";
+import inquirer from 'inquirer';
 import { loadRushConfiguration } from "../logic/rushConfiguration";
 
 interface IArchiveConfig {
@@ -55,6 +56,14 @@ ${consumingProjectNames.join(", ")}`);
     spinner = ora('Attempting to create a git checkpoint branch');
     const branchName: string = getCheckpointBranch(rushConfiguration.rushJsonFolder,packageName);
     spinner.succeed(`Git Checkpoint created at branch: ${branchName}`);
+    // Prompt user to push the newly created branch
+    const { pushBranch } = await inquirer.prompt([
+      { type: 'confirm', name: 'pushBranch', message: 'Push checkpoint branch to remote?' }
+    ])
+    if (pushBranch) {
+      console.log('pushing branch...');
+    }
+    process.exit(1);
     // Add data to metadata file
     const archivedProjectMetadataFilePath: string = `${tarballFolder}/projectCheckpoints.json`;
     let archivedProjectMetadataObject: { [key in string]: IProjectCheckpointMetadata } = {};
