@@ -89,18 +89,21 @@ ${consumingProjectNames.join(", ")}`);
     const mdFileContents: any = [
       { h2: "Archived Projects" }
     ];
+    const tableRows: any = []
     for (const [projectName, projectMetadata] of Object.entries(archivedProjectMetadataObject)) {
-      const projectMdDetails: any = [
-        { h3: projectName },
-        { h5: "Checkpoint Branch" },
-        { p: projectMetadata.checkpointBranch },
-        { h5: "Project Description" },
-        { p: projectMetadata.description },
-        { h5: "Archived on Date:" },
-        { p: projectMetadata.archivedOn },
-      ]
-      mdFileContents.push(...projectMdDetails);
+      tableRows.push([
+        projectName,
+        projectMetadata.checkpointBranch,
+        projectMetadata.description,
+        projectMetadata.archivedOn
+      ])
     }
+    mdFileContents.push({
+      table: {
+        headers: ["Project Name", "Checkpoint Branch", "Description", "Archive Date"],
+        rows: tableRows
+      }
+    })
     fs.writeFileSync(archivedProjectMetadataMdFilePath, json2md(mdFileContents));
   }
 
