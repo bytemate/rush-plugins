@@ -11,8 +11,8 @@ import { IProjectCheckpointMetadata, ProjectMetadata } from "../logic/projectMet
 import ora from "ora";
 import inquirer from 'inquirer';
 import fs from 'fs';
-import json2md from 'json2md';
 import { loadRushConfiguration } from "../logic/rushConfiguration";
+import { convertProjectMetadataToMD } from "../logic/generateMD";
 
 interface IArchiveConfig {
   packageName: string;
@@ -85,26 +85,8 @@ ${consumingProjectNames.join(", ")}`);
       description
     }
     JsonFile.save(archivedProjectMetadataObject, archivedProjectMetadataFilePath);
-    // Try saving a md file of this json file
-    const mdFileContents: any = [
-      { h2: "Archived Projects" }
-    ];
-    const tableRows: any = []
-    for (const [projectName, projectMetadata] of Object.entries(archivedProjectMetadataObject)) {
-      tableRows.push([
-        projectName,
-        projectMetadata.checkpointBranch,
-        projectMetadata.description,
-        projectMetadata.archivedOn
-      ])
-    }
-    mdFileContents.push({
-      table: {
-        headers: ["Project Name", "Checkpoint Branch", "Description", "Archive Date"],
-        rows: tableRows
-      }
-    })
-    fs.writeFileSync(archivedProjectMetadataMdFilePath, json2md(mdFileContents));
+
+    fs.writeFileSync(archivedProjectMetadataMdFilePath, convertProjectMetadataToMD(archivedProjectMetadataObject));
   }
 
   // create a metadata.json file
