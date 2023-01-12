@@ -10,6 +10,8 @@ import { getGraveyardInfo, graveyardRelativeFolder } from "../logic/graveyard";
 import { IProjectCheckpointMetadata, ProjectMetadata } from "../logic/projectMetadata";
 import ora from "ora";
 import inquirer from 'inquirer';
+import fs from 'fs';
+import json2md from 'json2md';
 import { loadRushConfiguration } from "../logic/rushConfiguration";
 
 interface IArchiveConfig {
@@ -65,6 +67,7 @@ ${consumingProjectNames.join(", ")}`);
     }
     // Add data to metadata file
     const archivedProjectMetadataFilePath: string = path.join(monoRoot, graveyardRelativeFolder, 'projectCheckpoints.json');
+    const archivedProjectMetadataMdFilePath: string = path.join(monoRoot, graveyardRelativeFolder, 'projectCheckpoints.md');
     let archivedProjectMetadataObject: { [key in string]: IProjectCheckpointMetadata } = {};
     if (FileSystem.exists(archivedProjectMetadataFilePath)) {
       archivedProjectMetadataObject = JsonFile.load(archivedProjectMetadataFilePath);
@@ -82,6 +85,23 @@ ${consumingProjectNames.join(", ")}`);
       description
     }
     JsonFile.save(archivedProjectMetadataObject, archivedProjectMetadataFilePath);
+    // Try saving a md file of this json file
+    const mdFileContents: any = [
+      { h2: "Archived Projects" }
+    ];
+    for (const [projectName, projectMetadata] of Object.entries(archivedProjectMetadataObject)) {
+      const projectMdDetails: any = [
+        { h3: projectName },
+        { h5: "Checkpoint Branch" },
+        { p: projectMetadata.checkpointBranch },
+        { h5: "Project Description" },
+        { p: projectMetadata.description },
+        { h5: "Archived on Date:" },
+        { p: projectMetadata.archivedOn },
+      ]
+      mdFileContents.push(...projectMdDetails);
+    }
+    fs.writeFileSync(archivedProjectMetadataMdFilePath, json2md(mdFileContents));
   }
 
   // create a metadata.json file
