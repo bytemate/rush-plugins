@@ -5,8 +5,8 @@ import type {
 import { FileSystem, JsonFile, JsonObject } from "@rushstack/node-core-library";
 import * as path from "path";
 import * as tar from "tar";
-import { getCheckpointBranch, gitCheckIgnored, gitFullClean } from "../logic/git";
-import { getGraveyardInfo } from "../logic/graveyard";
+import { getCheckpointBranch, gitCheckIgnored, gitFullClean, pushGitBranch } from "../logic/git";
+import { getGraveyardInfo, graveyardRelativeFolder } from "../logic/graveyard";
 import { IProjectCheckpointMetadata, ProjectMetadata } from "../logic/projectMetadata";
 import ora from "ora";
 import inquirer from 'inquirer';
@@ -61,11 +61,10 @@ ${consumingProjectNames.join(", ")}`);
       { type: 'confirm', name: 'pushBranch', message: 'Push checkpoint branch to remote?' }
     ])
     if (pushBranch) {
-      console.log('pushing branch...');
+      pushGitBranch(rushConfiguration.rushJsonFolder, branchName);
     }
-    process.exit(1);
     // Add data to metadata file
-    const archivedProjectMetadataFilePath: string = `${tarballFolder}/projectCheckpoints.json`;
+    const archivedProjectMetadataFilePath: string = path.join(monoRoot, graveyardRelativeFolder, 'projectCheckpoints.json');
     let archivedProjectMetadataObject: { [key in string]: IProjectCheckpointMetadata } = {};
     if (FileSystem.exists(archivedProjectMetadataFilePath)) {
       archivedProjectMetadataObject = JsonFile.load(archivedProjectMetadataFilePath);

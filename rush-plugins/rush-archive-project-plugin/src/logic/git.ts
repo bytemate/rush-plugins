@@ -66,3 +66,13 @@ export const getCheckpointBranch = (cwd: string, branchName: string): string => 
 
   return branchNameToCreate;
 }
+
+export const pushGitBranch = (cwd: string, branchName: string): void => {
+  const gitPath: string = getGitPathOrThrow();
+  const process: SpawnSyncReturns<string> = Executable.spawnSync(gitPath, ["push", "origin", `${branchName}:${branchName}`], {
+    currentWorkingDirectory: cwd,
+  });
+  if (process.status !== 0) {
+    console.error('Could not push branch to origin');
+  }
+}
