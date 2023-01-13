@@ -17,9 +17,10 @@ import { convertProjectMetadataToMD } from "../logic/generateMD";
 interface IArchiveConfig {
   packageName: string;
   gitCheckpoint: boolean;
+  shouldPushGitCheckpoint?: boolean;
 }
 
-export async function archive({ packageName, gitCheckpoint }: IArchiveConfig): Promise<void> {
+export async function archive({ packageName, gitCheckpoint, shouldPushGitCheckpoint }: IArchiveConfig): Promise<void> {
   let spinner: ora.Ora | undefined;
   const rushConfiguration: RushConfiguration = loadRushConfiguration();
   const monoRoot: string = rushConfiguration.rushJsonFolder;
@@ -58,11 +59,18 @@ ${consumingProjectNames.join(", ")}`);
     spinner = ora('Attempting to create a git checkpoint branch');
     const branchName: string = getCheckpointBranch(rushConfiguration.rushJsonFolder,packageName);
     spinner.succeed(`Git Checkpoint created at branch: ${branchName}`);
-    // Prompt user to push the newly created branch
-    const { pushBranch } = await inquirer.prompt([
-      { type: 'confirm', name: 'pushBranch', message: 'Push checkpoint branch to remote?' }
-    ])
-    if (pushBranch) {
+    let shouldPushBranch: boolean;
+    if (shouldPushGitCheckpoint === undefined) {
+      // Prompt user to push the newly created branch
+      const { pushBranch } = await inquirer.prompt([
+        { type: 'confirm', name: 'pushBranch', message: 'Push checkpoint branch to remote?' }
+      ])
+      shouldPushBranch = pushBranch;
+    } else {
+      shouldPushBranch = shouldPushGitCheckpoint;
+    }
+
+    if (shouldPushBranch) {
       pushGitBranch(rushConfiguration.rushJsonFolder, branchName);
     }
     // Add data to metadata file
