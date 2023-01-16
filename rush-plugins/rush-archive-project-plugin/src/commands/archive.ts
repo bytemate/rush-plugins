@@ -5,18 +5,22 @@ import type {
 import { FileSystem, JsonFile, JsonObject } from "@rushstack/node-core-library";
 import * as path from "path";
 import * as tar from "tar";
-import { getCheckpointBranch, gitCheckIgnored, gitFullClean } from "../logic/git";
-import { getGraveyardInfo } from "../logic/graveyard";
+import { getCheckpointBranch, gitCheckIgnored, gitFullClean, pushGitBranch } from "../logic/git";
+import { getGraveyardInfo, graveyardRelativeFolder } from "../logic/graveyard";
 import { IProjectCheckpointMetadata, ProjectMetadata } from "../logic/projectMetadata";
 import ora from "ora";
+import inquirer from 'inquirer';
+import fs from 'fs';
 import { loadRushConfiguration } from "../logic/rushConfiguration";
+import { convertProjectMetadataToMD } from "../logic/generateMD";
 
 interface IArchiveConfig {
   packageName: string;
   gitCheckpoint: boolean;
+  shouldPushGitCheckpoint?: boolean;
 }
 
-export async function archive({ packageName, gitCheckpoint }: IArchiveConfig): Promise<void> {
+export async function archive({ packageName, gitCheckpoint, shouldPushGitCheckpoint }: IArchiveConfig): Promise<void> {
   let spinner: ora.Ora | undefined;
   const rushConfiguration: RushConfiguration = loadRushConfiguration();
   const monoRoot: string = rushConfiguration.rushJsonFolder;
@@ -55,8 +59,23 @@ ${consumingProjectNames.join(", ")}`);
     spinner = ora('Attempting to create a git checkpoint branch');
     const branchName: string = getCheckpointBranch(rushConfiguration.rushJsonFolder,packageName);
     spinner.succeed(`Git Checkpoint created at branch: ${branchName}`);
+    let shouldPushBranch: boolean;
+    if (shouldPushGitCheckpoint === undefined) {
+      // Prompt user to push the newly created branch
+      const { pushBranch } = await inquirer.prompt([
+        { type: 'confirm', name: 'pushBranch', message: 'Push checkpoint branch to remote?' }
+      ])
+      shouldPushBranch = pushBranch;
+    } else {
+      shouldPushBranch = shouldPushGitCheckpoint;
+    }
+
+    if (shouldPushBranch) {
+      pushGitBranch(rushConfiguration.rushJsonFolder, branchName);
+    }
     // Add data to metadata file
-    const archivedProjectMetadataFilePath: string = `${tarballFolder}/projectCheckpoints.json`;
+    const archivedProjectMetadataFilePath: string = path.join(monoRoot, graveyardRelativeFolder, 'projectCheckpoints.json');
+    const archivedProjectMetadataMdFilePath: string = path.join(monoRoot, graveyardRelativeFolder, 'projectCheckpoints.md');
     let archivedProjectMetadataObject: { [key in string]: IProjectCheckpointMetadata } = {};
     if (FileSystem.exists(archivedProjectMetadataFilePath)) {
       archivedProjectMetadataObject = JsonFile.load(archivedProjectMetadataFilePath);
@@ -74,6 +93,8 @@ ${consumingProjectNames.join(", ")}`);
       description
     }
     JsonFile.save(archivedProjectMetadataObject, archivedProjectMetadataFilePath);
+
+    fs.writeFileSync(archivedProjectMetadataMdFilePath, convertProjectMetadataToMD(archivedProjectMetadataObject));
   }
 
   // create a metadata.json file
