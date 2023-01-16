@@ -1,6 +1,13 @@
 # Change Log - rush-archive-project-plugin
 
-This log was last generated on Sat, 07 Jan 2023 01:07:03 GMT and should not be manually modified.
+This log was last generated on Mon, 16 Jan 2023 05:03:53 GMT and should not be manually modified.
+
+## 1.1.6
+Mon, 16 Jan 2023 05:03:53 GMT
+
+### Patches
+
+- Add ability to push git branch and generate md file for archived projects"
 
 ## 1.1.5
 Sat, 07 Jan 2023 01:07:03 GMT

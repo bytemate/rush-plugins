@@ -2,6 +2,18 @@
   "name": "rush-archive-project-plugin",
   "entries": [
     {
+      "version": "1.1.6",
+      "tag": "rush-archive-project-plugin_v1.1.6",
+      "date": "Mon, 16 Jan 2023 05:03:53 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Add ability to push git branch and generate md file for archived projects\""
+          }
+        ]
+      }
+    },
+    {
       "version": "1.1.5",
       "tag": "rush-archive-project-plugin_v1.1.5",
       "date": "Sat, 07 Jan 2023 01:07:03 GMT",
