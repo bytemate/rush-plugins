@@ -7,10 +7,10 @@
     "plugin",
     "command"
   ],
-  "homepage": "https://github.com/bytesfriends/rush-plugins#readme",
+  "homepage": "https://github.com/bytemate/rush-plugins#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bytesfriends/rush-plugins",
+    "url": "https://github.com/bytemate/rush-plugins",
     "directory": "rush-plugins/rush-lint-staged-plugin"
   },
   "license": "MIT",

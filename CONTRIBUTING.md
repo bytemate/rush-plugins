@@ -2,7 +2,7 @@
 
 1. Install a LTS Node.js version, such as v14.19.1 
 2. Install rush globally: `npm install -g @microsoft/rush`
-3. Clone the repository: `git clone git@github.com:bytesfriends/rush-plugins.git`
+3. Clone the repository: `git clone git@github.com:bytemate/rush-plugins.git`
 
 # Building the project
 
