@@ -15,7 +15,6 @@ const terminal: Terminal = new Terminal(new ConsoleTerminalProvider());
 main();
 
 async function main(): Promise<void> {
-
   await yargs(hideBin(process.argv))
     .command(
       "archive",
