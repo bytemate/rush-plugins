@@ -32,8 +32,10 @@ export const getGraveyardInfo = ({
     `rush-archive-project-plugin.json`
   );
 
+  console.log('testing folder: ', pluginOptionsJsonFilePath);
+
   try {
-  const archiveConfigs: IArchiveConfig | undefined = JsonFile.load(pluginOptionsJsonFilePath);
+    const archiveConfigs: IArchiveConfig | undefined = JsonFile.load(pluginOptionsJsonFilePath);
 
     console.log(
       `Found target graveyard in ${pluginOptionsJsonFilePath}`
