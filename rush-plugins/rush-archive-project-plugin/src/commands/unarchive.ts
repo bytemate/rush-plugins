@@ -1,7 +1,7 @@
 import * as path from "path";
 import { FileSystem, JsonFile, JsonObject } from "@rushstack/node-core-library";
 import ora from "ora";
-import { getGraveyardInfo, graveyardRelativeFolder } from "../logic/graveyard";
+import { getGraveyardInfo } from "../logic/graveyard";
 import * as tar from "tar";
 import fs from 'fs';
 import { IProjectCheckpointMetadata, ProjectMetadata } from "../logic/projectMetadata";
@@ -28,7 +28,7 @@ export async function unarchive({
   const monoRoot: string = rushConfiguration.rushJsonFolder;
 
   // extract tarball
-  const { tarballName, tarballFolder } = getGraveyardInfo({
+  const { graveyardRelativeFolder, tarballName, tarballFolder } = getGraveyardInfo({
     monoRoot,
     packageName,
   });

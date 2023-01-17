@@ -3,9 +3,10 @@ import { PackageName, IParsedPackageName, JsonFile } from "@rushstack/node-core-
 import { RushConfiguration } from "@rushstack/rush-sdk";
 import { loadRushConfiguration } from "./rushConfiguration";
 
-export const graveyardRelativeFolder: string = "common/_graveyard";
+export const defaultGraveyardRelativeFolder: string = "common/_graveyard";;
 
 export interface IGraveyardInfo {
+  graveyardRelativeFolder: string;
   tarballFolder: string;
   tarballRelativeFolder: string;
   tarballName: string;
@@ -32,17 +33,13 @@ export const getGraveyardInfo = ({
     `rush-archive-project-plugin.json`
   );
 
-  console.log('testing folder: ', pluginOptionsJsonFilePath);
-
+  let graveyardRelativeFolder: string = defaultGraveyardRelativeFolder;
   try {
     const archiveConfigs: IArchiveConfig | undefined = JsonFile.load(pluginOptionsJsonFilePath);
 
-    console.log(
-      `Found target graveyard in ${pluginOptionsJsonFilePath}`
-    );
-
-    console.log('configs: ', archiveConfigs);
-    process.exit(1);
+    if (archiveConfigs?.graveyardFolder) {
+      graveyardRelativeFolder = archiveConfigs.graveyardFolder;
+    }
   } catch (e) {}
 
   const parsedPackageName: IParsedPackageName = PackageName.parse(packageName);
@@ -57,6 +54,7 @@ export const getGraveyardInfo = ({
     tarballName: `${parsedPackageName.unscopedName}.tar.gz`,
   });
   return {
+    graveyardRelativeFolder,
     tarballFolder,
     tarballRelativeFolder,
     tarballName: `${parsedPackageName.unscopedName}.tar.gz`,

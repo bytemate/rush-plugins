@@ -1,7 +1,7 @@
 import * as path from "path";
 import { Executable } from "@rushstack/node-core-library";
 import { archive } from "../archive";
-import { graveyardRelativeFolder } from "../../logic/graveyard";
+import { defaultGraveyardRelativeFolder } from "../../logic/graveyard";
 
 const folderSet = new Set<string>();
 
@@ -29,7 +29,7 @@ describe("archive", () => {
     );
     const fixtureMonorepoGraveyardPath = path.join(
       fixtureMonorepoPath,
-      graveyardRelativeFolder
+      defaultGraveyardRelativeFolder
     );
     folderSet.add(fixtureMonorepoPath);
     folderSet.add(fixtureMonorepoGraveyardPath);
@@ -73,7 +73,7 @@ describe("archive", () => {
     );
     const fixtureMonorepoGraveyardPath = path.join(
       fixtureMonorepoPath,
-      graveyardRelativeFolder
+      defaultGraveyardRelativeFolder
     );
     folderSet.add(fixtureMonorepoPath);
     folderSet.add(fixtureMonorepoGraveyardPath);
@@ -103,7 +103,7 @@ describe("archive", () => {
     );
     const fixtureMonorepoGraveyardPath = path.join(
       fixtureMonorepoPath,
-      graveyardRelativeFolder
+      defaultGraveyardRelativeFolder
     );
     folderSet.add(fixtureMonorepoPath);
     folderSet.add(fixtureMonorepoGraveyardPath);
