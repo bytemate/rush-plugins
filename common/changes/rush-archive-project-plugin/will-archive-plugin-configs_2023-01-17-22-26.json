@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-archive-project-plugin",
+      "comment": "Add support for graveyard folder in archive plugin config file",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-archive-project-plugin"
+}
