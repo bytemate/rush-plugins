@@ -2,6 +2,18 @@
   "name": "rush-archive-project-plugin",
   "entries": [
     {
+      "version": "1.1.7",
+      "tag": "rush-archive-project-plugin_v1.1.7",
+      "date": "Wed, 18 Jan 2023 06:59:28 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Add support for graveyard folder in archive plugin config file"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.1.6",
       "tag": "rush-archive-project-plugin_v1.1.6",
       "date": "Mon, 16 Jan 2023 05:03:53 GMT",
