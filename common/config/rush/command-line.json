@@ -12,6 +12,18 @@
    */
   "commands": [
     {
+      "name": "prettier",
+      "commandKind": "global",
+      "summary": "Used by the pre-commit Git hook. This command invokes Prettier to reformat staged changes.",
+
+      "autoinstallerName": "rush-prettier",
+
+      // This will invoke common/autoinstall/rush-prettier/node_modules/.bin/pretty-quick
+      "shellCommand": "pretty-quick --staged",
+
+      "safeForSimultaneousRushProcesses": true
+    },
+    {
       "commandKind": "bulk",
       "name": "test",
       "summary": "Bulk test script",
