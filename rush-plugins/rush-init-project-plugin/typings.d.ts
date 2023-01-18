@@ -1,5 +1,5 @@
-declare module "inquirer-autocomplete-prompt";
+declare module 'validate-npm-package-name';
 
-declare module "validate-npm-package-name";
+declare module 'handlebars-helpers*';
 
-declare module "handlebars-helpers*";
+declare module 'blessed/lib/widgets/*';

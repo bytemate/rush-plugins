@@ -1,57 +1,52 @@
-import { Colors, Terminal } from "@rushstack/node-core-library";
-import chalk from "chalk";
-import type { NodePlopAPI, PlopGenerator } from "node-plop";
-import nodePlop from "node-plop";
-import ora, { Ora } from "ora";
-import * as path from "path";
-import { getHooks, IHooks, IResult } from "./hooks";
-import type { IExtendedAnswers } from "./plopfile";
-import { TerminalSingleton } from "./terminal";
+import { Colors, Terminal } from '@rushstack/node-core-library';
+import chalk from 'chalk';
+import type { NodePlopAPI, PlopGenerator } from 'node-plop';
+import nodePlop from 'node-plop';
+import ora, { Ora } from 'ora';
+import * as path from 'path';
+import { getHooks, IHooks, IResult } from './hooks';
+import type { IExtendedAnswers } from './plopfile';
+import { TerminalSingleton } from './terminal';
 
 export interface ICliParams {
   answer?: string | Record<string, string>;
   verbose: boolean;
   dryRun: boolean;
+  ui: boolean;
 }
 
 export const initProject = async (params: ICliParams): Promise<void> => {
   const terminal: Terminal = TerminalSingleton.getInstance();
   // validate if external answer is valid JSON
-  if (params.answer && typeof params.answer === "string") {
+  if (params.answer && typeof params.answer === 'string') {
     try {
       params.answer = JSON.parse(params.answer);
     } catch (error: any) {
-      params.answer = "";
+      params.answer = '';
       terminal.writeErrorLine(`Invalid JSON answer: ${error?.message}`);
     }
   }
-  const plopfilePath: string = path.join(__dirname, "./plopfile.js");
+  const plopfilePath: string = path.join(__dirname, './plopfile.js');
 
   const plop: NodePlopAPI = nodePlop(plopfilePath, {
     destBasePath: process.cwd(),
     force: false,
-    ...params,
+    ...params
   });
 
-  const generators: { name: string; description: string }[] =
-    plop.getGeneratorList();
+  const generators: { name: string; description: string }[] = plop.getGeneratorList();
 
   if (generators.length !== 1) {
-    throw new Error(
-      "It should never run into this line. Please report to the author."
-    );
+    throw new Error('It should never run into this line. Please report to the author.');
   }
 
   const generator: PlopGenerator = plop.getGenerator(generators[0].name);
   await doThePlop(generator, []);
 
-  TerminalSingleton.getInstance().writeLine(Colors.green("ALL DONE!"));
+  TerminalSingleton.getInstance().writeLine(Colors.green('ALL DONE!'));
 };
 
-async function doThePlop(
-  generator: PlopGenerator,
-  bypassArr: string[]
-): Promise<void> {
+async function doThePlop(generator: PlopGenerator, bypassArr: string[]): Promise<void> {
   const hooks: IHooks = getHooks();
   const spinner: Ora = ora();
   const answers: IExtendedAnswers = await generator.runPrompts(bypassArr);
@@ -63,7 +58,7 @@ async function doThePlop(
       spinner.start();
     },
     onSuccess: (change) => {
-      let line: string = "";
+      let line: string = '';
       if (change.type) {
         line += ` ${typeMap(change.type, noMap)}`;
       }
@@ -74,7 +69,7 @@ async function doThePlop(
       spinner.start();
     },
     onFailure: (failure) => {
-      let line: string = "";
+      let line: string = '';
       if (failure.type) {
         line += ` ${typeMap(failure.type, noMap)}`;
       }
@@ -88,23 +83,23 @@ async function doThePlop(
       spinner.fail(line);
       failedActions = true;
       spinner.start();
-    },
+    }
   });
   spinner.stop();
-  const result: IResult = failedActions ? "Failed" : "Succeeded";
+  const result: IResult = failedActions ? 'Failed' : 'Succeeded';
   await hooks.done.promise(result, answers);
   if (failedActions) {
-    throw new Error("Failed to init project");
+    throw new Error('Failed to init project');
   }
 }
 
 const typeDisplay: Record<string, string> = {
-  function: chalk.yellow("->"),
-  add: chalk.green("++"),
-  addMany: chalk.green("+!"),
-  modify: `${chalk.green("+")}${chalk.red("-")}`,
-  append: chalk.green("_+"),
-  skip: chalk.green("--"),
+  function: chalk.yellow('->'),
+  add: chalk.green('++'),
+  addMany: chalk.green('+!'),
+  modify: `${chalk.green('+')}${chalk.red('-')}`,
+  append: chalk.green('_+'),
+  skip: chalk.green('--')
 };
 function typeMap(name: string, noMap: boolean): string {
   const dimType: string = chalk.dim(name);
