@@ -1,5 +1,5 @@
 import { list, Widgets } from 'blessed';
-import { COLORS } from '../COLOR';
+import { COLORS } from '../COLORS';
 
 export const TemplateList = (
   choices: { name: string; value: string }[]
@@ -8,20 +8,12 @@ export const TemplateList = (
 } => {
   const templateList: Widgets.ListElement = list({
     keys: true,
+    width: '100%',
     mouse: true,
-    scrollbar: {
-      ch: ' ',
-      track: {
-        bg: COLORS.red3
-      },
-      style: {
-        inverse: true
-      }
-    },
     style: {
       item: {
         hover: {
-          bg: COLORS.blue3
+          bg: COLORS.grey0
         }
       },
       selected: {

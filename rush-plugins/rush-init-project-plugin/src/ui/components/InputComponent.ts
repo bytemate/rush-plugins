@@ -4,10 +4,9 @@ import blessed, { Widgets } from 'blessed';
 import type { PromptQuestion } from 'node-plop';
 import type { SyncHook } from 'tapable';
 import { Answers } from 'inquirer';
-import { COLORS } from '../COLOR';
+import { COLORS } from '../COLORS';
 
 export class InputComponent extends BaseFieldComponent {
-  public label: Widgets.BoxElement;
   public input: Widgets.TextareaElement;
   public placeholder: Widgets.BoxElement;
   private _message: string = '';
@@ -18,21 +17,14 @@ export class InputComponent extends BaseFieldComponent {
     hookForPrompt: SyncHook<[PromptQuestion, Partial<IExtendedAnswers>], null | undefined> | undefined
   ) {
     super(form, prompt, option, hookForPrompt);
-    this.label = blessed.box({
-      tags: true,
-      parent: this.form,
-      height: 1,
-      content: this.prompt.name,
-      alwaysScroll: true,
-      shrink: true
-    });
     this.input = blessed.textarea({
       name: this.prompt.name,
       parent: this.form,
       inputOnFocus: true,
+      width: '100%',
       height: 3,
       border: 'line',
-      mouse: true,
+      scrollable: false,
       style: {
         focus: {
           border: {
@@ -41,8 +33,7 @@ export class InputComponent extends BaseFieldComponent {
         }
       },
       alwaysScroll: true,
-      shrink: true,
-      width: '100%'
+      shrink: true
     });
     this.input.key(['return'], () => {
       // Workaround, since we can't stop the return from being added.
@@ -58,7 +49,6 @@ export class InputComponent extends BaseFieldComponent {
     this.input.on('blur', async () => {
       this.label.style.fg = COLORS.black;
       await this.validateResult();
-      this.form.screen.render();
     });
     this.placeholder = blessed.box({
       tags: true,
@@ -76,7 +66,7 @@ export class InputComponent extends BaseFieldComponent {
   public async validateResult(): Promise<void> {
     this.label.setContent(`${this._message} {${COLORS.blue4}-fg}[validating...]{/${COLORS.blue4}-fg}`);
     try {
-      this.isValidate = await this.validate(this.input.value);
+      this.isValidate = await this.validate(this.input.getValue());
     } catch (error) {
       this.isValidate = ((error ?? 'error') as string).toString();
     }
@@ -88,6 +78,7 @@ export class InputComponent extends BaseFieldComponent {
       this.label.setContent(`{${COLORS.red6}-fg}*{/${COLORS.red6}-fg}${this._message}`);
       this.placeholder.setContent(` {${COLORS.red6}-fg}[${warningStr}]{/${COLORS.red6}-fg}`);
     }
+    this.form.screen.render();
   }
 
   public async setMessage(): Promise<void> {
@@ -101,10 +92,15 @@ export class InputComponent extends BaseFieldComponent {
   }
   public async setDefaultValue(): Promise<void> {
     try {
-      const defualtValue: string = await this.default();
-      this.input.value = defualtValue;
+      const defaultValue: string = (await this.default()) as string;
+      if (defaultValue) {
+        this.input.value = defaultValue;
+      }
     } catch (e) {
       this.form.screen.log(e);
     }
+  }
+  public getFieldComponent(): Widgets.Node {
+    return this.input;
   }
 }

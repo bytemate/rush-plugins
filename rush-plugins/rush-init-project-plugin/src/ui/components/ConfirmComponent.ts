@@ -1,13 +1,13 @@
-import { BaseFieldComponent, IComponentOptions, IExtendedAnswers } from './BaseFieldComponent';
+import { BaseFieldComponent, BaseValueType, IComponentOptions, IExtendedAnswers } from './BaseFieldComponent';
 import blessed, { Widgets } from 'blessed';
 
 import type { PromptQuestion } from 'node-plop';
 import type { SyncHook } from 'tapable';
 import { Answers } from 'inquirer';
-import { COLORS } from '../COLOR';
+import { COLORS } from '../COLORS';
+import { CUSTOM_EMIT_EVENTS } from '../EMIT_EVENTS';
 
 export class ConfirmComponent extends BaseFieldComponent {
-  public label: Widgets.BoxElement;
   public placeholder: Widgets.BoxElement;
   public confimBtn: Widgets.CheckboxElement;
   public constructor(
@@ -17,18 +17,9 @@ export class ConfirmComponent extends BaseFieldComponent {
     hookForPrompt: SyncHook<[PromptQuestion, Partial<IExtendedAnswers>], null | undefined> | undefined
   ) {
     super(form, prompt, option, hookForPrompt);
-    this.label = blessed.box({
-      tags: true,
-      parent: this.form,
-      height: 1,
-      content: this.prompt.name,
-      alwaysScroll: true,
-      shrink: true
-    });
     this.confimBtn = blessed.checkbox({
       parent: this.form,
       height: 1,
-      mouse: true,
       name: this.prompt.name,
       text: 'yes',
       alwaysScroll: true,
@@ -41,10 +32,10 @@ export class ConfirmComponent extends BaseFieldComponent {
     });
 
     this.confimBtn.on('check', () => {
-      this.form.emit('update', { [this.confimBtn.name]: this.confimBtn.checked });
+      this.form.emit(CUSTOM_EMIT_EVENTS.UPDATE_LAYOUT, { [this.confimBtn.name]: this.confimBtn.checked });
     });
     this.confimBtn.on('uncheck', () => {
-      this.form.emit('update', { [this.confimBtn.name]: this.confimBtn.checked });
+      this.form.emit(CUSTOM_EMIT_EVENTS.UPDATE_LAYOUT, { [this.confimBtn.name]: this.confimBtn.checked });
     });
     this.confimBtn.on('focus', () => {
       this.label.style.fg = COLORS.green5;
@@ -73,12 +64,13 @@ export class ConfirmComponent extends BaseFieldComponent {
   }
   public async setDefaultValue(): Promise<void> {
     try {
-      const defualtValue: boolean = Boolean(await this.default());
-      if (defualtValue) {
-        this.confimBtn.check();
+      const defaultValue: BaseValueType = await this.default();
+      if (defaultValue === false) {
+        return;
       }
+      this.confimBtn.check();
     } catch (e) {
-      this.form.screen.log(e);
+      this.form.screen.log('confirm', e);
     }
   }
 }

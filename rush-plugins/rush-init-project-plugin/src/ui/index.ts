@@ -1,5 +1,5 @@
 import blessed, { box, Widgets } from 'blessed';
-import { goNext, start, getCurrentState, PROCESS_STATUS } from './events';
+import { goNext, start, getCurrentState, PROCESS_STATUS } from './EventManager';
 import { Steps } from './components/steps';
 import { Form } from './components/form';
 import { TemplateList } from './components/templateList';
@@ -7,7 +7,10 @@ import type { Answers } from 'inquirer';
 import type { IPluginContext } from '../logic/TemplateConfiguration';
 import type { NodePlopAPI, PlopCfg, PromptQuestion } from 'node-plop';
 import { ICliParams } from '../init-project';
-import { COLORS } from './COLOR';
+import { COLORS } from './COLORS';
+import { Warning } from './components/Warning';
+import { CUSTOM_EMIT_EVENTS } from './EMIT_EVENTS';
+import { TerminalSingleton } from '../terminal';
 
 export const initBlessedForm = async (
   promptQueue: Array<PromptQuestion>,
@@ -24,47 +27,17 @@ export const initBlessedForm = async (
     dockBorders: true,
     transparent: true,
     smartCSR: true,
-    useBCE: true
+    useBCE: true,
+    terminal: 'xterm-256color',
+    fullUnicode: true
   });
   const { stepBox, setStep } = Steps();
+  const { WarningBox, setWarningContent } = Warning();
   screen.append(stepBox);
-  screen.render();
-  screen.key(['C-c'], () => {
+  screen.append(WarningBox);
+  // exits the process
+  screen.program.key(['C-c'], () => {
     return process.exit(0);
-  });
-  screen.append(
-    blessed.box({
-      bottom: 0,
-      height: 1,
-      transparent: true,
-      index: 2,
-      content: 'press ctrl-c to exit or ESC to submit',
-      style: {
-        fg: COLORS.amber6
-      }
-    })
-  );
-  const downBtn: Widgets.BoxElement = blessed.box({
-    bottom: 1,
-    right: 1,
-    height: 1,
-    mouse: true,
-    width: 2,
-    content: '⬇',
-    style: {
-      fg: COLORS.green4
-    }
-  });
-  const upBtn: Widgets.BoxElement = blessed.box({
-    bottom: 2,
-    right: 1,
-    height: 1,
-    mouse: true,
-    width: 2,
-    content: '⬆',
-    style: {
-      fg: COLORS.red4
-    }
   });
   screen.on('resize', () => {
     screen.render();
@@ -73,11 +46,13 @@ export const initBlessedForm = async (
   let answers: Answers = {};
   let template: string = '';
   if (getCurrentState() === PROCESS_STATUS.TEMPLATE_SELECTING) {
+    setWarningContent('move with ⬇/⬆  press space or enter to next stage. Exit with Ctrl+c.');
     setStep(PROCESS_STATUS.TEMPLATE_SELECTING);
     const templateBox: Widgets.BoxElement = box({
       parent: screen,
-      top: 2,
-      height: '100%-3'
+      top: 4,
+      width: '100%',
+      height: '100%-5'
     });
     const { templateList } = TemplateList(templateChoices);
     templateBox.append(templateList);
@@ -96,72 +71,46 @@ export const initBlessedForm = async (
           resolve(selectedItem);
         });
       });
-
       templateList.key(['return'], function () {
         screen.remove(templateBox);
         resolve(selectedItem);
+      });
+      templateList.key(['space'], function () {
+        templateList.emit('keypress', '\r', { name: 'enter' });
       });
     });
     await loadTemplateConfiguration(promptQueue, template);
     goNext();
   }
   if (getCurrentState() === PROCESS_STATUS.FORM_FILLING) {
+    setWarningContent('move with ⬇/⬆ or tab. Exit with Ctrl+c.');
     setStep(PROCESS_STATUS.FORM_FILLING);
     const formBox: Widgets.BoxElement = box({
       parent: screen,
-      top: 2,
-      height: '100%-3'
+      top: 4,
+      tags: true,
+      width: '100%',
+      height: '100%-5',
+      content: `Selected Template: {${COLORS.blue4}}${template}{/${COLORS.blue4}}`
     });
-    const formInputMouseEmit = (key: Widgets.Events.IMouseEventArg): void => {
-      if (key.action === 'mousedown') {
-        if (screen.focused?.type === 'textarea') {
-          screen.focused.emit('keypress', '\x1b', { name: 'escape' });
-          screen.focusPop();
-        }
-      }
-    };
-    // used to emit input focus problem
-    screen.program.on('mouse', formInputMouseEmit);
     try {
-      const { form, formSubmit } = await Form(promptQueue);
+      const { form } = await Form(promptQueue);
       formBox.append(form);
-      screen.append(downBtn);
-      screen.append(upBtn);
-      downBtn.on('click', () => {
-        form.scroll(Number(form.height));
-        screen.render();
-        return false;
-      });
 
-      upBtn.on('click', () => {
-        form.scroll(-Number(form.height));
-        screen.render();
-        return false;
-      });
       form.focusNext();
       screen.render();
-      answers = await new Promise<Answers>((resolve, reject) => {
-        screen.key(['escape'], async () => {
-          try {
-            const res: Answers | boolean = await formSubmit();
-
-            if (res) {
-              screen.remove(formBox);
-              resolve(form.submission);
-            }
-          } catch (e) {
-            screen.log('error', e);
-            // reject(e)
+      answers = await new Promise<Answers>((resolve) => {
+        form.on(CUSTOM_EMIT_EVENTS.SUBMIT_ANSWERS, (res) => {
+          if (res) {
+            resolve(res);
           }
-          screen.alloc();
-          screen.render();
-          screen.cursorReset();
         });
       });
-    } catch (e) {
-      screen.log(e);
+    } catch (error: any) {
+      screen.log(error);
+      TerminalSingleton.getInstance().writeErrorLine((error ?? 'error')?.toString());
+      process.exit(1);
     }
-    screen.program.off('mouse', formInputMouseEmit);
     goNext();
   }
   // if(getCurrentState() === PROCESS_STATUS.ACTIONS_INVOKING){
@@ -170,7 +119,7 @@ export const initBlessedForm = async (
   // if(getCurrentState() === PROCESS_STATUS.FINISHED){
 
   // }
-
+  TerminalSingleton.getInstance().writeVerboseLine(`answers:  `);
   screen.destroy();
   return {
     template,

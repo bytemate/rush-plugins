@@ -233,6 +233,7 @@ export default function (plop: NodePlopAPI, plopCfg: PlopCfg & ICliParams): void
       await hooks.answers.promise(promptAnswers as IExtendedAnswers);
     } catch (error: any) {
       terminal.writeErrorLine((error ?? 'error')?.toString());
+      process.exit(1);
     }
     return promptAnswers;
   };

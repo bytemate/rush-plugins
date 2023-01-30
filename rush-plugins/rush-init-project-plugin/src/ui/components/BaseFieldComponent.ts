@@ -1,4 +1,4 @@
-import { Widgets } from 'blessed';
+import { box, Widgets } from 'blessed';
 import type { PromptQuestion } from 'node-plop';
 import type { SyncHook } from 'tapable';
 import { Answers } from 'inquirer';
@@ -23,6 +23,10 @@ export interface IExtendedAnswers extends Answers {
  * Any new component based on inquirer should extend this class
  */
 export class BaseFieldComponent {
+  /**
+   * Each Field need a label
+   */
+  public label: Widgets.BoxElement;
   public option: IComponentOptions;
   public form: Widgets.FormElement<Answers>;
   public prompt: PromptQuestion;
@@ -49,6 +53,14 @@ export class BaseFieldComponent {
     this.prompt = prompt;
     this.option = option;
     this._hookForPrompt = hookForPrompt;
+    this.label = box({
+      tags: true,
+      parent: this.form,
+      height: 1,
+      content: this.prompt.name,
+      alwaysScroll: true,
+      shrink: true
+    });
   }
   /**
    * validate result based on blessed widget implemented by every component
@@ -71,6 +83,12 @@ export class BaseFieldComponent {
    */
   public focusNext(): void {
     this.form.focusNext();
+  }
+  /**
+   * get really field object
+   */
+  public getFieldComponent(): Widgets.Node | undefined {
+    return;
   }
   public reset(): void {}
   public render(): void {
@@ -138,13 +156,22 @@ export class BaseFieldComponent {
    * The default value of the question.
    * implement of default param in inquirer
    */
-  public async default(): Promise<string> {
+  public async default(): Promise<BaseValueType> {
     this.form.submit();
-    let defaultValue: string = '';
-    if (typeof this.prompt.default === 'function') {
-      defaultValue = (await this.prompt.default(this.form.submission)) ?? '';
-    } else if (this.prompt.default) {
-      defaultValue = this.prompt.default ?? '';
+    let defaultValue: BaseValueType = '';
+    switch (typeof this.prompt.default) {
+      case 'function':
+        defaultValue = (await this.prompt.default(this.form.submission)) ?? '';
+        break;
+      case 'boolean':
+        defaultValue = this.prompt.default;
+        break;
+      case 'number':
+        defaultValue = this.prompt.default;
+        break;
+      default:
+        defaultValue = this.prompt.default ?? '';
+        break;
     }
     return defaultValue;
   }
@@ -189,7 +216,6 @@ export class BaseFieldComponent {
    * implement of when param in inquirer
    */
   public async when(): Promise<void> {
-    this.form.submit();
     switch (typeof this.prompt.when) {
       case 'function':
         this.isActived = await this.prompt.when(this.form.submission);
@@ -220,7 +246,7 @@ export class BaseFieldComponent {
    * init state include default and message config
    */
   public async initState(): Promise<void> {
-    await this.setDefaultValue();
     await this.setMessage();
+    await this.setDefaultValue();
   }
 }
