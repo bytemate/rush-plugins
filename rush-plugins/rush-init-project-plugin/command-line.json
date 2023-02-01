@@ -34,6 +34,13 @@
       "longName": "--verbose",
       "associatedCommands": ["init-project"],
       "required": false
+    },
+    {
+      "parameterKind": "flag",
+      "description": "Provide terminal ui operation",
+      "longName": "--ui",
+      "associatedCommands": ["init-project"],
+      "required": false
     }
   ]
 }
