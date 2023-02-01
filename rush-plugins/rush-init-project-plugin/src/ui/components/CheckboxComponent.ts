@@ -106,7 +106,7 @@ export class CheckboxComponent extends BaseFieldComponent {
       this._message = message;
       this.label.setContent(message);
     } catch (e) {
-      this.form.screen.log(e);
+      this.form.screen.log('checkbox set message error', e);
     }
   }
   public async setDefaultValue(): Promise<void> {
@@ -120,7 +120,7 @@ export class CheckboxComponent extends BaseFieldComponent {
       });
       this.setValue();
     } catch (e) {
-      this.form.screen.log(e);
+      this.form.screen.log('checkbox set default error', e);
     }
   }
 }

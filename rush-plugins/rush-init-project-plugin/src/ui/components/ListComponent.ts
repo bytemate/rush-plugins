@@ -7,6 +7,7 @@ import { Answers } from 'inquirer';
 import { COLORS } from '../COLORS';
 import { BlessedHiddenInputComponent } from './BlessedHiddenInputComponent';
 import { nextTick } from 'process';
+import { CUSTOM_EMIT_EVENTS } from '../EMIT_EVENTS';
 
 export class ListComponent extends BaseFieldComponent {
   public placeholder: Widgets.BoxElement;
@@ -74,12 +75,7 @@ export class ListComponent extends BaseFieldComponent {
 
     let currentSelectedItem: Widgets.BoxElement;
     let currentSelectedItemStyle: Record<string, any>;
-    let isSelecting: boolean = false;
-    sourceList.on('select', async (el: Widgets.BoxElement, selected: number) => {
-      if (isSelecting) {
-        return;
-      }
-      isSelecting = !isSelecting;
+    sourceList.on('select', (el: Widgets.BoxElement, selected: number) => {
       if (sourceList._.rendering) return;
       const text: string = this.choices[selected];
       this.hiddenInput.setValue(text);
@@ -93,12 +89,16 @@ export class ListComponent extends BaseFieldComponent {
       currentSelectedItem?.style = {
         bg: COLORS.red4
       };
-
-      this.label.setContent(`${this._message}(${this.hiddenInput.getValue()})`);
+      this.label.setContent(`${this._message}`);
       this.form.screen.render();
+      this.form.emit(CUSTOM_EMIT_EVENTS.UPDATE_LAYOUT);
+    });
+    sourceList.on('focus', () => {
+      this.label.style.fg = COLORS.green5;
+    });
+    sourceList.on('blur', async () => {
+      this.label.style.fg = COLORS.black;
       await this.validateResult();
-      // go back to form
-      isSelecting = !isSelecting;
     });
     // store current select index,
     let currentMoveItemIndex: number = 0;
@@ -129,13 +129,11 @@ export class ListComponent extends BaseFieldComponent {
   public async validateResult(): Promise<void> {
     this.isValidate = await this.validate(this.hiddenInput.getValue());
     if (this.isValidate === true) {
-      this.label.setContent(`${this._message}(${this.hiddenInput.getValue()})`);
+      this.label.setContent(`${this._message}`);
       this.placeholder.setContent('');
     } else {
       const warningStr: string = this.isValidate ? this.isValidate : 'error';
-      this.label.setContent(
-        `{${COLORS.red6}-fg}*{/${COLORS.red6}-fg}${this._message}(${this.hiddenInput.getValue()})`
-      );
+      this.label.setContent(`{${COLORS.red6}-fg}*{/${COLORS.red6}-fg}${this._message}`);
       this.placeholder.setContent(`{${COLORS.red6}-fg}[${warningStr}]{/${COLORS.red6}-fg}`);
     }
   }
@@ -145,18 +143,18 @@ export class ListComponent extends BaseFieldComponent {
       this._message = message;
       this.label.setContent(message);
     } catch (e) {
-      this.form.screen.log(e);
+      this.form.screen.log('list set message error', e);
     }
   }
   public async setDefaultValue(): Promise<void> {
     try {
-      await this.setItems();
       const defaultValue: string = (await this.default()) as string;
+      await this.setItems();
       const tempIndex: number = this.choices.indexOf(defaultValue);
       const selectedIndex: number = tempIndex >= 0 ? tempIndex : 0;
       this.sourceList.emit('select', this.sourceList.getItem(selectedIndex), selectedIndex);
     } catch (e) {
-      this.form.screen.log(e);
+      this.form.screen.log('list set default error', e);
     }
   }
   public async setItems(): Promise<void> {

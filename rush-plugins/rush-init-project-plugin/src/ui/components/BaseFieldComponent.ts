@@ -96,12 +96,8 @@ export class BaseFieldComponent {
   }
   public async invokeHooks(): Promise<void> {
     if (this._hookForPrompt) {
-      this.form.submit();
       await this._hookForPrompt.call(this.prompt, this.form.submission);
     }
-  }
-  public updatePrompt(prompt: PromptQuestion): void {
-    this.prompt = prompt;
   }
   /**
    * get current total height of  all elements and it's top
@@ -157,7 +153,6 @@ export class BaseFieldComponent {
    * implement of default param in inquirer
    */
   public async default(): Promise<BaseValueType> {
-    this.form.submit();
     let defaultValue: BaseValueType = '';
     switch (typeof this.prompt.default) {
       case 'function':
@@ -180,7 +175,6 @@ export class BaseFieldComponent {
    * implement of message param in inquirer
    */
   public async message(): Promise<string> {
-    this.form.submit();
     let message: string = '';
     if (typeof this.prompt.message === 'function') {
       message = (await this.prompt.message(this.form.submission)) ?? '';

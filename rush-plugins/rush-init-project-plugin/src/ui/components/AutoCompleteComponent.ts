@@ -9,15 +9,28 @@ import { nextTick } from 'process';
 import { COLORS } from '../COLORS';
 import { BlessedHiddenInputComponent } from './BlessedHiddenInputComponent';
 import { ListComponent } from './ListComponent';
+import { CUSTOM_EMIT_EVENTS } from '../EMIT_EVENTS';
 
 const SELECT_TEXT_LABEL: string = `{${COLORS.grey0}}search in the list, select by space/enter{/${COLORS.grey0}}`;
+
+interface IPromiseState {
+  state: boolean;
+  value: string;
+}
 
 export class AutoCompleteComponent extends BaseFieldComponent {
   public placeholder: Widgets.BoxElement;
   public input: Widgets.TextareaElement;
   public hiddenInput: BlessedHiddenInputComponent;
   public sourceList: Widgets.ListElement;
-  private _message: string = '';
+  private _messageState: IPromiseState = {
+    state: false,
+    value: ''
+  };
+  private _defaultState: IPromiseState = {
+    state: false,
+    value: ''
+  };
   private _inputCache: string;
   private _choices: Array<string> = [];
   public constructor(
@@ -27,6 +40,22 @@ export class AutoCompleteComponent extends BaseFieldComponent {
     hookForPrompt: SyncHook<[PromptQuestion, Partial<IExtendedAnswers>], null | undefined> | undefined
   ) {
     super(form, prompt, option, hookForPrompt);
+    // listener on prompt
+    const _: AutoCompleteComponent = this;
+    this.prompt = new Proxy(prompt, {
+      set(target: Record<string, () => void>, prop: string, newValue: string | (() => void)) {
+        switch (prop) {
+          case 'default':
+            // eslint-disable-next-line no-void
+            void _.setDefaultValue();
+            break;
+          default:
+            break;
+        }
+        return true;
+      }
+    });
+
     this.input = blessed.textarea({
       name: `_autocomplete_${prompt.name}`,
       parent: this.form,
@@ -71,15 +100,6 @@ export class AutoCompleteComponent extends BaseFieldComponent {
     this.input.on('blur', async () => {
       this.label.style.fg = COLORS.black;
       this._inputCache = this.input.getValue();
-      this.form.screen.render();
-    });
-    this.sourceList.on('focus', () => {
-      this.label.style.fg = COLORS.green5;
-      this.form.screen.render();
-    });
-    this.sourceList.on('blur', async () => {
-      this.label.style.fg = COLORS.black;
-      await this.validateResult();
       this.form.screen.render();
     });
     this.input.key(['return'], () => {
@@ -134,13 +154,19 @@ export class AutoCompleteComponent extends BaseFieldComponent {
 
     let currentSelectedItem: Widgets.BoxElement;
     let currentSelectedItemStyle: Record<string, any> = {};
-    let isSelecting: boolean = false;
-    sourceList.on('select', async (el: Widgets.BoxElement, selected: number) => {
-      if (isSelecting) {
-        return;
-      }
+
+    sourceList.on('focus', () => {
+      this.label.style.fg = COLORS.green5;
+      this.form.screen.render();
+    });
+    sourceList.on('blur', async () => {
+      this.label.style.fg = COLORS.black;
+      await this.validateResult();
+      this.form.screen.render();
+    });
+
+    sourceList.on('select', (el: Widgets.BoxElement, selected: number) => {
       if (sourceList._.rendering) return;
-      isSelecting = !isSelecting;
       this.hiddenInput.setValue(this._choices[selected]);
       // set selected item different color
       // @ts-ignore
@@ -151,9 +177,9 @@ export class AutoCompleteComponent extends BaseFieldComponent {
       currentSelectedItem?.style = {
         bg: COLORS.red4
       };
-      this.label.setContent(this._message);
+      this.label.setContent(this._messageState.value);
       this.form.screen.render();
-      isSelecting = !isSelecting;
+      this.form.emit(CUSTOM_EMIT_EVENTS.UPDATE_LAYOUT);
     });
     // store current select index,
     let currentSelectedItemIndex: number = 0;
@@ -162,9 +188,7 @@ export class AutoCompleteComponent extends BaseFieldComponent {
         currentSelectedItemIndex = selected;
       });
     });
-    // sourceList.key(['enter'], () => {
-    //   this.form.focusNext();
-    // })
+
     sourceList.key(['space'], () => {
       sourceList.emit('keypress', '\r', { name: 'enter' });
     });
@@ -186,35 +210,51 @@ export class AutoCompleteComponent extends BaseFieldComponent {
   public async validateResult(): Promise<void> {
     this.isValidate = await this.validate({ value: this.hiddenInput.getValue() });
     if (this.isValidate === true) {
-      this.label.setContent(this._message);
+      this.label.setContent(this._messageState.value);
       this.placeholder.setContent('');
     } else {
       const warningStr: string = this.isValidate ? this.isValidate : 'error';
-      this.label.setContent(`{${COLORS.red6}-fg}*{/${COLORS.red6}-fg}${this._message}`);
+      this.label.setContent(`{${COLORS.red6}-fg}*{/${COLORS.red6}-fg}${this._messageState.value}`);
       this.placeholder.setContent(`{${COLORS.red6}-fg}[${warningStr}]{/${COLORS.red6}-fg}`);
     }
-    this.form.screen.render();
   }
   public async setMessage(): Promise<void> {
+    if (this._messageState.state) {
+      return;
+    }
+    this._messageState.state = true;
     try {
       const message: string = await this.message();
-      this._message = `${message}${SELECT_TEXT_LABEL}`;
-      this.label.setContent(`${this._message}`);
+      this._messageState.value = `${message}${SELECT_TEXT_LABEL}`;
+      this.label.setContent(`${this._messageState.value}`);
     } catch (e) {
-      this.form.screen.log(e);
+      this.form.screen.log('autocomplete set message error', e);
     }
+    this._messageState.state = false;
   }
   public async setDefaultValue(): Promise<void> {
-    try {
-      await this.setItems();
-      const defaultValue: string = (await this.default()) as string;
-      const selectedIndex: number = this._choices.indexOf(defaultValue);
-      if (selectedIndex >= 0) {
-        this.sourceList.emit('select', this.sourceList.getItem(selectedIndex), selectedIndex);
-      }
-    } catch (e) {
-      this.form.screen.log(e);
+    if (this._defaultState.state) {
+      return;
     }
+    this._defaultState.state = true;
+    try {
+      if (this.input.getValue()) {
+        return;
+      }
+      const defaultValue: string = (await this.default()) as string;
+      if (defaultValue === this._defaultState.value) {
+        this._defaultState.state = false;
+        return;
+      }
+      await this.setItems();
+      this._defaultState.value = defaultValue;
+      const tempIndex: number = this._choices.indexOf(defaultValue);
+      const selectedIndex: number = tempIndex >= 0 ? tempIndex : 0;
+      this.sourceList.emit('select', this.sourceList.getItem(selectedIndex), selectedIndex);
+    } catch (e) {
+      this.form.screen.log('autocomplete set default error', e);
+    }
+    this._defaultState.state = false;
   }
   public async setItems(value?: string): Promise<void> {
     this.form.submit();

@@ -5,6 +5,7 @@ import type { PromptQuestion } from 'node-plop';
 import type { SyncHook } from 'tapable';
 import { Answers } from 'inquirer';
 import { COLORS } from '../COLORS';
+import { CUSTOM_EMIT_EVENTS } from '../EMIT_EVENTS';
 
 export class InputComponent extends BaseFieldComponent {
   public input: Widgets.TextareaElement;
@@ -49,6 +50,7 @@ export class InputComponent extends BaseFieldComponent {
     this.input.on('blur', async () => {
       this.label.style.fg = COLORS.black;
       await this.validateResult();
+      this.form.emit(CUSTOM_EMIT_EVENTS.UPDATE_LAYOUT);
     });
     this.placeholder = blessed.box({
       tags: true,
@@ -87,7 +89,7 @@ export class InputComponent extends BaseFieldComponent {
       this._message = message;
       this.label.setContent(this._message);
     } catch (e) {
-      this.form.screen.log(e);
+      this.form.screen.log('input set message error', e);
     }
   }
   public async setDefaultValue(): Promise<void> {
@@ -97,7 +99,7 @@ export class InputComponent extends BaseFieldComponent {
         this.input.value = defaultValue;
       }
     } catch (e) {
-      this.form.screen.log(e);
+      this.form.screen.log('input set default error', e);
     }
   }
   public getFieldComponent(): Widgets.Node {

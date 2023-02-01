@@ -19,12 +19,13 @@ type FieldComponent =
   | AutoCompleteComponent
   | ListComponent;
 
+const DEFAULT_TEXT: string = '{center}{bold}SUBMIT{bold}{/center}';
+const SUBMINTING_TEXT: string = '{center}submiting, please wait patiently{/center}';
+
 const createSubmit = (
   form: Widgets.FormElement<Answers>,
   formValidateAndSubmit: () => {}
 ): Widgets.ButtonElement => {
-  const DEFAULT_TEXT: string = '{center}{bold}SUBMIT{bold}{/center}';
-  const SUBMINTING_TEXT: string = '{center}submiting, please wait patiently{/center}';
   const submitBtn: Widgets.ButtonElement = blessed.button({
     parent: form,
     name: '_submit',
@@ -65,7 +66,7 @@ const createSubmit = (
         form.emit(CUSTOM_EMIT_EVENTS.SUBMIT_ANSWERS, res);
       }
     } catch (e) {
-      form.screen.log('error', e);
+      form.screen.log('form submit error', e);
     }
     submitBtn.setContent(DEFAULT_TEXT);
     submitBtn.screen.render();
@@ -89,7 +90,9 @@ const createSubmit = (
       return true;
     }
   );
-  submitBtn.on('click', submitAnswer);
+  submitBtn.on('click', async () => {
+    submitBtn.emit('keypress', '\r', { name: 'enter' });
+  });
   return submitBtn;
 };
 
@@ -142,7 +145,7 @@ export const Form = async (
       | undefined = hooks.promptQuestion.get(prompt.name);
 
     if (hookForCurrentPrompt) {
-      await form.submit();
+      form.submit();
       await hookForCurrentPrompt.call(prompt, form.submission);
       prompt = promptQueue[i];
     }

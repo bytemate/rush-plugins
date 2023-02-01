@@ -59,7 +59,7 @@ export class ConfirmComponent extends BaseFieldComponent {
       const message: string = await this.message();
       this.label.setContent(message);
     } catch (e) {
-      this.form.screen.log(e);
+      this.form.screen.log('confirm set message error', e);
     }
   }
   public async setDefaultValue(): Promise<void> {
@@ -70,7 +70,7 @@ export class ConfirmComponent extends BaseFieldComponent {
       }
       this.confimBtn.check();
     } catch (e) {
-      this.form.screen.log('confirm', e);
+      this.form.screen.log('confirm set default error', e);
     }
   }
 }
