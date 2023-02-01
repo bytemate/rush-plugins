@@ -2,6 +2,18 @@
   "name": "rush-init-project-plugin",
   "entries": [
     {
+      "version": "0.7.0",
+      "tag": "rush-init-project-plugin_v0.7.0",
+      "date": "Wed, 01 Feb 2023 09:06:22 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "add ui option in cli"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.6.1",
       "tag": "rush-init-project-plugin_v0.6.1",
       "date": "Wed, 07 Dec 2022 09:05:36 GMT",

@@ -1,6 +1,6 @@
 {
   "name": "rush-init-project-plugin",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "Rush plugin for initialize project in monorepo",
   "keywords": [
     "rush",
