@@ -232,6 +232,7 @@ export default function (plop: NodePlopAPI, plopCfg: PlopCfg & ICliParams): void
     try {
       await hooks.answers.promise(promptAnswers as IExtendedAnswers);
     } catch (error: any) {
+      terminal.writeErrorLine(`Error in "answers" hook, please check your plugins`);
       terminal.writeErrorLine((error ?? 'error')?.toString());
       process.exit(1);
     }
