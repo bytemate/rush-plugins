@@ -45,6 +45,17 @@ export class ConfirmComponent extends BaseFieldComponent {
       this.label.style.fg = COLORS.black;
       this.form.screen.render();
     });
+
+    // hidden confirm will affect other components
+    this.confimBtn.on('show', async () => {
+      await this.setDefaultValue();
+    });
+    this.confimBtn.on('hide', () => {
+      if (this.confimBtn.checked) {
+        this.confimBtn.uncheck();
+      }
+    });
+
     this.placeholder = blessed.box({
       parent: this.form,
       height: 1,

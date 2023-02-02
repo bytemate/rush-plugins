@@ -210,14 +210,19 @@ export class BaseFieldComponent {
    * implement of when param in inquirer
    */
   public async when(): Promise<void> {
+    let currentActive: boolean = true;
     switch (typeof this.prompt.when) {
       case 'function':
-        this.isActived = await this.prompt.when(this.form.submission);
+        currentActive = await this.prompt.when(this.form.submission);
         break;
       default:
-        this.isActived = true;
+        currentActive = true;
         break;
     }
+    if (this.isActived === currentActive) {
+      return;
+    }
+    this.isActived = currentActive;
     this.elements.forEach((ele: Widgets.BoxElement | Widgets.BoxElement[], index: number) => {
       if (ele instanceof Array) {
         ele.forEach((item: Widgets.BoxElement) => {
