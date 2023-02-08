@@ -1,3 +1,3 @@
 export * from './version';
-export * from './core';
+export * from './run-check';
 export * from './modules';

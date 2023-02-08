@@ -7,6 +7,7 @@ import { terminal, withPrefix } from '../helpers/terminal';
 
 import type { NestedRequired } from '../helpers/type';
 import type { ICommandLineOptions } from '../bin';
+import ora from 'ora';
 
 const normalizeCheckContext = (
   commandLineOption: ICommandLineOptions
@@ -29,17 +30,19 @@ const normalizeCheckContext = (
   }
 
   const option: NestedRequired<IRushGitLFSPluginOption> = loadPluginOptions();
+  const spinner: ora.Ora = ora();
   return {
     result: [],
     fix,
     files,
     option,
+    spinner,
   };
 };
 
-export const run = async (commandLineOption: ICommandLineOptions): Promise<void> => {
-  const ctx: IGitLFSCheckModuleContext = normalizeCheckContext(commandLineOption);
+export const runCheck = async (commandLineOption: ICommandLineOptions): Promise<void> => {
   const checker: GitLFSCheckModule = new GitLFSCheckModule();
+  const ctx: IGitLFSCheckModuleContext = normalizeCheckContext(commandLineOption);
   await checker.run(ctx);
   if (ctx.result.filter(e => typeof e.errorType !== 'undefined' && !e.fixed).length > 0) {
     if (ctx.option.errorTips) {

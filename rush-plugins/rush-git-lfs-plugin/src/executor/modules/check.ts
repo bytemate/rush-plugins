@@ -4,6 +4,8 @@ import fse from 'fs-extra';
 import execa from 'execa';
 import { RushConfigurationProject } from '@rushstack/rush-sdk';
 import minimatch from 'minimatch';
+import ora from 'ora';
+import chalk from 'chalk';
 
 import { GitLFSBaseModule, IGitLFSModuleContext } from './base';
 import { terminal, withPrefix } from '../../helpers/terminal';
@@ -18,6 +20,7 @@ export interface IGitLFSCheckModuleContext extends IGitLFSModuleContext {
   files: string[];
   result: IGitLFSCheckModuleFileError[];
   fix?: boolean;
+  spinner: ora.Ora;
 }
 
 export interface IGitLFSCheckModuleFileError {
@@ -94,19 +97,47 @@ export class GitLFSCheckModule extends GitLFSBaseModule {
       result,
       fix,
       option: { checkPattern },
+      spinner,
     } = ctx;
 
+    spinner.start('Start Git LFS check...');
     for (const f of files) {
-      terminal.writeVerboseLine(withPrefix(`Checking LFS status for ${toRelativePath(f)}`));
-
+      terminal.writeVerboseLine(withPrefix(`Checking file status for ${toRelativePath(f)}`));
+      spinner.text = `Checking file status for ${toRelativePath(f)}`;
       const isNeedToTrack: boolean = this.isFileNeedToTrack(f, checkPattern);
 
       if (isNeedToTrack && !this.isTrackedByLFS(f)) {
-        result.push({
-          file: toRelativePath(f),
-          errorType: GitLFSCheckModuleErrorType.FileNeedToBeTrackedByLFS,
-        });
-        terminal.writeErrorLine(withPrefix(`${toRelativePath(f)} need to be managed by Git LFS`));
+        let isFixed: boolean = false;
+
+        if (fix) {
+          try {
+            terminal.writeVerboseLine(withPrefix(`Trying to fix ${toRelativePath(f)}`));
+            this.fixFile(f);
+            isFixed = true;
+            terminal.writeVerboseLine(withPrefix(`Fixed ${toRelativePath(f)}`));
+          } catch (e) {
+            terminal.writeVerboseLine(
+              withPrefix(`Error occurs while fixing ${toRelativePath(f)} ${e}`)
+            );
+          }
+        }
+        if (isFixed) {
+          spinner.warn(
+            `Git LFS check failed for ${chalk.red(
+              toRelativePath(f)
+            )}, but was automatically fixed`
+          );
+        } else {
+          result.push({
+            file: toRelativePath(f),
+            errorType: GitLFSCheckModuleErrorType.FileNeedToBeTrackedByLFS,
+          });
+          spinner.fail(
+            `Git LFS check failed for ${chalk.red(toRelativePath(f))}${
+              fix ? " and can't be automatically fixed" : ''
+            }`
+          );
+        }
       } else {
         result.push({
           file: toRelativePath(f),
@@ -117,28 +148,10 @@ export class GitLFSCheckModule extends GitLFSBaseModule {
     const errors: IGitLFSCheckModuleFileError[] = result.filter(
       e => typeof e.errorType !== 'undefined'
     );
-    if (fix && errors.length > 0) {
-      terminal.writeLine(withPrefix('Trying to automatically fix files with Git LFS...'));
-      let fixedCount: number = 0;
-      for (const e of errors) {
-        try {
-          this.fixFile(e.file);
-          fixedCount++;
-          e.fixed = true;
-          terminal.writeLine(withPrefix(e.file + ' ✅'));
-        } catch (error) {
-          terminal.writeErrorLine(
-            withPrefix(`Can't fix ${e.file} automatically, please fix it manually`)
-          );
-        }
-      }
-      if (fixedCount === errors.length) {
-        terminal.writeLine(
-          withPrefix(
-            'All files fixed, please add the modified .gitattributes files to git and commit them again'
-          )
-        );
-      }
+    if (errors.length > 0) {
+      spinner.fail('Git LFS check failed');
+    } else {
+      spinner.succeed('Git LFS check success');
     }
 
     return result;

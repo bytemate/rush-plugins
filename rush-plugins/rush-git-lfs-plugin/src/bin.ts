@@ -2,7 +2,7 @@
 import { program } from 'commander';
 
 import { terminal, terminalProvider, withPrefix } from './helpers/terminal';
-import { version, run } from './executor';
+import { version, runCheck } from './executor';
 
 export interface ICommandLineOptions {
   verbose?: boolean;
@@ -37,7 +37,7 @@ async function main(): Promise<void> {
       .option('--file [file_path...]', 'The path of files')
       .action(async options => {
         setLogLevel(options.verbose);
-        await run(options);
+        await runCheck(options);
       })
       .parseAsync(process.argv);
   } catch (error: any) {

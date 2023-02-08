@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-git-lfs-plugin",
+      "comment": "Reduce log and use ora as alternative",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-git-lfs-plugin"
+}
