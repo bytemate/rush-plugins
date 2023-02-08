@@ -26,7 +26,7 @@ const enum ErrorMsg {
 
 export const getFilePathsFromChangedFiles = (): string[] => {
   /* use git diff to get changed files */
-  terminal.writeLine(withPrefix('Using git diff to get changed files.'));
+  terminal.writeVerboseLine(withPrefix('Using git diff to get changed files.'));
   let files: string[];
   try {
     const { exitCode, stdout, stderr } = execa.commandSync(
@@ -37,7 +37,7 @@ export const getFilePathsFromChangedFiles = (): string[] => {
         .split(/\r?\n|\r|\n/g)
         .filter(s => s.length)
         .map(p => path.resolve(RushRootFolder, p));
-      terminal.writeLine(withPrefix(`Changed files paths\n${files.join(',\n')}`));
+      terminal.writeVerboseLine(withPrefix(`Changed files paths\n${files.join(',\n')}`));
       return files;
     } else {
       terminal.writeErrorLine(withPrefix(stderr));
