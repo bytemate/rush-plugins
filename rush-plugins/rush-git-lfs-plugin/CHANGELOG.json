@@ -2,6 +2,18 @@
   "name": "rush-git-lfs-plugin",
   "entries": [
     {
+      "version": "0.1.2",
+      "tag": "rush-git-lfs-plugin_v0.1.2",
+      "date": "Wed, 08 Feb 2023 07:35:21 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Reduce log and use ora as alternative"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.1.1",
       "tag": "rush-git-lfs-plugin_v0.1.1",
       "date": "Mon, 19 Dec 2022 11:19:35 GMT",
