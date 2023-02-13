@@ -5,6 +5,11 @@
       "pluginName": "git-lfs-check",
       "description": "Check if new files are correct managed by git-lfs",
       "commandLineJsonFilePath": "command-line.json"
+    },
+    {
+      "pluginName": "git-lfs-pull",
+      "description": "build-aware git lfs pull tooling",
+      "commandLineJsonFilePath": "command-line.json"
     }
   ]
 }

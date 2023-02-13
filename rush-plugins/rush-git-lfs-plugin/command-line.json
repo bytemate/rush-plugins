@@ -7,6 +7,13 @@
       "summary": "Check Git LFS file in rush project",
       "shellCommand": "node <packageFolder>/lib/bin.js",
       "safeForSimultaneousRushProcesses": true
+    },
+    {
+      "name": "git-lfs-pull",
+      "commandKind": "global",
+      "summary": "pull git lfs",
+      "shellCommand": "node <packageFolder>/lib/pull.js",
+      "safeForSimultaneousRushProcesses": true
     }
   ],
   "parameters": [
@@ -14,9 +21,7 @@
       "description": "Fix Git LFS status",
       "parameterKind": "flag",
       "longName": "--fix",
-      "associatedCommands": [
-        "git-lfs-check"
-      ],
+      "associatedCommands": ["git-lfs-check"],
       "required": false
     },
     {
@@ -25,28 +30,30 @@
       "longName": "--file",
       "argumentName": "FILE_PATH",
       "required": false,
-      "associatedCommands": [
-        "git-lfs-check"
-      ]
+      "associatedCommands": ["git-lfs-check"]
     },
     {
       "description": "The version of the plugin",
       "parameterKind": "flag",
       "longName": "--version",
       "required": false,
-      "associatedCommands": [
-        "git-lfs-check"
-      ]
+      "associatedCommands": ["git-lfs-check"]
     },
     {
       "parameterKind": "string",
       "description": "verbosity that can be increased",
       "longName": "--verbose",
       "argumentName": "VERBOSE",
-      "associatedCommands": [
-        "git-lfs-check"
-      ],
+      "associatedCommands": ["git-lfs-check"],
       "required": false
+    },
+    {
+      "parameterKind": "stringList",
+      "argumentName": "PROJECT",
+      "longName": "--to",
+      "shortName": "-t",
+      "description": "choose project",
+      "associatedCommands": ["git-lfs-pull"]
     }
   ]
 }
