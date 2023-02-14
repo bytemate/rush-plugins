@@ -1,6 +1,13 @@
 # Change Log - rush-git-lfs-plugin
 
-This log was last generated on Wed, 08 Feb 2023 07:35:21 GMT and should not be manually modified.
+This log was last generated on Tue, 14 Feb 2023 03:16:12 GMT and should not be manually modified.
+
+## 0.2.0
+Tue, 14 Feb 2023 03:16:12 GMT
+
+### Minor changes
+
+- add git lfs pull plugin
 
 ## 0.1.2
 Wed, 08 Feb 2023 07:35:21 GMT
