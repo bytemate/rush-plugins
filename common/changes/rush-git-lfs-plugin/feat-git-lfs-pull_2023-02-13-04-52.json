@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-git-lfs-plugin",
+      "comment": "add git lfs pull plugin",
+      "type": "minor"
+    }
+  ],
+  "packageName": "rush-git-lfs-plugin"
+}
