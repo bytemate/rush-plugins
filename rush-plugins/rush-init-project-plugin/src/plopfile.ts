@@ -201,6 +201,17 @@ export default function (plop: NodePlopAPI, plopCfg: PlopCfg & ICliParams): void
         // when template decided, load template configuration
         if (currentPrompt?.name === 'template') {
           await loadTemplateConfiguration(promptQueue, currentAnswers.template!);
+
+          // answers from cli are prior to answers from template
+          // init answers
+          const promptQueueNames: Array<string | undefined> = promptQueue.map((x) => x.name);
+          allAnswers = pickBy(
+            {
+              ...(templateConfiguration?.answers ?? {}),
+              allAnswers
+            },
+            (v, k) => promptQueueNames.includes(k)
+          );
         }
 
         // merge answers

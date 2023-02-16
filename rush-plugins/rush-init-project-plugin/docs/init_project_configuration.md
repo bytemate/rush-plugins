@@ -20,6 +20,7 @@ const config = {
   prompts: [],
   plugins: [],
   defaultProjectConfiguration: {},
+  answers: {} // cli answers are prior to answers config in template
 };
 module.exports = config;
 ```
@@ -473,7 +474,7 @@ export class MyDataPlugin implements IPlugin {
   public static readonly pluginName: string = 'MyDataPlugin';
   apply(hooks: IHooks): void {
     hooks.answers.tap(MyDataPlugin.pluginName, (answers) => {
-      // mutate answers here 
+      // mutate answers here
       answers.foo = 'foo';
       answers.bar = 'bar';
     });
