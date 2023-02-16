@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-init-project-plugin",
+      "comment": "add answers config to template config",
+      "type": "minor"
+    }
+  ],
+  "packageName": "rush-init-project-plugin"
+}
