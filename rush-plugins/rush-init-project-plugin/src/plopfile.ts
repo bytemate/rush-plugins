@@ -164,7 +164,7 @@ export default function (plop: NodePlopAPI, plopCfg: PlopCfg & ICliParams): void
         pageSize: 20
       } as any);
 
-      let promptQueue: PromptQuestion[] = defaultPrompts.slice();
+      const promptQueue: PromptQuestion[] = defaultPrompts.slice();
 
       if (pluginContext.cliAnswer) {
         // if some answers are provided externally, use them instead of prompting.
@@ -174,13 +174,6 @@ export default function (plop: NodePlopAPI, plopCfg: PlopCfg & ICliParams): void
         }
         const promptQueueNames: Array<string | undefined> = promptQueue.map((x) => x.name);
         allAnswers = pickBy(pluginContext.cliAnswer, (v, k) => promptQueueNames.includes(k));
-        // filter out prompts that are provided externally.
-        const answeredPrompts: string[] = Object.keys(allAnswers);
-        promptQueue = promptQueue.filter((it) => {
-          if (it.name) {
-            return !answeredPrompts.includes(it.name);
-          }
-        });
       }
 
       while (promptQueue.length > 0) {
@@ -196,6 +189,9 @@ export default function (plop: NodePlopAPI, plopCfg: PlopCfg & ICliParams): void
             continue;
           }
         }
+
+        // we don't need to filter prompts, for Inquirer will avoid asking allAnswers already provided here.
+        // https://github.com/SBoudrias/Inquirer.js#methods
         const currentAnswers: Partial<IExtendedAnswers> = await inquirer.prompt([currentPrompt], allAnswers);
 
         // when template decided, load template configuration

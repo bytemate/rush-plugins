@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-init-project-plugin",
+      "comment": "remove filter prompts in rush init-project",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-init-project-plugin"
+}
