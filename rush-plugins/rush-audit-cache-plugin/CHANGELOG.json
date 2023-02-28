@@ -2,6 +2,18 @@
   "name": "rush-audit-cache-plugin",
   "entries": [
     {
+      "version": "0.2.0",
+      "tag": "rush-audit-cache-plugin_v0.2.0",
+      "date": "Tue, 28 Feb 2023 08:07:14 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "rush audit cache plugin support multiple projects"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.1.10",
       "tag": "rush-audit-cache-plugin_v0.1.10",
       "date": "Mon, 12 Dec 2022 02:58:12 GMT",

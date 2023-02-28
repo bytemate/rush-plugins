@@ -1,6 +1,13 @@
 # Change Log - rush-init-project-plugin
 
-This log was last generated on Thu, 02 Feb 2023 11:25:18 GMT and should not be manually modified.
+This log was last generated on Tue, 28 Feb 2023 08:07:14 GMT and should not be manually modified.
+
+## 0.7.2
+Tue, 28 Feb 2023 08:07:14 GMT
+
+### Patches
+
+- remove filter prompts in rush init-project
 
 ## 0.7.1
 Thu, 02 Feb 2023 11:25:18 GMT
