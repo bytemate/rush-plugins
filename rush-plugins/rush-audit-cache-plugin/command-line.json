@@ -11,7 +11,7 @@
   ],
   "parameters": [
     {
-      "parameterKind": "string",
+      "parameterKind": "stringList",
       "description": "The package name of the project",
       "longName": "--project",
       "shortName": "-p",
