@@ -40,7 +40,7 @@ async function main(): Promise<void> {
           parallelism?: string;
         }) => {
           const checkAllCacheConfiguredProject: boolean = opts.all;
-          const projectNames: string[] = opts.project;
+          const projectNames: string[] = [...new Set(opts.project)];
           if (checkAllCacheConfiguredProject && projectNames.length) {
             terminal.writeErrorLine(`The parameters "--all" and "--project" cannot be used together.`);
             program.help();

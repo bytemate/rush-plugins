@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-audit-cache-plugin",
+      "comment": "audit cache if select project, will not audit dependencies projects",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-audit-cache-plugin"
+}
