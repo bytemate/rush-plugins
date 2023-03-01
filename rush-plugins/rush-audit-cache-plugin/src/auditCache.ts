@@ -7,7 +7,7 @@ import { AUDIT_CACHE_FOLDER } from './helpers/constants';
 import { TraceExecutorFactory } from './core/TraceExecutor';
 import { BaseTraceExecutor, IBaseTraceExecutorOptions, ITraceResult } from './core/base/BaseTraceExecutor';
 import { AuditCacheAnalyzer, IAnalyzeResult } from './core/Analyzer';
-import { getSortedAllDependencyProjects, getAllCacheConfiguredProjects } from './helpers/rushProject';
+import { getAllCacheConfiguredProjects } from './helpers/rushProject';
 
 export interface IAuditCacheOptions {
   projectNames: string[];
@@ -34,7 +34,6 @@ export async function auditCache(options: IAuditCacheOptions): Promise<IAuditCac
 
   if (!checkAllCacheConfiguredProject) {
     const notExistProjects: string[] = [];
-    const projects: RushConfigurationProject[] = [];
     projectNames.forEach((projectName) => {
       const rushConfigurationProject: RushConfigurationProject | undefined =
         rushConfiguration.findProjectByShorthandName(projectName);
@@ -42,25 +41,15 @@ export async function auditCache(options: IAuditCacheOptions): Promise<IAuditCac
         notExistProjects.push(projectName);
         return;
       }
-      projects.push(rushConfigurationProject);
+      auditCacheProjects.push(rushConfigurationProject);
+      terminal.writeDebugLine(
+        `Audit cache projects ${auditCacheProjects.map(({ packageName }) => packageName).join(',')}`
+      );
     });
 
     if (notExistProjects.length) {
       throw new Error(`Projects ${notExistProjects.join(',')} not found`);
     }
-    const auditCacheProjectsToProject: RushConfigurationProject[] = [];
-    for (const project of projects) {
-      const allDependencyProjects: ReadonlyArray<RushConfigurationProject> =
-        getSortedAllDependencyProjects(project);
-      const allDependencyPackageNames: string[] = allDependencyProjects.map((p) => p.packageName);
-      auditCacheProjectsToProject.push(...[project, ...allDependencyProjects]);
-      terminal.writeDebugLine(
-        `The dependencies of the project ${project.packageName} are ${allDependencyPackageNames
-          .filter((name) => name !== project.packageName)
-          .join(',')}`
-      );
-    }
-    auditCacheProjects.push(...new Set(auditCacheProjectsToProject));
   } else {
     const allCacheConfiguredProjects: RushConfigurationProject[] =
       getAllCacheConfiguredProjects(rushConfiguration);
@@ -182,34 +171,10 @@ export async function auditCache(options: IAuditCacheOptions): Promise<IAuditCac
     for (const projectName of projectNames) {
       const targetProjectAnalyzeResult: IAnalyzeResult['key'] = analyzeResult[projectName];
 
-      const otherAnalyzedProjects: string[] = Object.keys(analyzeResult).filter(
-        (name) => name !== projectName
-      );
-
       writeProjectAnalyzeResult({
         packageName: projectName,
         result: targetProjectAnalyzeResult
       });
-
-      const highRiskProjects: string[] = [];
-      let totalOtherHighRisks: number = 0;
-      for (const packageName of otherAnalyzedProjects) {
-        const { highRisk } = analyzeResult[packageName];
-        if (highRisk.length > 0) {
-          highRiskProjects.push(packageName);
-          totalOtherHighRisks += highRisk.length;
-        }
-      }
-      terminal.writeLine('');
-      if (highRiskProjects.length === 0) {
-        terminal.writeLine(`There is no high risk in dependencies of the project ${projectName}.`);
-      } else {
-        terminal.writeLine(
-          `Find total ${totalOtherHighRisks} high risk in the dependencies of the project ${projectName}, include ${highRiskProjects.join(
-            ','
-          )}.`
-        );
-      }
     }
   }
 
