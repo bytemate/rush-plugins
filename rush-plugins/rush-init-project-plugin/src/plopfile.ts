@@ -4,7 +4,7 @@ import { FileSystem, PackageName } from '@rushstack/node-core-library';
 import hbsHelpersLib from 'handlebars-helpers/lib';
 import { Answers, Inquirer } from 'inquirer';
 import autocompletePlugin from 'inquirer-autocomplete-prompt';
-import { pickBy } from 'lodash';
+import { flatten, pickBy } from 'lodash';
 import type {
   ActionConfig,
   ActionType,
@@ -26,10 +26,17 @@ import {
   IPluginContext,
   TemplateConfiguration
 } from './logic/TemplateConfiguration';
-import { getTemplateNameList, getTemplatesFolder, ITemplatePathNameType } from './logic/templateFolder';
+import {
+  formatTemplatesByTags,
+  getTemplateNameList,
+  getTemplatesFolder,
+  ITemplateChoice,
+  ITemplatePathNameType
+} from './logic/templateFolder';
 import { getGitUserName } from './logic/GitConfig';
 import type { ICliParams } from './init-project';
 import { TerminalSingleton } from './terminal';
+import Separator from 'inquirer/lib/objects/separator';
 
 export interface IExtendedAnswers extends Answers {
   authorName: string;
@@ -142,11 +149,7 @@ export default function (plop: NodePlopAPI, plopCfg: PlopCfg & ICliParams): void
     // get templates choices
     const templatesFolder: string = getTemplatesFolder();
     const templateNameList: ITemplatePathNameType[] = await getTemplateNameList(templatesFolder);
-    const templateChoices: { name: string; value: string }[] = templateNameList.map((x) => ({
-      name: x.displayName ? x.displayName : x.folderName,
-      value: x.folderName
-    }));
-
+    const templateChoices: ITemplateChoice[][] = formatTemplatesByTags(templateNameList);
     // default prompt
     const defaultPromptFunc = async (): Promise<Answers> => {
       let allAnswers: Partial<IExtendedAnswers> = {};
@@ -155,10 +158,19 @@ export default function (plop: NodePlopAPI, plopCfg: PlopCfg & ICliParams): void
         name: 'template',
         message: 'Please select a template',
         source: (ans: unknown, input: string) => {
+          const source: (ITemplateChoice | Separator)[] = templateChoices.reduce(
+            (p, c) =>
+              p.concat(c[0]?.tag ? new inquirer.Separator(`----------${c[0].tag}----------`) : []).concat(c),
+            [] as (ITemplateChoice | Separator)[]
+          );
           if (!input) {
-            return templateChoices;
+            return source;
           }
-          return templateChoices.filter((x) => x.name.includes(input) || x.value.includes(input));
+          // @ts-ignore
+          return source.filter(
+            (x: ITemplateChoice | Separator) =>
+              'type' in x || x.name?.includes(input) || x.value?.includes(input)
+          );
         },
         loop: false,
         pageSize: 20
@@ -214,7 +226,7 @@ export default function (plop: NodePlopAPI, plopCfg: PlopCfg & ICliParams): void
         plop,
         plopCfg,
         loadTemplateConfiguration,
-        templateChoices
+        flatten(templateChoices)
       );
     };
 

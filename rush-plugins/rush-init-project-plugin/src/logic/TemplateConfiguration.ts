@@ -1,29 +1,29 @@
-import type { PromptQuestion } from "node-plop";
-import { getTemplateFolder } from "./templateFolder";
-import { lilconfigSync, LilconfigResult } from "lilconfig";
-import type { IHooks } from "../hooks";
+import type { PromptQuestion } from 'node-plop';
+import { getTemplateFolder } from './templateFolder';
+import { lilconfigSync, LilconfigResult } from 'lilconfig';
+import type { IHooks } from '../hooks';
 
-const searchPlaces: string[] = ["init.config.ts", "init.config.js"];
+const searchPlaces: string[] = ['init.config.ts', 'init.config.js'];
 
 const loaders: Record<string, (path: string) => IConfig> = {
-  ".js": (path) => require(path),
-  ".ts": (path) => {
-    require("ts-node").register({
+  '.js': (path) => require(path),
+  '.ts': (path) => {
+    require('ts-node').register({
       transpileOnly: true,
       compilerOptions: {
-        esModuleInterop: true,
-      },
+        esModuleInterop: true
+      }
     });
     const module: any = require(path);
     try {
-      if ("default" in module) {
+      if ('default' in module) {
         return module.default;
       }
     } catch {
       // no-catch
     }
     return module;
-  },
+  }
 };
 
 /**
@@ -48,6 +48,7 @@ export interface IConfig {
   plugins?: IPlugin[];
   defaultProjectConfiguration?: IDefaultProjectConfiguration;
   displayName?: string;
+  tags?: string[];
 }
 
 export interface IPlugin {
@@ -64,17 +65,17 @@ export class TemplateConfiguration {
   private _plugins: IPlugin[];
   private _defaultProjectConfiguration: IDefaultProjectConfiguration;
   public displayName: string;
-
+  public tags: string[] | undefined;
   private constructor(template: string) {
     const templateFolder: string = getTemplateFolder(template);
-    const result: LilconfigResult = lilconfigSync("init", {
+    const result: LilconfigResult = lilconfigSync('init', {
       searchPlaces,
-      loaders,
+      loaders
     }).search(templateFolder);
     this._prompts = [];
     this._plugins = [];
     this._defaultProjectConfiguration = {};
-    this.displayName = "";
+    this.displayName = '';
     if (result && result.config) {
       if (result.config.prompts) {
         this._prompts = result.config.prompts;
@@ -83,21 +84,19 @@ export class TemplateConfiguration {
         this._plugins = result.config.plugins;
       }
       if (result.config.defaultProjectConfiguration) {
-        this._defaultProjectConfiguration =
-          result.config.defaultProjectConfiguration;
+        this._defaultProjectConfiguration = result.config.defaultProjectConfiguration;
       }
       if (result.config.displayName) {
         this.displayName = result.config.displayName;
       }
+      if (result.config.tags) {
+        this.tags = result.config.tags;
+      }
     }
   }
-  public static async loadFromTemplate(
-    template: string
-  ): Promise<TemplateConfiguration> {
+  public static async loadFromTemplate(template: string): Promise<TemplateConfiguration> {
     if (!template) {
-      throw new Error(
-        "template is required when loading template configuration"
-      );
+      throw new Error('template is required when loading template configuration');
     }
     return new TemplateConfiguration(template);
   }
