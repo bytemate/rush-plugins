@@ -78,7 +78,6 @@ export default function (plop: NodePlopAPI, plopCfg: PlopCfg & ICliParams): void
         if (!validatePackageName(input)) {
           return 'package name is invalid';
         }
-        answers.unscopedPackageName = PackageName.getUnscopedName(input);
         return true;
       }
     },
@@ -198,7 +197,6 @@ export default function (plop: NodePlopAPI, plopCfg: PlopCfg & ICliParams): void
         if (currentPrompt?.name === 'template') {
           await loadTemplateConfiguration(promptQueue, currentAnswers.template!);
         }
-
         // merge answers
         allAnswers = { ...allAnswers, ...currentAnswers };
       }
@@ -225,6 +223,8 @@ export default function (plop: NodePlopAPI, plopCfg: PlopCfg & ICliParams): void
     } else {
       promptAnswers = await defaultPromptFunc();
     }
+    // process answers
+    promptAnswers.unscopedPackageName = PackageName.getUnscopedName(promptAnswers.packageName ?? '');
     try {
       await hooks.answers.promise(promptAnswers as IExtendedAnswers);
     } catch (error: any) {
