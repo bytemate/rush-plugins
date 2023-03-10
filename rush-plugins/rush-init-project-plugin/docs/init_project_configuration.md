@@ -1,3 +1,25 @@
+# Configuration to manage templates
+You can create a configuration file called `template.json` with your templates.
+
+For instance,
+
+```
+common/_templates
+├── rush-plugin-for-command
+└── template.json
+```
+
+For `template.json`
+```
+{
+  "templates": [
+    {
+      "displayName": "command template",
+      "folderName": "rush-plugin-for-command", // relative to template.json
+    }
+  ]
+}
+```
 # Configuration for initialize project
 
 You can create a configuration file called `init.config.js` or `init.config.ts` under your template folder.
@@ -473,7 +495,7 @@ export class MyDataPlugin implements IPlugin {
   public static readonly pluginName: string = 'MyDataPlugin';
   apply(hooks: IHooks): void {
     hooks.answers.tap(MyDataPlugin.pluginName, (answers) => {
-      // mutate answers here 
+      // mutate answers here
       answers.foo = 'foo';
       answers.bar = 'bar';
     });

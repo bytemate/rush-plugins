@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Template config File",
+  "description": "The main configuration file Template management.",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "description": "Part of the JSON Schema standard, this optional keyword declares the URL of the schema that the file conforms to. Editors may download the schema and use it to perform syntax highlighting.",
+      "type": "string"
+    },
+    "templates": {
+      "description": "A list of templates managed by this tool.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "description": "The display name of the template.",
+            "type": "string"
+          },
+          "folderName": {
+            "description": "The path to the template folder relative to the template config file.",
+            "type": "string"
+          },
+          "description": {
+            "description": "The template description.",
+            "type": "string"
+          },
+          "tags": {
+            "description": "An optional set of custom tags that can be used to select this template. For example, adding \"my-custom-tag\" will allow this template to be selected by the command \"rush init-project --only tag:my-custom-tag\".",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_@/.$-]+$"
+            }
+          },
+          "author": {
+            "description": "The maintainers for this template.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false,
+        "required": ["folderName"]
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": ["templates"]
+}

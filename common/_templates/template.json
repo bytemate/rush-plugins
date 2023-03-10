@@ -1,0 +1,8 @@
+{
+  "templates": [
+    {
+      "displayName": "command",
+      "folderName": "rush-plugin-for-command"
+    }
+  ]
+}
