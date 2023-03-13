@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Template config File",
+  "description": "The main configuration file Template management.",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "description": "Part of the JSON Schema standard, this optional keyword declares the URL of the schema that the file conforms to. Editors may download the schema and use it to perform syntax highlighting.",
+      "type": "string"
+    },
+    "templates": {
+      "description": "A list of templates managed by this tool.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "description": "The display name of the template.",
+            "type": "string"
+          },
+          "templateFolder": {
+            "description": "The path to the template folder relative to the template config file.",
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "required": ["templateFolder"]
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": ["templates"]
+}

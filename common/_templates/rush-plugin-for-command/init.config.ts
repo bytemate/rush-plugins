@@ -2,8 +2,8 @@ import type {
   IConfig,
   IHooks,
   IAnswers,
-  PromptQuestion,
-} from "../../autoinstallers/command-plugins/node_modules/rush-init-project-plugin";
+  PromptQuestion
+} from '../../autoinstallers/command-plugins/node_modules/rush-init-project-plugin';
 
 const config: IConfig = {
   prompts: [],
@@ -11,15 +11,12 @@ const config: IConfig = {
     {
       apply: (hooks: IHooks) => {
         hooks.promptQuestion
-          .for("projectFolder")
-          .tap(
-            "command-plugin",
-            (promptQuestion: PromptQuestion, answersSoFar: IAnswers) => {
-              const { unscopedPackageName } = answersSoFar;
-              promptQuestion.default = `rush-plugins/${unscopedPackageName}`;
-              return undefined;
-            }
-          );
+          .for('projectFolder')
+          .tap('command-plugin', (promptQuestion: PromptQuestion, answersSoFar: IAnswers) => {
+            const { unscopedPackageName } = answersSoFar;
+            promptQuestion.default = `rush-plugins/${unscopedPackageName}`;
+            return undefined;
+          });
         // hooks.done.tapPromise("command-plugin", async (result, answers) => {
         //   await new Promise<void>((resolve) => {
         //     setTimeout(() => {
@@ -28,11 +25,10 @@ const config: IConfig = {
         //     resolve();
         //   });
         // });
-      },
-    },
+      }
+    }
   ],
-  defaultProjectConfiguration: {},
-  // displayName: "Rush Plugin For Command",
+  defaultProjectConfiguration: {}
 };
 
 export default config;

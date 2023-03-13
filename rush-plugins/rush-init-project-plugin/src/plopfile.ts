@@ -78,7 +78,6 @@ export default function (plop: NodePlopAPI, plopCfg: PlopCfg & ICliParams): void
         if (!validatePackageName(input)) {
           return 'package name is invalid';
         }
-        answers.unscopedPackageName = PackageName.getUnscopedName(input);
         return true;
       }
     },
@@ -143,8 +142,8 @@ export default function (plop: NodePlopAPI, plopCfg: PlopCfg & ICliParams): void
     const templatesFolder: string = getTemplatesFolder();
     const templateNameList: ITemplatePathNameType[] = await getTemplateNameList(templatesFolder);
     const templateChoices: { name: string; value: string }[] = templateNameList.map((x) => ({
-      name: x.displayName ? x.displayName : x.folderName,
-      value: x.folderName
+      name: x.displayName ? x.displayName : x.templateFolder,
+      value: x.templateFolder
     }));
 
     // default prompt
@@ -198,7 +197,6 @@ export default function (plop: NodePlopAPI, plopCfg: PlopCfg & ICliParams): void
         if (currentPrompt?.name === 'template') {
           await loadTemplateConfiguration(promptQueue, currentAnswers.template!);
         }
-
         // merge answers
         allAnswers = { ...allAnswers, ...currentAnswers };
       }
@@ -225,6 +223,8 @@ export default function (plop: NodePlopAPI, plopCfg: PlopCfg & ICliParams): void
     } else {
       promptAnswers = await defaultPromptFunc();
     }
+    // process answers
+    promptAnswers.unscopedPackageName = PackageName.getUnscopedName(promptAnswers.packageName ?? '');
     try {
       await hooks.answers.promise(promptAnswers as IExtendedAnswers);
     } catch (error: any) {
