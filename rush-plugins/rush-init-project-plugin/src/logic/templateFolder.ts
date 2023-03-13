@@ -5,7 +5,7 @@ import templeteSchema from './template.schema.json';
 import { TerminalSingleton } from '../terminal';
 
 export interface ITemplatePathNameType {
-  folderName: string;
+  templateFolder: string;
   displayName?: string;
 }
 
@@ -47,7 +47,7 @@ export async function getTemplateNameList(templatesFolder: string): Promise<ITem
         .filter((filename: string) => {
           return !filename.startsWith('_');
         });
-      templateNameList = templateFolderList.map((folderName: string) => ({ folderName }));
+      templateNameList = templateFolderList.map((templateFolder: string) => ({ templateFolder }));
     } else {
       const jsonSchema: JsonSchema = JsonSchema.fromLoadedObject(templeteSchema);
       const res: JsonObject = await JsonFile.loadAndValidateWithCallbackAsync(

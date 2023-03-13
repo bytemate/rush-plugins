@@ -15,7 +15,7 @@ For `template.json`
   "templates": [
     {
       "displayName": "command template",
-      "folderName": "rush-plugin-for-command", // relative to template.json
+      "templateFolder": "rush-plugin-for-command", // relative to template.json
     }
   ]
 }

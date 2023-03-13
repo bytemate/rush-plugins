@@ -2,7 +2,7 @@
   "templates": [
     {
       "displayName": "command",
-      "folderName": "rush-plugin-for-command"
+      "templateFolder": "rush-plugin-for-command"
     }
   ]
 }

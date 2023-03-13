@@ -142,8 +142,8 @@ export default function (plop: NodePlopAPI, plopCfg: PlopCfg & ICliParams): void
     const templatesFolder: string = getTemplatesFolder();
     const templateNameList: ITemplatePathNameType[] = await getTemplateNameList(templatesFolder);
     const templateChoices: { name: string; value: string }[] = templateNameList.map((x) => ({
-      name: x.displayName ? x.displayName : x.folderName,
-      value: x.folderName
+      name: x.displayName ? x.displayName : x.templateFolder,
+      value: x.templateFolder
     }));
 
     // default prompt
