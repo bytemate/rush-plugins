@@ -1,6 +1,13 @@
 # Change Log - rush-init-project-plugin
 
-This log was last generated on Tue, 28 Feb 2023 08:06:50 GMT and should not be manually modified.
+This log was last generated on Mon, 13 Mar 2023 09:45:27 GMT and should not be manually modified.
+
+## 0.8.0
+Mon, 13 Mar 2023 09:45:27 GMT
+
+### Minor changes
+
+- add template schema to manage templates and add assign unscopedPackageName after inquery
 
 ## 0.7.2
 Tue, 28 Feb 2023 08:06:50 GMT
