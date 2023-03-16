@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-init-project-plugin",
+      "comment": "fix in -a mode answers are not complete",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-init-project-plugin"
+}
