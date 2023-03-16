@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-init-project-plugin",
+      "comment": "remove duplicate loadTemplateConfiguration",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-init-project-plugin"
+}
