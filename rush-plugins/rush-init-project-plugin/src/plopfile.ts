@@ -165,12 +165,8 @@ export default function (plop: NodePlopAPI, plopCfg: PlopCfg & ICliParams): void
 
       const promptQueue: PromptQuestion[] = defaultPrompts.slice();
 
+      // combine predefined answer
       if (pluginContext.cliAnswer) {
-        // if some answers are provided externally, use them instead of prompting.
-        // if template is provided externally, load template configuration.
-        if (pluginContext.cliAnswer?.template) {
-          await loadTemplateConfiguration(promptQueue, pluginContext.cliAnswer.template);
-        }
         const promptQueueNames: Array<string | undefined> = promptQueue.map((x) => x.name);
         allAnswers = pickBy(pluginContext.cliAnswer, (v, k) => promptQueueNames.includes(k));
       }
@@ -193,7 +189,7 @@ export default function (plop: NodePlopAPI, plopCfg: PlopCfg & ICliParams): void
         // https://github.com/SBoudrias/Inquirer.js#methods
         const currentAnswers: Partial<IExtendedAnswers> = await inquirer.prompt([currentPrompt], allAnswers);
 
-        // when template decided, load template configuration
+        // when template decided and not provide by defined answer, load template configuration
         if (currentPrompt?.name === 'template') {
           await loadTemplateConfiguration(promptQueue, currentAnswers.template!);
         }
