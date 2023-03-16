@@ -2,6 +2,18 @@
   "name": "rush-init-project-plugin",
   "entries": [
     {
+      "version": "0.8.2",
+      "tag": "rush-init-project-plugin_v0.8.2",
+      "date": "Thu, 16 Mar 2023 12:08:26 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "fix in -a mode answers are not complete"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.8.1",
       "tag": "rush-init-project-plugin_v0.8.1",
       "date": "Thu, 16 Mar 2023 08:30:30 GMT",
