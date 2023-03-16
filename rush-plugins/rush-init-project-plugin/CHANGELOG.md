@@ -1,6 +1,13 @@
 # Change Log - rush-init-project-plugin
 
-This log was last generated on Mon, 13 Mar 2023 09:45:27 GMT and should not be manually modified.
+This log was last generated on Thu, 16 Mar 2023 08:30:30 GMT and should not be manually modified.
+
+## 0.8.1
+Thu, 16 Mar 2023 08:30:30 GMT
+
+### Patches
+
+- remove duplicate loadTemplateConfiguration
 
 ## 0.8.0
 Mon, 13 Mar 2023 09:45:27 GMT

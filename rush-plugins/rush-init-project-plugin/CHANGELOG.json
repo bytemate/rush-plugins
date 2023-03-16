@@ -2,6 +2,18 @@
   "name": "rush-init-project-plugin",
   "entries": [
     {
+      "version": "0.8.1",
+      "tag": "rush-init-project-plugin_v0.8.1",
+      "date": "Thu, 16 Mar 2023 08:30:30 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "remove duplicate loadTemplateConfiguration"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.8.0",
       "tag": "rush-init-project-plugin_v0.8.0",
       "date": "Mon, 13 Mar 2023 09:45:27 GMT",
