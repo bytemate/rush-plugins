@@ -165,10 +165,9 @@ export default function (plop: NodePlopAPI, plopCfg: PlopCfg & ICliParams): void
 
       const promptQueue: PromptQuestion[] = defaultPrompts.slice();
 
-      // combine predefined answer
-      if (pluginContext.cliAnswer) {
-        const promptQueueNames: Array<string | undefined> = promptQueue.map((x) => x.name);
-        allAnswers = pickBy(pluginContext.cliAnswer, (v, k) => promptQueueNames.includes(k));
+      // choose selected template
+      if (pluginContext.cliAnswer.template) {
+        allAnswers.template = pluginContext.cliAnswer.template;
       }
 
       while (promptQueue.length > 0) {
@@ -189,9 +188,12 @@ export default function (plop: NodePlopAPI, plopCfg: PlopCfg & ICliParams): void
         // https://github.com/SBoudrias/Inquirer.js#methods
         const currentAnswers: Partial<IExtendedAnswers> = await inquirer.prompt([currentPrompt], allAnswers);
 
-        // when template decided and not provide by defined answer, load template configuration
+        // when template decided, load template configuration
         if (currentPrompt?.name === 'template') {
           await loadTemplateConfiguration(promptQueue, currentAnswers.template!);
+          const promptQueueNames: Array<string | undefined> = promptQueue.map((x) => x.name);
+          // apply cliAnswer
+          allAnswers = pickBy(pluginContext.cliAnswer, (v, k) => promptQueueNames.includes(k));
         }
         // merge answers
         allAnswers = { ...allAnswers, ...currentAnswers };
