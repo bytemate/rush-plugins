@@ -26,6 +26,10 @@
         "additionalProperties": false,
         "required": ["templateFolder"]
       }
+    },
+    "globalPluginEntryPoint": {
+      "description": "entry point for global plugins",
+      "type": "string"
     }
   },
   "additionalProperties": false,

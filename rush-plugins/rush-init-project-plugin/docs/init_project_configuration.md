@@ -17,7 +17,8 @@ For `template.json`
       "displayName": "command template",
       "templateFolder": "rush-plugin-for-command", // relative to template.json
     }
-  ]
+  ],
+  "globalPluginEntryPoint": "_globalPlugin/index.ts" // a global plugin
 }
 ```
 # Configuration for initialize project
@@ -260,6 +261,22 @@ Plugin hooks Workflow:
 ```
 ┌─────────────────────────────┐
 │                             │
+│ Load Global Configuration   │
+│ `globalPluginEntryPoint`    │
+│  in `template.json`         │
+│                             │
+└──────────────┬──────────────┘
+               │
+┌──────────────▼───────────────┐
+│ Apply global plugin          │
+└──────────────┬───────────────┘
+               │
+┌──────────────▼─────────────────────────┐
+│ hooks.templates.promise({ templates }) │
+└──────────────┬─────────────────────────┘
+               │
+┌──────────────▼──────────────┐
+│                             │
 │ prompt to select a template │
 │                             │
 └──────────────┬──────────────┘
@@ -312,6 +329,16 @@ Plugin hooks Workflow:
 │ hooks.done.promise(result, answers) │
 └─────────────────────────────────────┘
 ```
+
+### templates
+
+- AsyncSeriesHook
+- params: `ITemplatesHook`
+  - { templates: ITemplatePathNameType[] }
+
+`templates` is internal templates list, and templates will show in choosing a template step.
+
+It only works in global plugin, and mutate the `templates` you can manage templates locally.
 
 ### prompts
 
