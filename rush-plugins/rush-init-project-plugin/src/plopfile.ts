@@ -1,6 +1,5 @@
-import { Terminal } from '@rushstack/node-core-library';
 import type { RushConfiguration } from '@rushstack/rush-sdk';
-import { FileSystem, PackageName } from '@rushstack/node-core-library';
+import { FileSystem, PackageName, Terminal } from '@rushstack/node-core-library';
 import hbsHelpersLib from 'handlebars-helpers/lib';
 import { Answers, Inquirer } from 'inquirer';
 import autocompletePlugin from 'inquirer-autocomplete-prompt';
@@ -26,10 +25,11 @@ import {
   IPluginContext,
   TemplateConfiguration
 } from './logic/TemplateConfiguration';
-import { getTemplateNameList, getTemplatesFolder, ITemplatePathNameType } from './logic/templateFolder';
+import { getTemplatesFolder } from './logic/templateFolder';
 import { getGitUserName } from './logic/GitConfig';
 import type { ICliParams } from './init-project';
 import { TerminalSingleton } from './terminal';
+import { IGlobalConfig, loadGlobalConfiguration } from './logic/loadGlobalConfiguration';
 
 export interface IExtendedAnswers extends Answers {
   authorName: string;
@@ -47,6 +47,7 @@ export default function (plop: NodePlopAPI, plopCfg: PlopCfg & ICliParams): void
   const monorepoRoot: string = rushConfiguration.rushJsonFolder;
 
   const hooks: IHooks = getHooks();
+
   const pluginContext: IPluginContext = {
     isDryRun: plopCfg.dryRun || Boolean(process.env.DRY_RUN),
     cliAnswer: typeof plopCfg.answer === 'object' ? plopCfg.answer : {}
@@ -138,9 +139,12 @@ export default function (plop: NodePlopAPI, plopCfg: PlopCfg & ICliParams): void
     const inquirer: Inquirer = inquirerPassed as unknown as Inquirer;
     inquirer.registerPrompt('autocomplete', autocompletePlugin);
 
-    // get templates choices
-    const templatesFolder: string = getTemplatesFolder();
-    const templateNameList: ITemplatePathNameType[] = await getTemplateNameList(templatesFolder);
+    const { templateNameList }: IGlobalConfig = await loadGlobalConfiguration(hooks, pluginContext);
+
+    await hooks.templates.promise({
+      templates: templateNameList
+    });
+
     const templateChoices: { name: string; value: string }[] = templateNameList.map((x) => ({
       name: x.displayName ? x.displayName : x.templateFolder,
       value: x.templateFolder

@@ -17,7 +17,8 @@ For `template.json`
       "displayName": "command template",
       "templateFolder": "rush-plugin-for-command", // relative to template.json
     }
-  ]
+  ],
+  "globalPluginEntryPoint": "_globalPlugin/index.ts" // a global plugin
 }
 ```
 # Configuration for initialize project
@@ -259,6 +260,22 @@ Plugin hooks Workflow:
 
 ```
 ┌─────────────────────────────┐
+│                             │
+│ Load Global Configuration   │
+│ `globalPluginEntryPoint`    │
+│  in `template.json`         │
+│                             │
+└──────────────┬──────────────┘
+               │
+┌──────────────▼───────────────┐
+│ Apply global plugin          │
+└──────────────┬───────────────┘
+               │
+┌──────────────▼─────────────────────────┐
+│ hooks.templates.promise({ templates }) │
+└──────────────┬─────────────────────────┘
+               │
+┌──────────────▼──────────────┐
 │                             │
 │ prompt to select a template │
 │                             │
