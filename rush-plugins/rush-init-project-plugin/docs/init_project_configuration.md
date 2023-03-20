@@ -330,6 +330,16 @@ Plugin hooks Workflow:
 └─────────────────────────────────────┘
 ```
 
+### templates
+
+- AsyncSeriesHook
+- params: `ITemplatesHook`
+  - { templates: ITemplatePathNameType[] }
+
+`templates` is internal templates list, and templates will show in choosing a template step.
+
+It only works in global plugin, and mutate the `templates` you can manage templates locally.
+
 ### prompts
 
 - AsyncSeriesHook
