@@ -12,7 +12,7 @@ async function main(): Promise<void> {
       "Add metadata to a project",
       (yargs) => {
         return yargs
-          .option("package", {
+          .option("project", {
             type: "string",
             describe: "The name of the package to archive",
           })
