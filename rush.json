@@ -496,6 +496,11 @@
       "packageName": "rush-git-lfs-plugin",
       "projectFolder": "rush-plugins/rush-git-lfs-plugin",
       "shouldPublish": true
+    },
+    {
+      "packageName": "rush-metadata-plugin",
+      "projectFolder": "rush-plugins/rush-metadata-plugin",
+      "shouldPublish": true
     }
   ]
 }

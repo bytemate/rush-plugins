@@ -9,6 +9,7 @@
     "rush-lint-staged-plugin": "0.1.6",
     "rush-sort-package-json": "0.0.3",
     "rush-upgrade-self-plugin": "1.0.6",
+    "rush-metadata-plugin": "link:../../../rush-plugins/rush-metadata-plugin",
     "typescript": "4.4.2"
   }
 }

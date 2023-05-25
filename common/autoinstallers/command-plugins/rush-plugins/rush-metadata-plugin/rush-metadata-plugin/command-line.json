@@ -1,0 +1,23 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/command-line.schema.json",
+  "commands": [
+    {
+      "name": "meta",
+      "commandKind": "global",
+      "summary": "Create or update metadata information in the current package.",
+      "shellCommand": "node <packageFolder>/lib/bin.js",
+      "safeForSimultaneousRushProcesses": true
+    }
+  ],
+  "parameters": [
+    {
+      "parameterKind": "string",
+      "description": "The package name of the project",
+      "longName": "--project",
+      "shortName": "-p",
+      "argumentName": "PACKAGE_NAME",
+      "associatedCommands": ["meta"],
+      "required": false
+    }
+  ]
+}

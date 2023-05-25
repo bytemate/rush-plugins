@@ -5,6 +5,7 @@ specifiers:
   rush-audit-cache-plugin: 0.0.2
   rush-init-project-plugin: 0.6.0
   rush-lint-staged-plugin: 0.1.6
+  rush-metadata-plugin: link:../../../rush-plugins/rush-metadata-plugin
   rush-sort-package-json: 0.0.3
   rush-upgrade-self-plugin: 1.0.6
   typescript: 4.4.2
@@ -14,6 +15,7 @@ dependencies:
   rush-audit-cache-plugin: 0.0.2
   rush-init-project-plugin: 0.6.0_typescript@4.4.2
   rush-lint-staged-plugin: 0.1.6
+  rush-metadata-plugin: link:../../../rush-plugins/rush-metadata-plugin
   rush-sort-package-json: 0.0.3
   rush-upgrade-self-plugin: 1.0.6
   typescript: 4.4.2
