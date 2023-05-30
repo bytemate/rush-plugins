@@ -8,23 +8,28 @@ import { JsonFile } from '@rushstack/node-core-library';
 import { ICoreMetadata } from './template';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
-
-const META_FILE_NAME: string = 'project-metadata.json';
+import { getCustomMetadataInfo } from './logic/customMeta';
 
 export const fillMeta = async ({project}: {project: string}): Promise<void> => {
-  log('creating metadata for project: ', project);
+
   const rushConfiguration: RushConfiguration = loadRushConfiguration();
+  const monoRoot: string = rushConfiguration.rushJsonFolder;
   const rushProject: RushConfigurationProject | undefined =
     rushConfiguration.getProjectByName(project);
   if (!rushProject) {
     throw new Error(`Could not find project with package name ${project}`);
   }
   const { projectFolder, projectRelativeFolder } = rushProject;
-  log('projecrt folder: ', projectFolder, projectRelativeFolder);
+
+  // Look for custom plugin configurations
+  const { metadataFileName, fields } = getCustomMetadataInfo({
+    monoRoot,
+    packageName: project
+  })
 
   // Check if metadata file exists already
-  const metaFilePath: string = path.join(projectFolder, META_FILE_NAME);
-  log('Checking metadata file: ', metaFilePath);
+  const metaFilePath: string = path.join(projectFolder, metadataFileName);
+
   if (fs.existsSync(metaFilePath)) {
     log('file exists at location: ', metaFilePath);
 
