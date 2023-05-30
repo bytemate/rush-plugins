@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-metadata-plugin",
+      "comment": "Add the basic functionality to generate and update metadata files in rush projects",
+      "type": "minor"
+    }
+  ],
+  "packageName": "rush-metadata-plugin"
+}
