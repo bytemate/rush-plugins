@@ -19,9 +19,9 @@ async function main(): Promise<void> {
           .demandOption(["project"]);
       },
       async (argv) => {
-        const { fillMeta } = await import("./fillMeta");
+        const { initMeta } = await import("./initMeta");
         try {
-          await fillMeta(argv);
+          await initMeta(argv);
         } catch (e: any) {
           console.error('error: ', e);
           process.exit(1);
