@@ -6,7 +6,6 @@ import { loadRushConfiguration } from '../logic/rushConfiguration';
 import { log } from 'console';
 import chalk from 'chalk';
 import { getAllMetadataFields, getCustomMetadataInfo } from '../logic/customMeta';
-import DefaultFields from '../defaultMetadataFields.json';
 import { IMetadataField } from '../types/metadataField';
 import { queryFields } from './queryFields';
 import { JsonFile } from '@rushstack/node-core-library';
@@ -14,7 +13,6 @@ import { JsonFile } from '@rushstack/node-core-library';
 // Used to initialize a metadata file for a package
 export const initMeta = async ({ project }: { project: string }): Promise<void> => {
   const rushConfiguration: RushConfiguration = loadRushConfiguration();
-  const monoRoot: string = rushConfiguration.rushJsonFolder;
   const rushProject: RushConfigurationProject | undefined = rushConfiguration.getProjectByName(project);
   if (!rushProject) {
     throw new Error(`Could not find project with package name ${project}`);
@@ -22,7 +20,7 @@ export const initMeta = async ({ project }: { project: string }): Promise<void> 
   const { projectFolder } = rushProject;
 
   // Look for custom plugin configurations
-  const { metadataFileName, fields } = getCustomMetadataInfo();
+  const { metadataFileName } = getCustomMetadataInfo();
 
   // Check if metadata file exists already
   const metaFilePath: string = path.join(projectFolder, metadataFileName);

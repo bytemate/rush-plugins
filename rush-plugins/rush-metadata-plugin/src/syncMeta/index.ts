@@ -17,7 +17,7 @@ export const syncMeta = async (): Promise<void> => {
     log('rush project: ', rushProject.projectFolder);
 
     // Look for custom plugin configurations
-    const { metadataFileName, fields } = getCustomMetadataInfo();
+    const { metadataFileName } = getCustomMetadataInfo();
 
     // Check if metadata file exists already
     const metaFilePath: string = path.join(rushProject.projectFolder, metadataFileName);
