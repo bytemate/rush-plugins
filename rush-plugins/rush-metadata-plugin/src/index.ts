@@ -6,20 +6,22 @@ import { hideBin } from 'yargs/helpers';
 main();
 
 async function main(): Promise<void> {
+  console.log('argv: ', process.argv);
   await yargs(hideBin(process.argv))
     .command(
-      "meta",
-      "Add metadata to a project",
+      'init',
+      'Add metadata to a project',
       (yargs) => {
         return yargs
-          .option("project", {
-            type: "string",
-            describe: "The name of the package to archive",
+          .option('project', {
+            type: 'string',
+            describe: 'The name of the package to archive'
           })
-          .demandOption(["project"]);
+          .demandOption(['project']);
       },
       async (argv) => {
-        const { initMeta } = await import("./initMeta");
+        console.log('ARGUMENTS: ', argv);
+        const { initMeta } = await import('./initMeta');
         try {
           await initMeta(argv);
         } catch (e: any) {
@@ -28,6 +30,15 @@ async function main(): Promise<void> {
         }
       }
     )
-    .demandCommand(1, "You need at least one command before moving on")
+    .command('sync', 'Sync the metadata in the monorepo.', async () => {
+      const { syncMeta } = await import('./syncMeta');
+      try {
+        await syncMeta();
+      } catch (e: any) {
+        console.error('error: ', e);
+        process.exit(1);
+      }
+    })
+    .demandCommand(1, 'You need at least one command before moving on')
     .parse();
 }

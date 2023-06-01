@@ -2,11 +2,18 @@
   "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/command-line.schema.json",
   "commands": [
     {
-      "name": "meta",
+      "name": "meta-init",
       "commandKind": "global",
-      "summary": "Create or update metadata information in the current package.",
-      "shellCommand": "node <packageFolder>/lib/index.js meta",
-      "safeForSimultaneousRushProcesses": true
+      "summary": "Initialize a metadata file for a project",
+      "shellCommand": "node <packageFolder>/lib/index.js init",
+      "safeForSimultaneousRushProcesses": false
+    },
+    {
+      "name": "meta-sync",
+      "commandKind": "global",
+      "summary": "Sync the metadata files in the monorepo",
+      "shellCommand": "node <packageFolder>/lib/index.js sync",
+      "safeForSimultaneousRushProcesses": false
     }
   ],
   "parameters": [
@@ -16,7 +23,7 @@
       "longName": "--project",
       "shortName": "-p",
       "argumentName": "PACKAGE_NAME",
-      "associatedCommands": ["meta"],
+      "associatedCommands": ["meta-init"],
       "required": false
     }
   ]
