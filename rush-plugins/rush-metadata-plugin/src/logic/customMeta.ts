@@ -3,7 +3,7 @@ import path from 'path';
 
 import { loadRushConfiguration } from "./rushConfiguration";
 import { JsonFile, FileSystem } from "@rushstack/node-core-library";
-import { ICustomMetadataField } from "../types/metadataField";
+import { IMetadataField } from "../types/metadataField";
 import { IPluginConfig } from "../types/pluginConfig";
 
 export const defaultMetadataRelativeFolder: string = 'incorrect-package-meta.json';
@@ -24,7 +24,7 @@ export const getCustomMetadataInfo = ({ monoRoot, packageName }: IGetCustomMetad
 
   // Custom configurations for plugin
   let metadataRelativeFolder: string = defaultMetadataRelativeFolder;
-  let customFields: ICustomMetadataField[] = [];
+  let customFields: IMetadataField[] = [];
 
   let metaConfigs: IPluginConfig | undefined;
   try {

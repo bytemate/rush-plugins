@@ -35,24 +35,17 @@ type: boolean
   "metadataFileName": "project-metadata222.json",
   "fields": [
     {
-      "name": "pointOfContacts",
-      "description": "POC for a specific package, synced to CODEOWNERS",
-      "type": "string[]",
-      "isSelect": false,
-      "required": true
-    },
-    {
       "name": "productLine",
       "description": "Which product line this project belongs to",
+      "prompt": "Which product line does this project belong to?",
       "type": "string",
-      "isSelect": true,
       "required": true
     },
     {
       "name": "environmentVars",
       "description": "A list of environment variables used in this package",
-      "type": "string[]",
-      "isSelect": false,
+      "prompt": "What environment variables are required for this package?",
+      "type": "string",
       "required": false
     }
   ]
