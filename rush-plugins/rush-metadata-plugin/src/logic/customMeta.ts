@@ -1,26 +1,21 @@
-import { RushConfiguration } from "@rushstack/rush-sdk";
+import { RushConfiguration } from '@rushstack/rush-sdk';
 import path from 'path';
 
-import { loadRushConfiguration } from "./rushConfiguration";
-import { JsonFile, FileSystem } from "@rushstack/node-core-library";
-import { IMetadataField } from "../types/metadataField";
-import { IPluginConfig } from "../types/pluginConfig";
+import { loadRushConfiguration } from './rushConfiguration';
+import { JsonFile, FileSystem } from '@rushstack/node-core-library';
+import { IMetadataField } from '../types/metadataField';
+import { IPluginConfig } from '../types/pluginConfig';
+import DefaultFields from '../defaultMetadataFields.json';
 
 export const defaultMetadataRelativeFolder: string = 'incorrect-package-meta.json';
 
-export interface IGetCustomMetadataInfoParams {
-  monoRoot: string;
-  packageName: string;
-}
-
-export const getCustomMetadataInfo = ({ monoRoot, packageName }: IGetCustomMetadataInfoParams): IPluginConfig => {
-
+export const getCustomMetadataInfo = (): IPluginConfig => {
   const rushConfiguration: RushConfiguration = loadRushConfiguration();
 
   const pluginOptionsJsonFilePath: string = path.join(
     rushConfiguration.rushPluginOptionsFolder,
     'rush-metadata-plugin.json'
-  )
+  );
 
   // Custom configurations for plugin
   let metadataRelativeFolder: string = defaultMetadataRelativeFolder;
@@ -48,5 +43,20 @@ export const getCustomMetadataInfo = ({ monoRoot, packageName }: IGetCustomMetad
   return {
     metadataFileName: metadataRelativeFolder,
     fields: customFields
-  }
-}
+  };
+};
+
+export const getAllMetadataFields = (): IMetadataField[] => {
+  // Look for custom plugin configurations
+  const { fields } = getCustomMetadataInfo();
+
+  // Load default fields
+  const { fields: defaultFields }: { fields: IMetadataField[] } = DefaultFields as {
+    fields: IMetadataField[];
+  };
+
+  // join the custom and default fields
+  const allFields: IMetadataField[] = [...defaultFields, ...fields];
+
+  return allFields;
+};

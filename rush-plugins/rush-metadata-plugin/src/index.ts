@@ -6,7 +6,6 @@ import { hideBin } from 'yargs/helpers';
 main();
 
 async function main(): Promise<void> {
-  console.log('argv: ', process.argv);
   await yargs(hideBin(process.argv))
     .command(
       'init',
