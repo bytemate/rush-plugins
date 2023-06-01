@@ -18,9 +18,6 @@
   "author": "william2958",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
-  "bin": {
-    "rush-metadata-plugin": "lib/index.js"
-  },
   "scripts": {
     "build": "heft build --clean",
     "build:watch": "heft build --watch",

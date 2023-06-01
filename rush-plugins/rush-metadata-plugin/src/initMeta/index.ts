@@ -26,20 +26,13 @@ export const initMeta = async ({ project }: { project: string }): Promise<void> 
   const metaFilePath: string = path.join(projectFolder, metadataFileName);
 
   if (fs.existsSync(metaFilePath)) {
-    log('file already exists at location! ', metaFilePath);
-
-    // Read and parse the file
-    // const loadedJsonFile: ICoreMetadata = JsonFile.load(metaFilePath);
-
     log(chalk.red('Please run rush meta update or edit the metadata file directly to make updates'));
-
     return;
   }
 
   const allFields: IMetadataField[] = getAllMetadataFields();
 
   const answers: Record<string, string> = await queryFields(allFields);
-  log('Returned answers: ', answers);
 
   JsonFile.save(answers, metaFilePath);
 };
