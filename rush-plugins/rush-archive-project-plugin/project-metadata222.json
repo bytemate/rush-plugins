@@ -3,7 +3,6 @@
   "pointOfContact": "b",
   "projectGroup": "c",
   "targetRuntime": "node",
-  "riskLevel": 0,
   "productLine": "f",
   "environmentVars": "d"
 }

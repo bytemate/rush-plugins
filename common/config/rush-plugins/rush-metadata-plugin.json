@@ -29,7 +29,6 @@ type: boolean
 
 */
 
-
 {
   "$schema": "../../../rush-plugins/rush-metadata-plugin/customMetaSchema.json",
   "metadataFileName": "project-metadata222.json",
@@ -48,5 +47,11 @@ type: boolean
       "type": "string",
       "required": false
     }
+    // {
+    //   "name": "testField",
+    //   "description": "test",
+    //   "type": "string",
+    //   "required": true
+    // }
   ]
 }

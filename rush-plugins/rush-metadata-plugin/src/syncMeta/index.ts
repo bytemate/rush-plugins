@@ -27,9 +27,9 @@ export const syncMeta = async (): Promise<void> => {
 
       log(chalk.green(`Updating metadata file at: ${metaFilePath}`));
 
-      syncMetadataFile(loadedJsonFile);
+      const newMetadataFile: any = syncMetadataFile(loadedJsonFile);
 
-      return;
+      JsonFile.save(newMetadataFile, metaFilePath, { updateExistingFile: true });
     }
   }
 };
