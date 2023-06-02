@@ -34,5 +34,5 @@ export const initMeta = async ({ project }: { project: string }): Promise<void> 
 
   const answers: Record<string, string> = await queryFields(allFields);
 
-  JsonFile.save(answers, metaFilePath);
+  JsonFile.save(answers, metaFilePath, { ensureFolderExists: true });
 };
