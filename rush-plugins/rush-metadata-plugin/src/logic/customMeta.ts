@@ -7,7 +7,12 @@ import { IMetadataField } from '../types/metadataField';
 import { IPluginConfig } from '../types/pluginConfig';
 import DefaultFields from '../defaultMetadataFields.json';
 
-export const defaultMetadataRelativeFolder: string = 'incorrect-package-meta.json';
+export const getDefaultMetadataFileName = (): string => {
+  // Load default fields
+  const { metadataFileName }: { metadataFileName: string } = DefaultFields;
+
+  return metadataFileName;
+};
 
 export const getCustomMetadataInfo = (): IPluginConfig => {
   const rushConfiguration: RushConfiguration = loadRushConfiguration();
@@ -18,7 +23,7 @@ export const getCustomMetadataInfo = (): IPluginConfig => {
   );
 
   // Custom configurations for plugin
-  let metadataRelativeFolder: string = defaultMetadataRelativeFolder;
+  let metadataRelativeFolder: string = getDefaultMetadataFileName();
   let customFields: IMetadataField[] = [];
 
   let metaConfigs: IPluginConfig | undefined;

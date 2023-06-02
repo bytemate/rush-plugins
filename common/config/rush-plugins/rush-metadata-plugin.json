@@ -31,7 +31,7 @@ type: boolean
 
 {
   "$schema": "../../../rush-plugins/rush-metadata-plugin/customMetaSchema.json",
-  "metadataFileName": "project-metadata222.json",
+  // "metadataFileName": "config/project-metadata.json",
   "fields": [
     {
       "name": "productLine",
