@@ -2,6 +2,18 @@
   "name": "rush-audit-cache-plugin",
   "entries": [
     {
+      "version": "0.2.2",
+      "tag": "rush-audit-cache-plugin_v0.2.2",
+      "date": "Mon, 05 Jun 2023 04:43:06 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "build cache audit tool support phased command"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.2.1",
       "tag": "rush-audit-cache-plugin_v0.2.1",
       "date": "Wed, 01 Mar 2023 04:51:48 GMT",
