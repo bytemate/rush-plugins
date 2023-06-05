@@ -14,7 +14,17 @@ export const getDefaultMetadataFileName = (): string => {
   return metadataFileName;
 };
 
-export const getCustomMetadataInfo = (): IPluginConfig => {
+export const getDefaultCodeownersFileName = (): string => {
+  const { codeownersFileName }: { codeownersFileName: string } = DefaultFields;
+  return codeownersFileName;
+};
+
+export interface ICustomMetadataInfo {
+  metadataFileName: string;
+  codeownersFileName: string;
+  fields: IMetadataField[];
+}
+export const getCustomMetadataInfo = (): ICustomMetadataInfo => {
   const rushConfiguration: RushConfiguration = loadRushConfiguration();
 
   const pluginOptionsJsonFilePath: string = path.join(
@@ -24,6 +34,7 @@ export const getCustomMetadataInfo = (): IPluginConfig => {
 
   // Custom configurations for plugin
   let metadataRelativeFolder: string = getDefaultMetadataFileName();
+  let codeownersFileName: string = getDefaultCodeownersFileName();
   let customFields: IMetadataField[] = [];
 
   let metaConfigs: IPluginConfig | undefined;
@@ -38,15 +49,17 @@ export const getCustomMetadataInfo = (): IPluginConfig => {
     if (metaConfigs.metadataFileName) {
       metadataRelativeFolder = metaConfigs.metadataFileName;
     }
+    if (metaConfigs.codeownersFileName) {
+      codeownersFileName = metaConfigs.codeownersFileName;
+    }
     if (metaConfigs.fields) {
       customFields = metaConfigs.fields;
     }
   }
 
-  console.log('custom metadata folder: ', metadataRelativeFolder);
-
   return {
     metadataFileName: metadataRelativeFolder,
+    codeownersFileName,
     fields: customFields
   };
 };

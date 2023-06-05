@@ -29,15 +29,25 @@ async function main(): Promise<void> {
         }
       }
     )
-    .command('sync', 'Sync the metadata in the monorepo.', async () => {
-      const { syncMeta } = await import('./syncMeta');
-      try {
-        await syncMeta();
-      } catch (e: any) {
-        console.error('error: ', e);
-        process.exit(1);
+    .command(
+      'sync',
+      'Sync the metadata in the monorepo.',
+      (yargs) => {
+        return yargs.option('codeowners', {
+          type: 'boolean',
+          describe: 'option to generate codeowners file'
+        });
+      },
+      async ({ codeowners }) => {
+        const { syncMeta } = await import('./syncMeta');
+        try {
+          await syncMeta({ codeowners: !!codeowners });
+        } catch (e: any) {
+          console.error('error: ', e);
+          process.exit(1);
+        }
       }
-    })
+    )
     .demandCommand(1, 'You need at least one command before moving on')
     .parse();
 }

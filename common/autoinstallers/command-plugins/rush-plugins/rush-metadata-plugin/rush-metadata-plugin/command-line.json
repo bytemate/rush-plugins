@@ -25,6 +25,13 @@
       "argumentName": "PACKAGE_NAME",
       "associatedCommands": ["meta-init"],
       "required": false
+    },
+    {
+      "parameterKind": "flag",
+      "description": "Whether to output a codeowners file",
+      "longName": "--codeowners",
+      "associatedCommands": ["meta-init", "meta-sync"],
+      "required": false
     }
   ]
 }

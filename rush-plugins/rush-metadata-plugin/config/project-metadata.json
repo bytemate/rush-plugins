@@ -1,9 +1,7 @@
 {
-  "purpose": "d",
-  "pointOfContact": "d",
-  "projectGroup": "d",
+  "purpose": "l",
+  "pointOfContact": ["j", "k", "l"],
+  "projectGroup": "k",
   "targetRuntime": "node",
-  "riskLevel": 0,
-  "productLine": "",
-  "environmentVars": "d"
+  "productLine": "m"
 }

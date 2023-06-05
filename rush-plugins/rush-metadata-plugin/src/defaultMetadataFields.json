@@ -1,10 +1,11 @@
 {
   "metadataFileName": "config/project-metadata.json",
+  "codeownersFileName": "config/CODEOWNERS",
   "fields": [
     {
       "name": "purpose",
       "description": "The purpose of the package.",
-      "prompt": "What is the purpose of this package?zzz",
+      "prompt": "What is the purpose of this package?",
       "fieldType": "string",
       "required": true
     },

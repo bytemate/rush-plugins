@@ -32,7 +32,12 @@ export const initMeta = async ({ project }: { project: string }): Promise<void> 
 
   const allFields: IMetadataField[] = getAllMetadataFields();
 
-  const answers: Record<string, string> = await queryFields(allFields);
+  const answers: Record<string, string | string[]> = await queryFields(allFields);
+
+  if (answers.pointOfContact) {
+    const enteredPointsOfContact: string = answers.pointOfContact as string;
+    answers.pointOfContact = enteredPointsOfContact.split(',').map((s) => s.trim());
+  }
 
   JsonFile.save(answers, metaFilePath, { ensureFolderExists: true });
 };
