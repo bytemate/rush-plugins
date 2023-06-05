@@ -37,6 +37,15 @@
       "required": false
     },
     {
+      "parameterKind": "stringList",
+      "description": "Phased commands need to be audit",
+      "longName": "--phased-commands",
+      "shortName": "-P",
+      "argumentName": "PHASED_COMMANDS_NAMES",
+      "associatedCommands": ["audit-cache"],
+      "required": false
+    },
+    {
       "parameterKind": "string",
       "description": "verbosity that can be increased",
       "longName": "--verbose",
