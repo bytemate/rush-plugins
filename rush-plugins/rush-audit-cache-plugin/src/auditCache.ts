@@ -15,6 +15,7 @@ export interface IAuditCacheOptions {
   checkAllCacheConfiguredProject: boolean;
   exclude: string[];
   parallelism?: string;
+  phasedCommands: string[];
 }
 
 export interface IAuditCacheResult {
@@ -23,7 +24,8 @@ export interface IAuditCacheResult {
 }
 
 export async function auditCache(options: IAuditCacheOptions): Promise<IAuditCacheResult> {
-  const { projectNames, terminal, checkAllCacheConfiguredProject, exclude, parallelism } = options;
+  const { projectNames, terminal, checkAllCacheConfiguredProject, exclude, parallelism, phasedCommands } =
+    options;
 
   terminal.writeDebugLine(`exclude: ${exclude}`);
 
@@ -83,7 +85,8 @@ export async function auditCache(options: IAuditCacheOptions): Promise<IAuditCac
   const traceResult: ITraceResult = await traceExecutor.execAsync();
 
   const analyzer: AuditCacheAnalyzer = new AuditCacheAnalyzer({
-    rushConfiguration
+    rushConfiguration,
+    phasedCommands
   });
 
   terminal.writeLine('');

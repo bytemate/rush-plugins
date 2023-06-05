@@ -1,16 +1,13 @@
-import * as path from "path";
-import { Executable } from "@rushstack/node-core-library";
+import * as path from 'path';
+import { Executable } from '@rushstack/node-core-library';
 
-import {
-  RushConfiguration,
-  RushConfigurationProject,
-} from "@rushstack/rush-sdk";
-import { FileSystem, JsonFile } from "@rushstack/node-core-library";
+import { RushConfiguration, RushConfigurationProject } from '@rushstack/rush-sdk';
+import { FileSystem, JsonFile } from '@rushstack/node-core-library';
 
-import { RUSH_PROJECT_JSON_RELATIVE_PATH } from "./constants";
+import { RUSH_PROJECT_JSON_RELATIVE_PATH } from './constants';
 
-import type { IUserProjectFileFilter } from "../core/base/BaseFileResolver";
-import type { SpawnSyncReturns } from "child_process";
+import type { IUserProjectFileFilter } from '../core/base/BaseFileResolver';
+import type { SpawnSyncReturns } from 'child_process';
 
 export interface IRushProjectJson {
   operationSettings: {
@@ -28,11 +25,7 @@ export interface IAuditCacheGlobalFileFilter {
   globalFileFilters: IUserProjectFileFilter[];
 }
 
-
-const packageNameToAllDependencyProjects: Record<
-  string,
-  RushConfigurationProject[]
-> = {};
+const packageNameToAllDependencyProjects: Record<string, RushConfigurationProject[]> = {};
 
 /**
  * Get all dependency projects of a project both directly and indirectly,
@@ -51,15 +44,10 @@ export const getSortedAllDependencyProjects = (
       if (visited.has(dependency.packageName)) {
         continue;
       }
-      recursiveGetAndSortAllDependencyProjects(
-        project,
-        visited,
-        allDependencyProjects
-      );
+      recursiveGetAndSortAllDependencyProjects(project, visited, allDependencyProjects);
     }
 
-    packageNameToAllDependencyProjects[project.packageName] =
-      allDependencyProjects;
+    packageNameToAllDependencyProjects[project.packageName] = allDependencyProjects;
   }
   return allDependencyProjects;
 };
@@ -77,11 +65,7 @@ function recursiveGetAndSortAllDependencyProjects(
     if (visited.has(dependency.packageName)) {
       continue;
     }
-    recursiveGetAndSortAllDependencyProjects(
-      dependency,
-      visited,
-      allDependencyProjects
-    );
+    recursiveGetAndSortAllDependencyProjects(dependency, visited, allDependencyProjects);
   }
   allDependencyProjects.push(project);
 }
@@ -89,7 +73,6 @@ function recursiveGetAndSortAllDependencyProjects(
 /**
  * try to load json by path
  */
-
 export function tryLoadJson<T>(jsonFilePath: string): T | undefined {
   try {
     const loadedJson: T = JsonFile.load(jsonFilePath);
@@ -111,13 +94,9 @@ export function getAllCacheConfiguredProjects(
 ): RushConfigurationProject[] {
   const projects: RushConfigurationProject[] = rushConfiguration.projects;
   return projects.filter((project) => {
-    const rushProjectJsonPath: string = path.join(
-      project.projectFolder,
-      RUSH_PROJECT_JSON_RELATIVE_PATH
-    );
+    const rushProjectJsonPath: string = path.join(project.projectFolder, RUSH_PROJECT_JSON_RELATIVE_PATH);
 
-    const rushProjectJson: IRushProjectJson | undefined =
-      tryLoadJson(rushProjectJsonPath);
+    const rushProjectJson: IRushProjectJson | undefined = tryLoadJson(rushProjectJsonPath);
     if (!rushProjectJson) {
       return false;
     }
@@ -130,25 +109,21 @@ export function getAllCacheConfiguredProjects(
  * install projects
  */
 export function installProjects(projects: RushConfigurationProject[]): void {
-  const rushPath: string | undefined = Executable.tryResolve("rush");
+  const rushPath: string | undefined = Executable.tryResolve('rush');
   if (!rushPath) {
     throw new Error(`rush is not present.`);
   }
   const projectArgs: string[] = projects.reduce((acc, { packageName }) => {
-    acc.push("--to");
+    acc.push('--to');
     acc.push(packageName);
     return acc;
   }, [] as string[]);
 
-  const args: string[] = ["install", ...projectArgs];
+  const args: string[] = ['install', ...projectArgs];
 
-  const spawnResult: SpawnSyncReturns<string> = Executable.spawnSync(
-    rushPath,
-    args,
-    {
-      stdio: "inherit",
-    }
-  );
+  const spawnResult: SpawnSyncReturns<string> = Executable.spawnSync(rushPath, args, {
+    stdio: 'inherit'
+  });
 
   if (spawnResult.status !== 0) {
     throw new Error(`rush install failed with exit code ${spawnResult.status}`);

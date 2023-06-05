@@ -30,6 +30,7 @@ async function main(): Promise<void> {
         '-c, --parallelism [parallelism]',
         "Specifies the maximum number of concurrent processes to launch during a build. (eg. '50% | '5')"
       )
+      .option('-P, --phased-commands [phasedCommands...]', 'phased commands need to be audit')
       .option('-v, --verbose [verbose]', 'set log level, default is 0, 1 for verbose, 2 for debug')
       .action(
         async (opts: {
@@ -38,8 +39,14 @@ async function main(): Promise<void> {
           all: boolean;
           exclude?: string[];
           parallelism?: string;
+          phasedCommands?: string[];
         }) => {
           const checkAllCacheConfiguredProject: boolean = opts.all;
+          const phasedCommands: string[] = opts.phasedCommands
+            ? opts.phasedCommands.length
+              ? opts.phasedCommands
+              : ['build']
+            : ['build'];
           const projectNames: string[] = [...new Set(opts.project)];
           if (checkAllCacheConfiguredProject && projectNames.length) {
             terminal.writeErrorLine(`The parameters "--all" and "--project" cannot be used together.`);
@@ -70,7 +77,8 @@ async function main(): Promise<void> {
             terminal,
             checkAllCacheConfiguredProject,
             exclude: opts.exclude ?? [],
-            parallelism: opts.parallelism
+            parallelism: opts.parallelism,
+            phasedCommands
           });
         }
       );

@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "rush-audit-cache-plugin",
+      "comment": "build cache audit tool support phased command",
+      "type": "patch"
+    }
+  ],
+  "packageName": "rush-audit-cache-plugin"
+}
