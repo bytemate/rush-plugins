@@ -10,6 +10,7 @@ import { getCustomMetadataInfo } from '../logic/customMeta';
 import { ICoreMetadata } from '../template';
 import { syncMetadataFile } from './syncMetadataFile';
 import { outputToCodeowners } from '../transformers/outputToCodeowners';
+import { outputToReadme } from '../transformers/outputToReadme';
 
 // Used to sync all the metadata files in the monorepo according to the metadata spec
 export const syncMeta = async ({ codeowners }: { codeowners: boolean }): Promise<void> => {
@@ -38,6 +39,9 @@ export const syncMeta = async ({ codeowners }: { codeowners: boolean }): Promise
         const codeownersAbsoluteFilePath: string = path.join(rushProject.projectFolder, codeownersFileName);
         outputToCodeowners(newMetadataFile.pointOfContact, codeownersAbsoluteFilePath);
       }
+
+      const readmeAbsoluteFilePath: string = path.join(rushProject.projectFolder, 'README.md');
+      outputToReadme(loadedJsonFile, readmeAbsoluteFilePath);
     }
   }
 };

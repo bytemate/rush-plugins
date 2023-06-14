@@ -3,5 +3,6 @@
   "pointOfContact": ["j", "k", "l"],
   "projectGroup": "k",
   "targetRuntime": "node",
-  "productLine": "m"
+  "productLine": "m",
+  "riskLevel": 2
 }

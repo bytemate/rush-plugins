@@ -12,6 +12,6 @@ export interface IMetadataField {
   prompt: string;
   fieldType: FieldTypes;
   required: boolean;
-  choices?: string[] | { label: string; value: string | number }[];
+  choices?: string[] | { name: string; value: string | number }[];
   defaultValue?: string;
 }
