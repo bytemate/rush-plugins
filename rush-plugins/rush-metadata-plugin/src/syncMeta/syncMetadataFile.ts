@@ -6,8 +6,6 @@ export const syncMetadataFile = (currMetadata: any): ICoreMetadata => {
   const allFields: IMetadataField[] = getAllMetadataFields();
   const newMetadata: any = {};
 
-  console.log('syncing file: ', currMetadata);
-
   for (const field of allFields) {
     // @ts-ignore
     if (field.required && !currMetadata[field.name]) {

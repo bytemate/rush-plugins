@@ -1,8 +1,9 @@
 {
-  "purpose": "l",
-  "pointOfContact": ["j", "k", "l"],
-  "projectGroup": "k",
+  "purpose": "This package initializes and syncs metadata files in a monorepo.",
+  "pointOfContact": ["william2958"],
+  "projectGroup": "rush-plugins",
   "targetRuntime": "node",
-  "productLine": "m",
-  "riskLevel": 2
+  "riskLevel": 0,
+  "productLine": "libs",
+  "environmentVars": ""
 }

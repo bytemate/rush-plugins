@@ -9,6 +9,7 @@ import { getAllMetadataFields, getCustomMetadataInfo } from '../logic/customMeta
 import { IMetadataField } from '../types/metadataField';
 import { queryFields } from './queryFields';
 import { JsonFile } from '@rushstack/node-core-library';
+import { outputToReadme } from '../transformers/outputToReadme';
 
 // Used to initialize a metadata file for a package
 export const initMeta = async ({ project }: { project: string }): Promise<void> => {
@@ -40,4 +41,7 @@ export const initMeta = async ({ project }: { project: string }): Promise<void> 
   }
 
   JsonFile.save(answers, metaFilePath, { ensureFolderExists: true });
+
+  const readmeAbsoluteFilePath: string = path.join(rushProject.projectFolder, 'README.md');
+  outputToReadme(answers, readmeAbsoluteFilePath);
 };

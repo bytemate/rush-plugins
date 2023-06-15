@@ -7,10 +7,9 @@ export const convertFieldValue = (field: IMetadataField, value: string | number 
 
   if (field.fieldType === 'list') {
     if (field.choices && typeof field.choices[0] === 'string') {
-      return String(value);
+      return value as string;
     }
     // Try to decode the field value into it's label
-
     if (field.choices && field.choices.length) {
       for (const choice of field.choices as {
         name: string;
@@ -23,5 +22,5 @@ export const convertFieldValue = (field: IMetadataField, value: string | number 
     }
     return '';
   }
-  return String(value);
+  return value as string;
 };

@@ -14,33 +14,29 @@ export const outputToReadme = (currentValues: any, outputFileLocation: string): 
 
   // Check if readme file already exists
   if (fs.existsSync(outputFileLocation)) {
-    console.log('README file already exists');
     const readmeContents: string = fs.readFileSync(outputFileLocation, 'utf8');
-
     // Check if the start and end key exist
     if (readmeContents.indexOf(MDStartKey) !== -1 && readmeContents.indexOf(MDEndKey)) {
       prevMDContents = readmeContents.slice(0, readmeContents.indexOf(MDStartKey));
       postMDContents = readmeContents.slice(readmeContents.indexOf(MDEndKey) + MDEndKey.length);
-
-      console.log(prevMDContents);
-      console.log(postMDContents);
     } else {
       // Preserve previous content in prevMDContents
       prevMDContents = readmeContents + '\n';
     }
   }
 
-  console.log('Outputting values to readme...');
-  console.log('Current values: ', currentValues);
-
   const allFields: IMetadataField[] = getAllMetadataFields();
   // Generate md file
-  const mdFileContents: any = [{ p: MDStartKey }];
+  const mdFileContents: any = [
+    { p: MDStartKey },
+    {
+      p: 'This section is auto-generated and will be auto-updated. Anything added manually outside this section will be preserved.'
+    }
+  ];
 
   for (const field of allFields) {
     let fieldValue: string = '';
     if (!currentValues[field.name]) {
-      console.log('No value found for field: ', field.name);
       continue;
     }
     fieldValue = convertFieldValue(field, currentValues[field.name]);

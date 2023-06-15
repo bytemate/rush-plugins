@@ -19,7 +19,6 @@ async function main(): Promise<void> {
           .demandOption(['project']);
       },
       async (argv) => {
-        console.log('ARGUMENTS: ', argv);
         const { initMeta } = await import('./initMeta');
         try {
           await initMeta(argv);
@@ -38,10 +37,10 @@ async function main(): Promise<void> {
           describe: 'option to generate codeowners file'
         });
       },
-      async ({ codeowners }) => {
+      async () => {
         const { syncMeta } = await import('./syncMeta');
         try {
-          await syncMeta({ codeowners: !!codeowners });
+          await syncMeta();
         } catch (e: any) {
           console.error('error: ', e);
           process.exit(1);
