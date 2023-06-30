@@ -3,7 +3,5 @@
   "pointOfContact": ["william2958"],
   "projectGroup": "rush-plugins",
   "targetRuntime": "node",
-  "riskLevel": 0,
-  "productLine": "libs",
-  "environmentVars": ""
+  "productLine": "libs"
 }

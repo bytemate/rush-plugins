@@ -40,7 +40,13 @@ export const outputToReadme = (currentValues: any, outputFileLocation: string): 
       continue;
     }
     fieldValue = convertFieldValue(field, currentValues[field.name]);
-    mdFileContents.push(...[{ h2: field.name }, { h4: field.description }, { p: fieldValue }]);
+    mdFileContents.push(
+      ...[
+        { h2: field.name },
+        { h4: `<span style="color:grey">${field.description}</span>` },
+        { p: fieldValue }
+      ]
+    );
   }
 
   mdFileContents.push({ p: MDEndKey });

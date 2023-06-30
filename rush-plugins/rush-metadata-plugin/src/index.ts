@@ -16,7 +16,10 @@ async function main(): Promise<void> {
             type: 'string',
             describe: 'The name of the package to archive'
           })
-          .demandOption(['project']);
+          .option('all', {
+            type: 'boolean',
+            describe: 'Whether to initialize a basic metadata file for each project in the monorepo'
+          });
       },
       async (argv) => {
         const { initMeta } = await import('./initMeta');

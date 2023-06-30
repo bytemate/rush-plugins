@@ -28,9 +28,9 @@
     },
     {
       "parameterKind": "flag",
-      "description": "Whether to output a codeowners file",
-      "longName": "--codeowners",
-      "associatedCommands": ["meta-init", "meta-sync"],
+      "description": "Generate a metadata JSON for each project in the monorepo",
+      "longName": "--all",
+      "associatedCommands": ["meta-init"],
       "required": false
     }
   ]
