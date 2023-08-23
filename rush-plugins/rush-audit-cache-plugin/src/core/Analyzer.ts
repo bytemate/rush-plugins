@@ -109,6 +109,7 @@ export class AuditCacheAnalyzer {
       readFileResolver.projectSafeMatcher.add([project.projectFolder].concat(allDependencyProjectFolders));
 
       const outputFolderNames: string[] = [];
+      const inputFolderNames: string[] = [];
       const rushProjectJsonPath: string = path.join(projectFolder, RUSH_PROJECT_JSON_RELATIVE_PATH);
       const rushProjectJson: IRushProjectJson | undefined =
         tryLoadJson<IRushProjectJson>(rushProjectJsonPath);
@@ -123,13 +124,19 @@ export class AuditCacheAnalyzer {
         const usedOperationSettings: IRushProjectJson['operationSettings'] | undefined =
           operationSettings.filter(({ operationName }) => this._phasedCommands.includes(operationName));
         if (usedOperationSettings && usedOperationSettings.length) {
-          usedOperationSettings.forEach(({ outputFolderNames: outputFolders }) => {
-            outputFolderNames.push(...outputFolders);
-          });
+          usedOperationSettings.forEach(
+            ({ outputFolderNames: outputFolders, dependsOnAdditionalFiles = [] }) => {
+              outputFolderNames.push(...outputFolders, ...dependsOnAdditionalFiles);
+              inputFolderNames.push(...dependsOnAdditionalFiles);
+            }
+          );
         }
       }
       writeFileResolver.projectSafeMatcher.add(
         outputFolderNames.map((director) => path.join(project.projectFolder, director))
+      );
+      readFileResolver.projectSafeMatcher.add(
+        inputFolderNames.map((director) => path.join(project.projectFolder, director))
       );
 
       // prepare audit cache global config
