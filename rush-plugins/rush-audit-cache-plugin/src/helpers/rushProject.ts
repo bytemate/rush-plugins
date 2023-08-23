@@ -13,6 +13,7 @@ export interface IRushProjectJson {
   operationSettings: {
     operationName: string;
     outputFolderNames: string[];
+    dependsOnAdditionalFiles?: string[];
   }[];
   incrementalBuildIgnoredGlobs: string[];
 }
