@@ -2,6 +2,18 @@
   "name": "rush-audit-cache-plugin",
   "entries": [
     {
+      "version": "0.2.3",
+      "tag": "rush-audit-cache-plugin_v0.2.3",
+      "date": "Wed, 23 Aug 2023 05:01:48 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "rush-audit-cache-plugin support dependsOnAdditionalFiles"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.2.2",
       "tag": "rush-audit-cache-plugin_v0.2.2",
       "date": "Mon, 05 Jun 2023 04:43:06 GMT",
