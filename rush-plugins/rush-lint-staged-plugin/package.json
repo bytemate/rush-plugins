@@ -14,7 +14,9 @@
     "directory": "rush-plugins/rush-lint-staged-plugin"
   },
   "license": "MIT",
-  "author": "Cheng Liu<chengcyber@outlook.com>",
+  "contributors": [
+    "Cheng Liu <chengcyber@outlook.com>"
+  ],
   "type": "module",
   "exports": {
     ".": "./lib/index.mjs"

@@ -16,7 +16,9 @@
     "directory": "rush-plugins/rush-init-project-plugin"
   },
   "license": "MIT",
-  "author": "liucheng.leo",
+  "contributors": [
+    "Cheng Liu <chengcyber@outlook.com>"
+  ],
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "bin": {
