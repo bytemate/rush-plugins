@@ -16,7 +16,9 @@
     "directory": "rush-plugins/rush-print-log-if-error-plugin"
   },
   "license": "MIT",
-  "author": "Cheng Liu",
+  "contributors": [
+    "Cheng Liu <chengcyber@outlook.com>"
+  ],
   "main": "lib/index.js",
   "scripts": {
     "build": "heft build --clean",

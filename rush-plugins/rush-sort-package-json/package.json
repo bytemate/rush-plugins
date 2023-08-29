@@ -16,7 +16,9 @@
     "directory": "rush-plugins/rush-sort-package-json"
   },
   "license": "MIT",
-  "author": "bohanzh",
+  "contributors": [
+    "bohanzh"
+  ],
   "main": "lib/index.js",
   "scripts": {
     "build": "heft build --clean",

@@ -18,7 +18,9 @@
     "directory": "rush-plugins/rush-archive-project-plugin"
   },
   "license": "MIT",
-  "author": "Cheng Liu<chengcyber@outlook.com",
+  "contributors": [
+    "Cheng Liu <chengcyber@outlook.com>"
+  ],
   "main": "lib/index.js",
   "bin": {
     "rush-project-archiver": "lib/cli.js"

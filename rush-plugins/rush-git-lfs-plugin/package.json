@@ -15,7 +15,9 @@
     "directory": "rush-plugins/rush-git-lfs-plugin"
   },
   "license": "MIT",
-  "author": "EscapeB<haselczl@gmail.com>",
+  "contributors": [
+    "EscapeB<haselczl@gmail.com>"
+  ],
   "main": "lib/index.js",
   "scripts": {
     "build": "heft build --clean",

@@ -17,7 +17,9 @@
     "directory": "rush-plugins/rush-upgrade-self-plugin"
   },
   "license": "MIT",
-  "author": "Cheng Liu<chengcyber@outlook.com>",
+  "contributors": [
+    "Cheng Liu <chengcyber@outlook.com>"
+  ],
   "main": "lib/index.js",
   "bin": {
     "rush-upgrade-self": "lib/cli.js"
