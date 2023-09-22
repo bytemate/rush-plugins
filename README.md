@@ -1,4 +1,8 @@
-This monorepo hosts unofficial rush plugins created and used inside ByteDance.
+❗❗️❗️ ️
+# DEPRECATED
+This repository is no longer maintained. The current repository has been migrated to the [TikTok repository](https://github.com/tiktok/rush-plugins)!
+❗️❗️❗️
+
 
 # rush-init-project-plugin
 
