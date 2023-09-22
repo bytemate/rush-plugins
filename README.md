@@ -1,6 +1,6 @@
-❗❗️❗️ ️
-# DEPRECATED
- The current repository has been migrated to the [TikTok repository](https://github.com/tiktok/rush-plugins)   
+❗❗️❗️    
+# RELOCATED
+The current repository has been migrated to the [TikTok repository](https://github.com/tiktok/rush-plugins)    
 ❗️❗️❗️
 
 
