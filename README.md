@@ -1,6 +1,6 @@
 ❗❗️❗️ ️
 # DEPRECATED
-This repository is no longer maintained. The current repository has been migrated to the [TikTok repository](https://github.com/tiktok/rush-plugins)!
+ The current repository has been migrated to the [TikTok repository](https://github.com/tiktok/rush-plugins)   
 ❗️❗️❗️
 
 
