@@ -1,0 +1,47 @@
+{
+  "metadataFileName": "config/project-metadata.json",
+  "codeownersFileName": "config/CODEOWNERS",
+  "fields": [
+    {
+      "name": "purpose",
+      "description": "The purpose of the package.",
+      "prompt": "What is the purpose of this package?",
+      "fieldType": "string",
+      "required": true
+    },
+    {
+      "name": "pointOfContact",
+      "description": "The list of package owners.",
+      "prompt": "Who are the POCs of this package? (Separated by ',')",
+      "fieldType": "string",
+      "required": true
+    },
+    {
+      "name": "projectGroup",
+      "description": "Which project group does this package belong to?",
+      "prompt": "What is the project group for this package?",
+      "fieldType": "string",
+      "required": false
+    },
+    {
+      "name": "targetRuntime",
+      "description": "The environment in which the project will run.",
+      "prompt": "What is the target runtime?",
+      "fieldType": "list",
+      "choices": ["node", "browser", "cli"],
+      "required": false
+    },
+    {
+      "name": "riskLevel",
+      "description": "The risk level assigned to this package.",
+      "prompt": "What is the risk level of this package?",
+      "fieldType": "list",
+      "choices": [
+        { "name": "0 - Low Risk (Internal Library)", "value": 0 },
+        { "name": "1 - Medium Risk (External Library)", "value": 1 },
+        { "name": "2 - High Risk (Production Application)", "value": 2 }
+      ],
+      "required": false
+    }
+  ]
+}

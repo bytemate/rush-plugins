@@ -1,0 +1,7 @@
+{
+  "purpose": "This package initializes and syncs metadata files in a monorepo.",
+  "pointOfContact": ["william2958"],
+  "projectGroup": "rush-plugins",
+  "targetRuntime": "node",
+  "productLine": "libs"
+}

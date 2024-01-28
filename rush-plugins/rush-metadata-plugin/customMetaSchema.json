@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "CustomMetadata",
+  "properties": {
+    "metadataFileName": {
+      "type": "string",
+      "description": "The metadata file name to be saved and edited."
+    },
+    "fields": {
+      "type": "array",
+      "description": ""
+    }
+  },
+  "required": ["metadataFileName", "fields"]
+}

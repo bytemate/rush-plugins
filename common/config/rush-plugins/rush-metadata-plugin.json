@@ -1,0 +1,57 @@
+/**
+
+Custom field parameters:
+
+field: name
+desc: name of the metadata field
+type: string
+
+field: description
+desc: description of the metdata field
+type: string
+
+field: type
+desc: what kind of data is it
+types:
+- string
+- number
+- string[]
+- number[]
+
+field: isSelect
+desc: whether this field will be a rush selector or not (passed into "--to" parameter, etc)
+type: boolean
+(note that this cannot be used for any type other than string)
+
+field: required
+desc: whether or not this field is required
+type: boolean
+
+*/
+
+{
+  "$schema": "../../../rush-plugins/rush-metadata-plugin/customMetaSchema.json",
+  // "metadataFileName": "config/project-metadata.json",
+  "fields": [
+    {
+      "name": "productLine",
+      "description": "Which product line this project belongs to",
+      "prompt": "Which product line does this project belong to?",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "environmentVars",
+      "description": "A list of environment variables used in this package",
+      "prompt": "What environment variables are required for this package?",
+      "type": "string",
+      "required": false
+    }
+    // {
+    //   "name": "testField",
+    //   "description": "test",
+    //   "type": "string",
+    //   "required": true
+    // }
+  ]
+}

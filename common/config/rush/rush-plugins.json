@@ -50,6 +50,11 @@
       "packageName": "rush-upgrade-self-plugin",
       "pluginName": "rush-upgrade-self-plugin",
       "autoinstallerName": "command-plugins" // the name of autoinstaller you created before
+    },
+    {
+      "packageName": "rush-metadata-plugin",
+      "pluginName": "rush-metadata-plugin",
+      "autoinstallerName": "command-plugins" // the name of autoinstaller you created before
     }
   ]
 }
